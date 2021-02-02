@@ -1,0 +1,22 @@
+@import 'phone.scss';
+
+// Making sure on phone the same design remains by rotating the html
+// https://stackoverflow.com/a/55064712/9819103
+@media (max-width: 1025px) and (orientation: landscape) {
+    html {
+        // FIXME: Rotating the html makes canvas goes poof
+        transform: rotate(-90deg);  /* Rotate the content container */
+        transform-origin: left top;
+        width: 100vh;   /* Set content width to viewport height */
+        height: 100vw;   /* Set content height to viewport width */
+        overflow-x: hidden;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: black;
+      }
+}
+
+@media (min-width: 1025px){
+    @import 'desktop.scss';
+}

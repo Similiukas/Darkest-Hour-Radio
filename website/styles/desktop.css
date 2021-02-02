@@ -1,0 +1,207 @@
+body {
+  height: 87vh;
+}
+
+#cassette-container, .control, #informacija {
+  display: none;
+}
+
+#canvas {
+  display: block;
+}
+
+.overlay {
+  width: 90%;
+  top: 7vh;
+  left: 5%;
+}
+
+section {
+  height: 100%;
+}
+
+#radio {
+  position: relative;
+  display: block;
+  margin-top: 10vh;
+  max-width: 80%;
+  height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#boombox {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.boombox-buttons {
+  position: absolute;
+  display: block;
+  margin-left: 10px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+.boombox-buttons .button {
+  background-color: #6d7277;
+  display: inline-block;
+  margin-left: 15px;
+  -webkit-box-shadow: 0px -1px 0px #4d5459, 1px 0px 0px #545b61, 1px -2px 0px #4d5459, 2px -1px 0px #545b61, 2px -3px 0px #4d5459, 3px -2px 0px #545b61, 3px -4px 0px #4d5459, 4px -3px 0px #545b61, 4px -5px 0px #4d5459, 5px -4px 0px #545b61, 5px -6px 0px #4d5459, 6px -5px 0px #545b61;
+          box-shadow: 0px -1px 0px #4d5459, 1px 0px 0px #545b61, 1px -2px 0px #4d5459, 2px -1px 0px #545b61, 2px -3px 0px #4d5459, 3px -2px 0px #545b61, 3px -4px 0px #4d5459, 4px -3px 0px #545b61, 4px -5px 0px #4d5459, 5px -4px 0px #545b61, 5px -6px 0px #4d5459, 6px -5px 0px #545b61;
+  overflow: hidden;
+  border: 0;
+  -webkit-transition: all .1s ease-in;
+  transition: all .1s ease-in;
+}
+
+.boombox-buttons .button span {
+  display: block;
+  margin-top: 5%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  line-height: 2.6vmax;
+  font-size: 2.2vmax;
+  height: 100%;
+  top: 50%;
+}
+
+.boombox-buttons .button:active {
+  height: 4vh !important;
+}
+
+.boombox-buttons .button:hover {
+  cursor: pointer;
+  background-color: #61656a;
+}
+
+.boombox-buttons .active {
+  background-color: #55595c;
+  height: 3vh !important;
+}
+
+#HUD {
+  position: absolute;
+  display: block;
+}
+
+#HUD #sound-container {
+  display: block;
+  width: 20%;
+  height: 100%;
+  float: left;
+}
+
+#HUD #sound-container #sound-bar {
+  position: relative;
+  background-color: #3d3c3c;
+  float: left;
+  width: 10px;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+#HUD #sound-container #sound-bar .sound-inner {
+  background-color: #336929;
+  width: 100%;
+  height: 40%;
+  -ms-flex-item-align: end;
+      align-self: flex-end;
+}
+
+#HUD #sound-container #sound-text {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -ms-flex-line-pack: center;
+      align-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  float: left;
+  color: #4e4d4d;
+  width: 60%;
+  height: 100%;
+  text-align: center;
+  font-family: 'Nova Square', cursive;
+  font-size: 0.7vmax;
+}
+
+#HUD #visualize {
+  background-color: #1f1f1f;
+  display: block;
+  width: 56%;
+  height: 100%;
+  float: left;
+  border-radius: 20px;
+}
+
+#HUD #listeners {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  text-align: center;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 24%;
+  height: 100%;
+  float: left;
+  color: #4e4d4d;
+  font-family: 'Nova Square', cursive;
+  font-size: 1vmax;
+}
+
+#HUD #listeners span {
+  background-color: black;
+  color: lightcyan;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  font-size: 1.8vmax;
+  font-family: 'Nova Square', cursive;
+}
+
+#player {
+  position: absolute;
+}
+
+#player img {
+  width: 100%;
+  height: auto;
+}
+
+#player #player-controls span {
+  font-size: 1.5vmax;
+  font-family: 'Nova Square', monospace;
+}
+
+#player #player-controls .song {
+  width: 100%;
+}
+
+#player #player-controls .control {
+  display: none;
+}
+
+footer {
+  height: 3vh;
+}
+/*# sourceMappingURL=desktop.css.map */

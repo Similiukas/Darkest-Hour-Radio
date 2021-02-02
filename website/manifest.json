@@ -1,0 +1,37 @@
+{
+    "short_name": "DHR",
+    "name": "Darkest Hour Radio",
+    "description": "Internet Radio Show",
+    "icons": [
+      {
+        "src": "images/icons-192.png",
+        "type": "image/png",
+        "sizes": "192x192",
+        "purpose": "any maskable"
+      },
+      {
+        "src": "images/icons-256.png",
+        "type": "image/png",
+        "sizes": "256x256",
+        "purpose": "any maskable"
+      },
+      {
+        "src": "images/icons-384.png",
+        "type": "image/png",
+        "sizes": "384x384",
+        "purpose": "any maskable"
+      },
+      {
+        "src": "images/icons-512.png",
+        "type": "image/png",
+        "sizes": "512x512",
+        "purpose": "any maskable"
+      }
+    ],
+    "start_url": "/?home=true",
+    "display": "standalone",
+    "orientation": "portrait",
+    "scope": "/",
+    "theme_color": "#404e59",
+    "background_color": "#475057"
+  }

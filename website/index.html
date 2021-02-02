@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>DHRadio</title>
+
+    <!-- Google analytics -->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FWRX1K7JWK"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-FWRX1K7JWK');
+    </script>
+    <!---------------------->
+
+    <!-- SEO -->    <!-- TODO: Change the domain to the proper url-->
+    <meta name="description" content="Darkest Hour Radio. Pirate radio for your entertainment. Tune in to listen to the best live radio shows in Lithuania from the first national internet radio">
+    <meta name="theme-color" content="#404e59">
+    <link rel="canonical" href="https://dhradio.tk/">
+    <meta property="og:locale" content="lt_LT">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="DHRadio">
+    <meta property="og:description" content="Darkest Hour Radio. Pirate radio for your entertainment. Tune in to listen to the best live radio shows in Lithuania from the first national internet radio">
+    <meta property="og:url" content="https://dhradio.tk/">
+    <!---------> 
+    
+    <link rel="icon" href="images/logo-min.png" type="image/x-icon">
+    <link rel="apple-touch-icon" href="images/logo-min.png">
+    <link rel="stylesheet" href="styles/style.css">
+    
+    <script language="javascript" type="text/javascript" src="script/visualizer.js"></script>
+    <script language="javascript" type="text/javascript" src="script/player.js"></script>
+    
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Nova+Square&display=swap" rel="stylesheet"> 
+    
+    <!-- PWA and service workers -->
+    <link rel="manifest" href="manifest.json" type="text/json">
+    <script>
+        if ("serviceWorker" in navigator){
+            window.addEventListener("load", () => {
+                navigator.serviceWorker.register("/sw.js");
+            });
+        }
+    </script>
+    <!----------------------------->
+
+    <!-- TODO: Take a look at google analytics. Can also use it offline with workbox https://developers.google.com/web/tools/workbox-->
+</head>
+<body onload="setPlayerSize()" onresize="setPlayerSize()">
+
+    <!-- TODO: Need to make this prettier -->
+    <div class="overlay" style="display: none;" onclick="toggleOverlay()">
+        <div id="overlay-text">
+            <h4>Welcome to the <i><strong>Darkest Hour Radio</strong></i>.</h4><h4 style="font-size: smaller;">We pirate for your entertainment.</h4><hr><br><br>
+            <h5>Live radio show schedule:</h5><hr><br>
+            <p>Darkest Hour Radio debut <time>20:00 [2021/02/03]</time></p><br>
+            <br><h6 style="font-size: 1.5vmax;">Contacts</h6><hr><br>
+            <p style="font-size: 0.8vmax;"><br>Darkest Hour Radio is an open source project and the whole code is at github: <a href="https://github.com/Similiukas" target="_blank" rel="noopener noreferrer" style="font-size: .8vmax;">Similiukas</a>
+                <br>If you want to contact the developer team (for song suggestions or if <strong>YOU</strong> want to host a live show on the radio) contact via
+                eMail: lesiimass0@gmail.com</p>
+        </div>
+    </div>
+
+    <div class="overlay timeout" style="display: none;" onclick="toggleOverlay('timeout')">
+        <div id="overlay-text">Are you still listening?</div>
+    </div>
+    
+    <canvas id="canvas"></canvas>
+
+    <section>
+        <div id="cassette-container">
+            <img id="cassette" src="images/cassette-min.png" alt="cassette-image">
+        </div>  <!-- Hide in desktop-->
+
+
+        <div id="radio">
+
+            <div class="boombox-buttons">
+                <!-- Add a sound on button -->
+                <div class="button play" onclick="togglePlay(this, 'play')">
+                    <span class="material-icons">play_arrow</span>
+                </div>
+                <div class="button pause active" onclick="togglePlay(this, 'pause')">
+                    <span class="material-icons">pause</span>
+                </div>
+                <div class="button volume_down" onclick="volumeChange(this, false)">
+                    <span class="material-icons">volume_down</span>
+                </div>
+                <div class="button volume_up" onclick="volumeChange(this, true)">
+                    <span class="material-icons">volume_up</span>
+                </div>
+                <div class="button info" onclick="toggleOverlay('simple')">
+                    <span class="material-icons">info</span>
+                </div>
+            </div>  <!-- Hide on mobile -->
+
+            <div id="HUD">
+                <div id="sound-container">
+                    <div id="sound-bar">
+                        <div class="sound-inner"></div>
+                    </div>
+                    <div id="sound-text">SOUND<br>LEVEL</div>
+                    <div id="sound-bar">
+                        <div class="sound-inner"></div>
+                    </div>
+                </div>
+                <canvas id="visualize"></canvas>
+                <div id="listeners">
+                    Current Listeners:<br>
+                    <span id="listener-count">0</span>
+                </div>
+            </div> <!-- Hide on mobile -->
+
+
+
+            <div id="player">
+                <div id="player-controls">
+                    <!-- TODO: Need to read about it before deployment http://google.github.io/material-design-icons/ -->
+                    <span class="control play material-icons md-48" onclick="togglePlay(this, 'phone')">play_circle</span>   <!-- Hide in desktop-->
+                    <div class="song info">
+                        <span class="name">Loading...</span>
+                        <span class="artist"></span>
+                    </div>
+                    <div class="control sound">
+                        <input oninput="volumeChange(this)" label="volume-slider" type="range" id="volume-slider" min="0" max="100" value="40" orient="vertical">
+                    </div>  <!-- Hide in desktop-->
+                </div>
+                <img id="cover-art" src="images/default.jpeg" alt="Album cover photo">
+                <audio id="player-test" preload="none" crossorigin="anonymous"><source></audio>
+            </div>
+
+            <img id="boombox" src="images/desktop-template-min.png" alt="Old style boombox player">
+
+        </div>
+
+        <div id="informacija">
+            <img src="images/logo-min.png" alt="DHR logo">
+            <p><strong style="font-size: larger;">Darkest Hour Radio</strong><br><subtitle style="font-size: small;">We pirate for your entertainment</subtitle><br><br>
+            Next live show schedule:<br>
+            <strong>Darkest Hour Radio debut <time style="font-size: smaller;">20:00 [2021/02/03]</time></strong></p>
+        </div>
+        <footer><a href="https://github.com/Similiukas" target="_blank" rel="noopener noreferrer">©Similiukas 2021</a></footer>
+    </section>
+
+    <!-- <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
+    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
+    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
+    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
+    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
+    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
+    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
+    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
+    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
+    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
+    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
+    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
+    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
+    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
+    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
+    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
+    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
+    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
+    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
+    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
+    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
+    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
+    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
+    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
+    <audio class="players" preload="none" crossorigin="anonymous"><source></audio> -->
+
+
+    
+        <!-- <h1>Programming in da plane, let's go</h1>
+        <p>Zodziu, css vel pamirsau ir oof, kaip daiktus i vidury padet, neprisimenu, noic. Btw, she wonderful</p> -->
+        
+        
+        <!-- <div id="player">
+          <iframe width="380" height="470" src="https://cdn2.cloudrad.io/dhrradijas/live.ogg/p1.html" frameborder="0"></iframe>
+        </div> -->
+        <!-- <audio controls src="http://34.70.131.207:8000/live.ogg">This is getting a lot more complicated</audio> -->
+        
+
+</body>
+</html>

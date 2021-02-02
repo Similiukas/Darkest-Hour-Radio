@@ -1,0 +1,212 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background: url("images/bakgraunds-min.jpg") no-repeat center center;
+    background-size: cover;
+    background-color: black;
+    height: 100vmax;
+    overflow: hidden;
+}
+
+span, div, a {
+    font-family: 'Roboto', sans-serif;
+}
+
+a{
+    text-decoration: none;
+    color: gray;
+    font-size: 0.8em;
+}
+
+// Removing from desktop
+.boombox-buttons, #boombox, #HUD{
+    display: none;
+}
+#radio {
+    display: block;
+    height: 50vmax;
+}
+// --------------------
+
+.overlay {
+    background-color: rgba(10, 10, 10, 0.6);
+    position: fixed;
+    width: 100%;
+    height: 80%;
+    top: 10vmax;
+    border-radius: 20px;
+    z-index: 2;
+    cursor: pointer;
+    #overlay-text {
+        position: relative;
+        margin-right: 20px;
+        top: 50%;
+        left: 50%;
+        font-size: 3vmax;
+        color: white;
+        text-align: center;
+        transform: translate(-50%,-50%);
+        h5 {
+            font-size: 2vmax;
+            margin-left: 20px;
+            text-align: left;
+        }
+        p {
+            font-size: 1.2vmax;
+            margin-left: 40px;
+            text-align: left;
+        }
+    }
+
+    time {
+        font-size: 1vmax;
+        font-style: italic;
+    }
+
+    hr {
+        opacity: 0.2;
+    }
+}
+
+#canvas {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+section {
+    height: 100vmax;
+}
+
+#cassette-container{
+    position: relative;
+    display: block;
+    height: 22vmax;
+    text-align: center;
+    img {
+        margin-left: auto;
+        margin-right: auto;
+        width: auto;
+        height: 100%;
+    }
+    span {
+        position: absolute;
+        top: 15%;
+        left: 23%;
+    }
+}
+
+#player{
+    display: block;
+    height: 50vmax;
+    margin-right: auto;
+    margin-left: auto;
+    color: white;
+    #player-controls{
+        height: 22%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        span{
+            display: block;
+            margin-top: auto;
+            margin-bottom: auto;
+            width: 100%;
+            float: left;
+            text-align: center;
+            font-size: 20px;
+            &.artist {
+                padding-top: 0;
+                font-size: 15px;
+            }
+        }
+    
+        .control {
+            display: block;
+            width: 25%;
+        }
+        .song {
+            width: 50%;
+            float: left;
+        }
+        .sound {
+            height: 80%;
+        }
+
+        // TODO: Need to make a proper slider
+        #volume-slider {
+            display: block;
+            appearance: slider-vertical;
+            color: yellowgreen;
+            height: 100%;
+            background: #3f1f1f;
+            outline: none;
+            width: 8px;
+            margin-left: auto;
+            margin-right: auto;
+            &::-webkit-slider-thumb{
+                appearance: none;
+                background: #4CAF50;
+                cursor: pointer;
+            }
+            /* For Mozilla */
+            &::-moz-range-thumb{
+                background: #4CAF50;
+                cursor: pointer;
+            }
+        }
+    
+        .material-icons.md-36 { font-size: 36px; }
+        .material-icons.md-48 { font-size: 48px; }
+
+        &::after{           // Don't know if this is needed but clearing float values by https://www.w3schools.com/css/tryit.asp?filename=trycss_website_layout_grid2
+            content: "";
+            display: table;
+            clear: both;
+        }
+    }
+
+    img{
+        position: relative;
+        height: 78%;
+        width: auto;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+#informacija{
+    display: block;
+    height: 24vmax;
+    overflow: auto;
+    img {
+        background-color: tan;
+        max-width: 33%;
+        height: auto;
+        float: left;
+        margin: 10px 10px 0 10px;
+        border-radius: 20px 0 20px 0;
+    }
+    p{
+        color: white;
+        padding-top: 10px;
+        text-align: center;
+        font-size: .8rem;
+        height: 100%;
+        font-family: 'Roboto', sans-serif;
+    }
+}
+
+footer{
+    height: 4vmax;
+    background-color: rgb(0, 0, 0);
+    text-align: center;
+}
