@@ -9,8 +9,8 @@ Internet radio built with [Icecast](https://icecast.org), [liquidsoap](https://w
 
 #
 ## How it's built
-_App architecture diagram:_
-![Radio architecture](DHR_architecture.png)
+_App architecture diagram:_<br>
+![Radio architecture](DHR_architecture.png)<br>
 The goal of the project was to make a free or as cheap as possible internet radio (_as a student, need to save money_).<br>
 The main radio server is hosted on GCP f1-micro server (1vCPU, 0.6 GB RAM) running Debian 10. The main logic is controlled with liquidsoap, which takes in 3 inputs (music files, Mopidy output and Live radio output) and determines which one to output to the Icecast server. The inputs are set in layers, so if a higher level output starts playing, liquidsoap changes to it (with a nice jingle as well). For example, if live DJ connects, then the listeners will hear that, but when he disconnects, it will switch to Mopidy or music files.<br>
 ### The properties of main input layers are:
