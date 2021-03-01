@@ -44,9 +44,36 @@ body {
     width: 90%;
     top: 7vh;
     left: 5%;
+    #overlay-text {
+        #schedule-header {
+            font-size: 2vmax;
+            margin-left: 20px;
+            text-align: left;
+        }
+        p {
+            font-size: 1.2vmax;
+            margin-left: 40px;
+            text-align: left;
+            time {
+                font-size: 1vmax;
+                font-style: italic;
+            }
+        }
+        #schedule-main {
+            margin-left: 80px;
+            line-height: 40px;
+        }
+        #overlay-description {
+            font-size: 0.8vmax;
+        }
+    }
+
+    hr {
+        opacity: 0.2;
+    }
 }
 
-section{
+main {
     height: 100%;
 }
 
@@ -115,17 +142,16 @@ section{
         float: left;
         #sound-bar {
             position: relative;
-            background-color: rgb(61, 60, 60);
+            $yellow2: #999900;
+            $red2: #880b0b;
+            background: linear-gradient(to bottom, $red2, $red2 10%, $yellow2 10%, $yellow2 40%, rgb(49, 78, 32) 40%);
             float: left;
             width: 10px;
             height: 100%;
-            display: flex;
             .sound-inner {
-                background-color: rgb(51, 105, 41);
-                // background: linear-gradient(#f11010 30%, rgb(58, 98, 35) 30%);
+                background-color: rgb(60, 60, 60);
                 width: 100%;
-                height: 40%;
-                align-self: flex-end;
+                height: 0%;
             }
         }
         #sound-text {
@@ -172,7 +198,7 @@ section{
             margin-right: auto;
             text-align: center;
             font-size: 1.8vmax;
-            font-family: 'Nova Square', cursive;
+            font-family: 'Share Tech Mono', monospace;
         }
     }
 }
@@ -189,6 +215,12 @@ section{
         span {
             font-size: 1.5vmax;
             font-family: 'Nova Square', monospace;
+            &.name.small {
+                font-size: 1.3vmax;
+            }
+            &.artist.small {
+                font-size: .8vmax;
+            }
         }
         .song {
             width: 100%;
@@ -199,6 +231,23 @@ section{
     }
 }
 
+#chat-container {
+    right: 0;
+    width: 35vw;
+    .chat #all-messages .message-container {
+        .name {
+            font-size: 1em;
+        }
+        .message {
+            font-size: 1.1em;
+        }
+    }
+        
+}
+
 footer {
+    display: block;
     height: 3vh;
+    background-color: black;
+    text-align: center;
 }

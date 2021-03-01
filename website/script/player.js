@@ -1,5 +1,5 @@
 getInfo();
-var timer = setInterval(getInfo, 12000);    // TODO: Change the interval time
+var timer = setInterval(getInfo, 12000);
 var currentSong = "";
 var offline = true;
 var myTimeout = -1;
@@ -11,22 +11,24 @@ async function getInfo(){
     try {
         var info = await fetch(`https://dhrstream.ml/status-json.xsl?_=${Math.random()}`);
         var json = await info.json();
-        document.getElementById("listener-count").innerHTML = json.icestats.source.listeners;
-        if (currentSong != json.icestats.source.title){         // Would need to add to check if transitioning from pls to mopidy or to live (naming transitioning files simply)
+        let source = Array.isArray(json.icestats.source) ? json.icestats.source[0] : json.icestats.source;
+        document.getElementById("listener-count").textContent = source["listeners"].toString().padStart(2, '0');
+        if (currentSong != source.title){         // Would need to add to check if transitioning from pls to mopidy or to live (naming transitioning files simply)
             changedSong = true;
             offline = false;
-            console.log(json.icestats.source.title);
-            if (json.icestats.source.title != "undefined"){
-                currentSong = json.icestats.source.title;
+            console.log(source.title);
+            if (source.title != "undefined"){
+                currentSong = source.title;
                 updateCoverArt(decodeURI(currentSong));
             }
     
         }
     } catch (err) {
         console.error("Something is WRONG", err);
-        document.getElementsByClassName("name")[0].innerHTML = "Temporarily offline";
-        document.getElementsByClassName("artist")[0].innerHTML = "";
+        document.getElementsByClassName("name")[0].textContent = "Temporarily offline";
+        document.getElementsByClassName("artist")[0].textContent = "";
         document.getElementById("cover-art").src = defaultPhoto;
+        document.getElementById("listener-count").textContent = "00";
         offline = true;     // Change to backup image and reset artist text
     }
 }
@@ -42,10 +44,10 @@ function volumeChange(element, increase){
         audio.volume = element.value / 100;
     }
     else if (increase == true){
-        audio.volume = (audio.volume >= 0.8) ? 1 : audio.volume + 0.1;
+        audio.volume = (audio.volume >= 0.85) ? 1 : audio.volume + 0.1;
     }
     else{
-        audio.volume = (audio.volume <= 0.2) ? 0 : audio.volume - 0.1;
+        audio.volume = (audio.volume <= 0.15) ? 0 : audio.volume - 0.1;
     }
     setSound(audio.volume);
 }
@@ -63,7 +65,7 @@ function setPlayerSize() {
     setButtonsSize(boomboxHeight, boomboxWidth);
 
     const MARGIN_X = 0.15;       // Relative to the left side of radio player (grided portion)
-    const MARGIN_Y = 0.1;       // Margin (in %) of player from grid
+    const MARGIN_Y = 0.1;        // Margin (in %) of player from grid
 
     const gridX = boomboxWidth * .28035;    // Grid horizontal width
     const gridY = boomboxHeight * .77301;   // Grid vertical height
@@ -156,6 +158,7 @@ function togglePlay(element, boomboxButton){
         // Starting visualizations only once
         if (!visualizationInitialized) {
             player.volume = .4;     // On first start, reducing the volume
+            setSound(player.volume);
             if (navigator.userAgent.indexOf("Firefox") > - 1){  // Turning on background visualization only for Mozilla
                 startVisualization();
             }
@@ -165,20 +168,20 @@ function togglePlay(element, boomboxButton){
         
         // Dealing with GUI
         if (boomboxButton == "phone"){
-            element.innerHTML = "pause_circle";
+            element.textContent = "pause_circle";
         }
         else {
             element.classList.add("active");
             document.getElementsByClassName("button pause active")[0].classList.remove("active");
         }
         
-        myTimeout = setTimeout(toggleOverlay, 2.4 * 60 * 1000, "timeout");  // Creating a timeout for 2.5 hours 2.5 * 60 * 1000
+        myTimeout = setTimeout(toggleOverlay, 2.4 * 60 * 60 * 1000, "timeout");  // Creating a timeout for 2.5 hours 2.5 * 60 * 1000
     } else if (!player.paused && boomboxButton != "play"){
         player.pause();
         if (myTimeout != -1)    clearTimeout(myTimeout)                     // Clearing the timeout overlay
         // Dealing with GUI
         if (boomboxButton == "phone"){
-            element.innerHTML = "play_circle";
+            element.textContent = "play_circle";
         }
         else {
             element.classList.add("active");
@@ -190,12 +193,16 @@ function togglePlay(element, boomboxButton){
 
 async function updateCoverArt(song){
     console.log(`Song changed to: ${song}`);
+    let nameDOM = document.getElementsByClassName("name")[0];
+    let artistDOM = document.getElementsByClassName("artist")[0];
 
     let songInfo = parseMetadata(song);     // FIXME: Broadcasting silence sets song to undefined so need to check that and ignore it
-    document.getElementsByClassName("name")[0].innerHTML = songInfo[2];
-    document.getElementsByClassName("artist")[0].innerHTML = `By ${songInfo[1]}`;
+    nameDOM.textContent = songInfo[2];
+    artistDOM.textContent = `By ${songInfo[1]}`;
     console.log(songInfo);
-    // TODO: If song name is very long > 25, reduce font-style, else, set the font-size to default
+    // Reducing font size if title is long
+    songInfo[2].length > 15 ? nameDOM.classList.add("small") : nameDOM.classList.remove("small");
+    songInfo[1].length > 20 ? artistDOM.classList.add("small") : artistDOM.classList.remove("small");
     try {
         if (songInfo.length == 3){
             console.log("Only artist and title");
@@ -211,12 +218,12 @@ async function updateCoverArt(song){
                 addCoverArt(MBID, true);
             }
         }
-        else if ((songInfo[3].match(/.-./g) || []).length >= 2){
+        else if ((songInfo[3].match(/.-./g) || []).length >= 2) {   // If album or MBID has more than '-', then it's MBID
             console.log("MBID: " + songInfo[3].slice(1));
             // Search for cover art by release MBID
             addCoverArt(songInfo[3].slice(1), false);
         }
-        else{                                    // FIXME: Say So - Japanese Version (Single) This is NOT MBID soo In love with E-Girl is also
+        else {      // FIXME: Say So - Japanese Version (Single) This is NOT MBID soo In love with E-Girl is also
             console.log("Album: " + songInfo[3].slice(1));
             // Search for release by artist and album name
             // Search for cover art by release

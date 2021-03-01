@@ -328,7 +328,7 @@ function centerHUD(){
  */
 function setSound(amount){
   for (const element of document.getElementsByClassName("sound-inner")) {
-    element.style.height = (amount * 100).toString() + "%";
+    element.style.height = ((1 - amount) * 100).toString() + "%";
   }
 }
 

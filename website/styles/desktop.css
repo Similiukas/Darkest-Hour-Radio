@@ -16,7 +16,37 @@ body {
   left: 5%;
 }
 
-section {
+.overlay #overlay-text #schedule-header {
+  font-size: 2vmax;
+  margin-left: 20px;
+  text-align: left;
+}
+
+.overlay #overlay-text p {
+  font-size: 1.2vmax;
+  margin-left: 40px;
+  text-align: left;
+}
+
+.overlay #overlay-text p time {
+  font-size: 1vmax;
+  font-style: italic;
+}
+
+.overlay #overlay-text #schedule-main {
+  margin-left: 80px;
+  line-height: 40px;
+}
+
+.overlay #overlay-text #overlay-description {
+  font-size: 0.8vmax;
+}
+
+.overlay hr {
+  opacity: 0.2;
+}
+
+main {
   height: 100%;
 }
 
@@ -98,21 +128,17 @@ section {
 
 #HUD #sound-container #sound-bar {
   position: relative;
-  background-color: #3d3c3c;
+  background: -webkit-gradient(linear, left top, left bottom, from(#880b0b), color-stop(10%, #880b0b), color-stop(10%, #999900), color-stop(40%, #999900), color-stop(40%, #314e20));
+  background: linear-gradient(to bottom, #880b0b, #880b0b 10%, #999900 10%, #999900 40%, #314e20 40%);
   float: left;
   width: 10px;
   height: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 #HUD #sound-container #sound-bar .sound-inner {
-  background-color: #336929;
+  background-color: #3c3c3c;
   width: 100%;
-  height: 40%;
-  -ms-flex-item-align: end;
-      align-self: flex-end;
+  height: 0%;
 }
 
 #HUD #sound-container #sound-text {
@@ -176,7 +202,7 @@ section {
   margin-right: auto;
   text-align: center;
   font-size: 1.8vmax;
-  font-family: 'Nova Square', cursive;
+  font-family: 'Share Tech Mono', monospace;
 }
 
 #player {
@@ -193,6 +219,14 @@ section {
   font-family: 'Nova Square', monospace;
 }
 
+#player #player-controls span.name.small {
+  font-size: 1.3vmax;
+}
+
+#player #player-controls span.artist.small {
+  font-size: .8vmax;
+}
+
 #player #player-controls .song {
   width: 100%;
 }
@@ -201,7 +235,23 @@ section {
   display: none;
 }
 
+#chat-container {
+  right: 0;
+  width: 35vw;
+}
+
+#chat-container .chat #all-messages .message-container .name {
+  font-size: 1em;
+}
+
+#chat-container .chat #all-messages .message-container .message {
+  font-size: 1.1em;
+}
+
 footer {
+  display: block;
   height: 3vh;
+  background-color: black;
+  text-align: center;
 }
 /*# sourceMappingURL=desktop.css.map */

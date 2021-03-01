@@ -5,11 +5,11 @@
 }
 
 body{
-    background: url("images/bakgraunds-min.jpg") no-repeat center center;
+    background: url("../images/bakgraunds-min.jpg") no-repeat center center;
     background-size: cover;
     background-color: black;
     height: 100vmax;
-    overflow: hidden;
+    // overflow: hidden;
 }
 
 span, div, a {
@@ -23,7 +23,7 @@ a{
 }
 
 // Removing from desktop
-.boombox-buttons, #boombox, #HUD{
+.boombox-buttons, #boombox, #HUD, footer{
     display: none;
 }
 #radio {
@@ -50,25 +50,6 @@ a{
         color: white;
         text-align: center;
         transform: translate(-50%,-50%);
-        h5 {
-            font-size: 2vmax;
-            margin-left: 20px;
-            text-align: left;
-        }
-        p {
-            font-size: 1.2vmax;
-            margin-left: 40px;
-            text-align: left;
-        }
-    }
-
-    time {
-        font-size: 1vmax;
-        font-style: italic;
-    }
-
-    hr {
-        opacity: 0.2;
     }
 }
 
@@ -81,14 +62,14 @@ a{
     height: 100%;
 }
 
-section {
+main {
     height: 100vmax;
 }
 
 #cassette-container{
     position: relative;
     display: block;
-    height: 22vmax;
+    height: 20vmax;
     text-align: center;
     img {
         margin-left: auto;
@@ -125,6 +106,12 @@ section {
             &.artist {
                 padding-top: 0;
                 font-size: 15px;
+            }
+            &.name.small {
+                font-size: 15px;
+            }
+            &.artist.small {
+                font-size: 12px;
             }
         }
     
@@ -184,8 +171,9 @@ section {
 }
 
 #informacija{
+    // background-color: blue;
     display: block;
-    height: 24vmax;
+    height: 27vmax;
     overflow: auto;
     img {
         background-color: tan;
@@ -205,8 +193,133 @@ section {
     }
 }
 
-footer{
-    height: 4vmax;
-    background-color: rgb(0, 0, 0);
-    text-align: center;
+$chat-color: #32383d;
+#chat-container {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    .collapse-btn {
+        background-color: $chat-color;
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
+        color: lightgoldenrodyellow;
+        padding: 10px;
+        border-radius: 10px 10px 0 0;
+        border: 0;
+        outline: none;
+        font-family: 'Nova Square', cursive;
+        &:after {   // Adding '+' on the right
+            content: '\002B';
+            color: black;
+            font-weight: bold;
+            float: right;
+            margin-left: 5px;
+        }
+        &.active::after{
+            content: '\2212';
+        }
+        &:hover {
+            background-color: darken($chat-color, 5);
+        }
+    }
+    .chat {
+        overflow: hidden;
+        max-height: 0;
+        transition: max-height 0.2s ease-in-out;
+        #all-messages {
+            background-color: darken(rgba($chat-color, .9), 5) ;
+            height: 60vh;
+            overflow: auto;
+            .message-container {
+                display: block;
+                padding: 20px 5px 10px 5px;
+                border-bottom: 1px solid #383a3a;
+                opacity: 0;
+                transition: opacity .3s ease-in-out;
+                .name {
+                    color: lightcoral;
+                    font-size: .8em;
+                    box-sizing: border-box;
+                    font-family: 'Nova Square', cursive;
+                }
+                .timestamp {
+                    font-size: .6em;
+                    color: dimgray;
+                }
+                .message {
+                    font-size: .9em;
+                    font-family: 'Nova Square', cursive;
+                    color: lightgoldenrodyellow;
+                }
+                &.visible {
+                    opacity: 1;
+                }
+                &.myself {
+                    text-align: right;
+                    .name, .timestamp{
+                        float: right;
+                    }
+                    .timestamp {
+                        line-height: 22px;
+                    }
+                    .message {
+                        display: inline-block;
+                    }
+                }
+            }
+        }
+        form {
+            background-color: $chat-color;
+            padding: 15px 0 15px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            textarea {
+                resize: none;
+                overflow: hidden;
+                border: none;
+                border-bottom: 1px solid rgba(0,0,0,.12);
+                display: inline-block;
+                font-size: .9em;
+                font-family: 'Nova Square', cursive;
+                padding: 4px 0;
+                margin-left: 1%;
+                width: 75%;
+                background: 0;
+                text-align: left;
+                color: lightgoldenrodyellow;
+                &::placeholder {
+                    color: lightcoral;
+                    line-height: 35px;  // 65px
+                }
+                &:focus{
+                    outline: none;
+                    border: 1px solid darken($chat-color, 8);
+                    border-radius: 15px;
+                }
+            }
+            button {
+                display: inline-block;
+                width: 24%;
+                height: 40px;
+                margin-left: 10px;
+                font-family: 'Nova Square', cursive;
+                cursor: pointer;
+                background-color: lighten($chat-color, 5);
+                outline: none;
+                border-radius: 15px;
+                border-color: $chat-color;
+                color: blanchedalmond;
+                transition: all .2s ease-in-out;
+                &:disabled {
+                    background-color: darken($chat-color, 5);
+                    color: black;
+                }
+                &:hover:enabled{
+                    background-color: darken($chat-color, 1);
+                }
+            }
+        }
+    }
 }

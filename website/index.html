@@ -2,30 +2,46 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, height=500, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>DHRadio</title>
 
     <!-- Google analytics -->
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FWRX1K7JWK"></script>
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-FWRX1K7JWK"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
 
         gtag('config', 'G-FWRX1K7JWK');
-    </script>
+    </script> -->
+    <!-- TODO: Need to uncomment this -->
     <!---------------------->
 
-    <!-- SEO -->    <!-- TODO: Change the domain to the proper url-->
-    <meta name="description" content="Darkest Hour Radio. Pirate radio for your entertainment. Tune in to listen to the best live radio shows in Lithuania from the first national internet radio">
+    <!-- Disable tap highlight on IE -->
+    <meta name="msapplication-tap-highlight" content="no">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Darkest Hour Radio">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Darkest Hour Radio">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#404e59">
+
+    <!-- SEO -->
+    <meta name="description" content="Darkest Hour Radio. Pirate radio for your entertainment. Tune in to listen to the best live radio shows in Lithuania from the first national independent internet radio">
     <meta name="theme-color" content="#404e59">
+    <meta name="keywords" content="DHR, Darkest Hour Radio, dhradio, Radijas, Edvardas Brijūnas, radijo svetainė">
     <link rel="canonical" href="https://dhradio.tk/">
     <meta property="og:locale" content="lt_LT">
     <meta property="og:type" content="website">
     <meta property="og:title" content="DHRadio">
-    <meta property="og:description" content="Darkest Hour Radio. Pirate radio for your entertainment. Tune in to listen to the best live radio shows in Lithuania from the first national internet radio">
+    <meta property="og:image" content="https://dhradio.tk/images/logo-min.png">
+    <meta property="og:description" content="Darkest Hour Radio. Pirate radio for your entertainment. Tune in to listen to the best live radio shows in Lithuania from the first national independent internet radio">
     <meta property="og:url" content="https://dhradio.tk/">
     <!---------> 
     
@@ -37,8 +53,8 @@
     <script language="javascript" type="text/javascript" src="script/player.js"></script>
     
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Nova+Square&display=swap" rel="stylesheet"> 
-    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Nova+Square&family=Share+Tech+Mono&display=swap" rel="stylesheet"> 
+
     <!-- PWA and service workers -->
     <link rel="manifest" href="manifest.json" type="text/json">
     <script>
@@ -50,7 +66,8 @@
     </script>
     <!----------------------------->
 
-    <!-- TODO: Take a look at google analytics. Can also use it offline with workbox https://developers.google.com/web/tools/workbox-->
+    <!-- First input delay polyfill library -->
+    <script type="text/javascript">!function(n,e){var t,o,i,c=[],f={passive:!0,capture:!0},r=new Date,a="pointerup",u="pointercancel";function p(n,c){t||(t=c,o=n,i=new Date,w(e),s())}function s(){o>=0&&o<i-r&&(c.forEach(function(n){n(o,t)}),c=[])}function l(t){if(t.cancelable){var o=(t.timeStamp>1e12?new Date:performance.now())-t.timeStamp;"pointerdown"==t.type?function(t,o){function i(){p(t,o),r()}function c(){r()}function r(){e(a,i,f),e(u,c,f)}n(a,i,f),n(u,c,f)}(o,t):p(o,t)}}function w(n){["click","mousedown","keydown","touchstart","pointerdown"].forEach(function(e){n(e,l,f)})}w(n),self.perfMetrics=self.perfMetrics||{},self.perfMetrics.onFirstInputDelay=function(n){c.push(n),s()}}(addEventListener,removeEventListener);</script>
 </head>
 <body onload="setPlayerSize()" onresize="setPlayerSize()">
 
@@ -58,10 +75,13 @@
     <div class="overlay" style="display: none;" onclick="toggleOverlay()">
         <div id="overlay-text">
             <h4>Welcome to the <i><strong>Darkest Hour Radio</strong></i>.</h4><h4 style="font-size: smaller;">We pirate for your entertainment.</h4><hr><br><br>
-            <h5>Live radio show schedule:</h5><hr><br>
-            <p>Darkest Hour Radio debut <time>20:00 [2021/02/03]</time></p><br>
-            <br><h6 style="font-size: 1.5vmax;">Contacts</h6><hr><br>
-            <p style="font-size: 0.8vmax;"><br>Darkest Hour Radio is an open source project and the whole code is at github: <a href="https://github.com/Similiukas/Darkest-Hour-Radio" target="_blank" rel="noopener noreferrer" style="font-size: .8vmax;">Similiukas</a>
+            <h5 id="schedule-header">Live radio show schedule:</h5><hr><br>
+            <p id="schedule-main">Evening Vibes <time>21:00 [2021/03/03]</time><br>
+                                  Darkest Hour <time>20:00 [2021/03/05]</time>
+            </p><br>
+            <br><h6 style="font-size: 1.5vmax;">Contacts</h6><hr>
+            <p id="overlay-description"><br>Darkest Hour Radio is an open source project and the whole code is at github: <a href="https://github.com/Similiukas/Darkest-Hour-Radio" target="_blank" rel="noopener noreferrer" style="font-size: .8vmax;">Similiukas</a>
+                <br>Chat is completely anonymous and unmoderated. It's a wild west internet like it used to be before. So feel free to express your opinion and talk with other listeners.
                 <br>If you want to contact the developer team (for song suggestions or if <strong>YOU</strong> want to host a live show on the radio) contact via
                 eMail: lesiimass0@gmail.com</p>
         </div>
@@ -73,7 +93,7 @@
     
     <canvas id="canvas"></canvas>
 
-    <section>
+    <main>
         <div id="cassette-container">
             <img id="cassette" src="images/cassette-min.png" alt="cassette-image">
         </div>  <!-- Hide in desktop-->
@@ -143,10 +163,75 @@
             <img src="images/logo-min.png" alt="DHR logo">
             <p><strong style="font-size: larger;">Darkest Hour Radio</strong><br><subtitle style="font-size: small;">We pirate for your entertainment</subtitle><br><br>
             Next live show schedule:<br>
-            <strong>Darkest Hour Radio debut <time style="font-size: smaller;">20:00 [2021/02/03]</time></strong></p>
+            <strong>Evening Vibes número dos<br><time style="font-size: smaller;">21:00 [2021/03/03]</time></strong></p>
         </div>
+
+        <div id="chat-container">
+            <button class="collapse-btn" type="button" onclick="openChat(this)">Open chat</button>
+
+            <div class="chat">
+                <div id="all-messages">
+                    <div class="message-container visible">
+                        <div class="name">Name of person</div>
+                        <span class="timestamp">[2020/02/12]</span>
+                        <span class="message">Text of the message is here</span>
+                    </div>
+                    <div class="message-container visible">
+                        <span class="name">Name of person</span>
+                        <span class="timestamp">[2020/02/12]</span>
+                        <span class="message">Text of the message is 😄 here which is really really really reallyreally really really reallyreally really really reallyreally really really really long</span>
+                    </div>
+                    <div class="message-container visible">
+                        <span class="name">Name of person</span>
+                        <span class="timestamp">[2020/02/12]</span>
+                        <span class="message">Text of the message is 😄 here which is really really really reallyreally really really reallyreally really really reallyreally really really really long</span>
+                    </div>
+                    <div class="message-container visible">
+                        <span class="name">Name of person</span>
+                        <span class="timestamp">[2020/02/12]</span>
+                        <span class="message">Text of the message is 😄 here which is really really really reallyreally really really reallyreally really really reallyreally really really really long</span>
+                    </div>
+                    <div class="message-container visible">
+                        <span class="name">Name of person</span>
+                        <span class="timestamp">[2020/02/12]</span>
+                        <span class="message">Text of the message is 😄 here which is really really really reallyreally really really reallyreally really really reallyreally really really really long</span>
+                    </div>
+                    <div class="message-container visible">
+                        <span class="name">Name of person</span>
+                        <span class="timestamp">[2020/02/12]</span>
+                        <span class="message">Text of the message is 😄 lly long</span>
+                    </div>
+                    <div class="message-container visible">
+                        <span class="name">Name of person</span>
+                        <span class="timestamp">[2020/02/12]</span>
+                        <span class="message">Text of the message is 😄 here which is really really really reallyreally really really reallyreally really really reallyreally really really really long</span>
+                    </div>
+                    <div class="message-container visible">
+                        <span class="name">Name of person</span>
+                        <sup class="timestamp">[50 minutes ago]</sup>
+                        <span class="message">Text of the message is 😄 here which is really really really reallyreally really really reallyreally really really reallyreally really really really long</span>
+                    </div>
+                    <div class="message-container myself visible">
+                        <span class="name">Name of person</span>
+                        <span class="timestamp">[50 minutes ago]</span>
+                        <span class="message">Text of the message is 😄 herellong</span>
+                    </div>
+                    <div class="message-container myself visible">
+                        <span class="name">Name of person</span>
+                        <span class="timestamp">[50 minutes ago]</span>
+                        <span class="message">Text of the message is 😄 here which is really really really reallyreally really really reallyreally really really reallyreally really really really long</span>
+                    </div>
+                </div>
+                <form id="message-form" action="#">
+                    <textarea id="message" type="text" name="message" placeholder="Message..." maxlength="200"></textarea>
+                    <button id="submit" type="submit" disabled>Chat</button>
+                </form>
+            </div>
+
+        </div>
+        
         <footer><a href="https://github.com/Similiukas" target="_blank" rel="noopener noreferrer">©Similiukas 2021</a></footer>
-    </section>
+    </main>
 
     <!-- <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
     <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
@@ -185,6 +270,15 @@
         </div> -->
         <!-- <audio controls src="http://34.70.131.207:8000/live.ogg">This is getting a lot more complicated</audio> -->
         
+    <!-- Import and configure the Firebase SDK -->
+    <!-- These scripts are made available when the app is served or deployed on Firebase Hosting -->
+    <script src="/__/firebase/8.2.9/firebase-app.js"></script>
+    <script src="/__/firebase/8.2.9/firebase-analytics.js"></script>
+    <script src="/__/firebase/8.2.9/firebase-firestore.js"></script>
+    <script src="/__/firebase/8.2.9/firebase-performance.js"></script>
+    <!-- TODO: Remove emulator -->
+    <script src="/__/firebase/init.js?useEmulator=true"></script>
 
+    <script src="script/chat.js"></script>
 </body>
 </html>
