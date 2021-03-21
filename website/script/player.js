@@ -1,25 +1,25 @@
 getInfo();
-var timer = setInterval(getInfo, 12000);
+var timer = setInterval(getInfo, 14000);
 var currentSong = "";
 var offline = true;
 var myTimeout = -1;
 var visualizationInitialized = false;
-let defaultPhoto = "images/logo-min.png";
+const defaultPhoto = "images/logo-min.png";
+var weAreLive = false;
 
+// TODO Need to minimize the new template photo
 
 async function getInfo(){
     try {
-        var info = await fetch(`https://dhrstream.ml/status-json.xsl?_=${Math.random()}`);
+        var info = await fetch(`https://stream.dhradio.tk/status-json.xsl?_=${Math.random()}`);
         var json = await info.json();
         let source = Array.isArray(json.icestats.source) ? json.icestats.source[0] : json.icestats.source;
         document.getElementById("listener-count").textContent = source["listeners"].toString().padStart(2, '0');
         if (currentSong != source.title){         // Would need to add to check if transitioning from pls to mopidy or to live (naming transitioning files simply)
-            changedSong = true;
             offline = false;
-            console.log(source.title);
-            if (source.title != "undefined"){
+            if (source.title != "undefined" || source.title != "Unknown" || source.title != "$live$"){
                 currentSong = source.title;
-                updateCoverArt(decodeURI(currentSong));
+                updateCoverArt(decodeURI(currentSong));     // TODO I dunno if decodeURI is actually needed tho
             }
     
         }
@@ -53,77 +53,46 @@ function volumeChange(element, increase){
 }
 
 /**
- * Settings the size and positions the main audio player on boombox
- */
-function setPlayerSize() {
-    centerHUD();
-
-    let player = document.getElementById("player");
-    let boomboxCSS = getComputedStyle(document.getElementById("boombox"));
-    let [boomboxHeight, boomboxWidth] = [parseFloat(boomboxCSS.height), parseFloat(boomboxCSS.width)];
-    
-    setButtonsSize(boomboxHeight, boomboxWidth);
-
-    const MARGIN_X = 0.15;       // Relative to the left side of radio player (grided portion)
-    const MARGIN_Y = 0.1;        // Margin (in %) of player from grid
-
-    const gridX = boomboxWidth * .28035;    // Grid horizontal width
-    const gridY = boomboxHeight * .77301;   // Grid vertical height
-
-    const horizontalMargin = gridX * MARGIN_X;  // Margin distance from grid edges to player
-    const distanceFromTop = boomboxHeight - gridY; // Distance from boombox top to the grid part
-    const verticalMargin = gridY * MARGIN_Y;    // Margin from grid top and bottom to player
-
-    player.style.marginLeft = horizontalMargin.toString() + "px";   // Putting player left of grid
-    player.style.width = (gridX - 2 * horizontalMargin).toString() + "px";  // Setting player's width
-    player.style.marginTop = (distanceFromTop + verticalMargin).toString() + "px";
-    player.style.height = (gridY - 2 * verticalMargin).toString() + "px";
-}
-
-/**
- * Sets boombox buttons position and size
- * @param {float} boomboxHeight Boombox height in px
- * @param {float} boomboxWidth Boombox width in px
- */
-function setButtonsSize(boomboxHeight, boomboxWidth){
-    let buttons = document.getElementsByClassName("boombox-buttons")[0];
-
-    const buttonHeight = .08;    // .10042
-
-    for (const button of buttons.children) {
-        button.style.height = (boomboxHeight * buttonHeight).toString() + "px";
-        button.style.width = (boomboxWidth * .04273).toString() + "px";
-    }
-
-    buttons.style.marginTop = (boomboxHeight * .01569 - boomboxHeight * buttonHeight).toString() + "px";
-}
-
-/**
  * Turning off and on overlay
  * @param {string} overlayType Type of overlay (either timeout or other)
  */
-function toggleOverlay(overlayType){
-    let element = (overlayType == "timeout") ? document.getElementsByClassName("overlay")[1] : document.getElementsByClassName("overlay")[0];
+function toggleOverlay(overlayID){
+    console.log("toogle overlay", overlayID);
+    let element = document.getElementsByClassName("overlay")[overlayID];
     element.style.display = (element.style.display == "none") ? "block" : "none";
 
-    if (overlayType == "timeout" && !document.getElementById("player-test").paused){    // Simulating player pause
+    if (overlayID == 2 && !document.getElementById("player-test").paused){    // Simulating player pause
         if (window.innerWidth < 1025){
             togglePlay(document.getElementsByClassName("control play")[0], "phone");
         }
         else {
             togglePlay(document.getElementsByClassName("pause")[0], "pause");
-            document.getElementsByClassName("play")[0].style.pointerEvents = "none";    // Not letting trigger togglePlay while overlay is on
+            document.getElementsByClassName("boombox-buttons")[0].style.pointerEvents = "none";    // Not letting trigger togglePlay while overlay is on
         }
     }
-    else if (overlayType == "timeout"){                                                 // Simulating player play
+    else if (overlayID == 2){                                                 // Simulating player play
         if (window.innerWidth < 1025) {
             togglePlay(document.getElementsByClassName("control play")[0], "phone");
         }
         else {
             togglePlay(document.getElementsByClassName("play")[0], "play");
-            document.getElementsByClassName("play")[0].style.pointerEvents = "auto";
+            document.getElementsByClassName("boombox-buttons")[0].style.pointerEvents = "auto";
         }
     }
+}
+
+
+function toggleShow(showID){
+    let element = document.getElementsByClassName("podcast-show")[showID];
+    for (const element of document.getElementsByClassName("podcast-show")) {
+        // element.style.display = "none";
+        element.classList.remove("active");
+    }
+    // element.style.display = "block";
+    element.classList.add("active");
+    // flkty.resize();
+    console.log("TOGGLED", showID);
+    carResize(showID);
 }
 
 /**
@@ -148,11 +117,11 @@ function togglePlay(element, boomboxButton){
     //     player.load();
     //     player.play();
     // }
-    // TODO: Make play and pause fade in and out very quickly (Something like Spotify)
+    // TODO Make play and pause fade in and out very quickly (Something like Spotify)
     var player = document.getElementById("player-test");
     if (!offline && player.paused && boomboxButton != "pause"){
         // Putting random numbers makes a different url so audio doesn't buffer and always loads new content
-        player.firstChild.src = `https://dhrstream.ml/playlist.ogg?_=${Math.random()}`;
+        player.firstChild.src = `https://stream.dhradio.tk/playlist.ogg?_=${Math.random()}`;
         player.load();
         player.play();
         // Starting visualizations only once
@@ -175,7 +144,7 @@ function togglePlay(element, boomboxButton){
             document.getElementsByClassName("button pause active")[0].classList.remove("active");
         }
         
-        myTimeout = setTimeout(toggleOverlay, 2.4 * 60 * 60 * 1000, "timeout");  // Creating a timeout for 2.5 hours 2.5 * 60 * 1000
+        myTimeout = setTimeout(toggleOverlay, 2.1 * 60 * 60 * 1000, 2);  // Creating a timeout for 2.1 hours 2.1 * 60 * 60 * 1000
     } else if (!player.paused && boomboxButton != "play"){
         player.pause();
         if (myTimeout != -1)    clearTimeout(myTimeout)                     // Clearing the timeout overlay
@@ -196,50 +165,68 @@ async function updateCoverArt(song){
     let nameDOM = document.getElementsByClassName("name")[0];
     let artistDOM = document.getElementsByClassName("artist")[0];
 
-    let songInfo = parseMetadata(song);     // FIXME: Broadcasting silence sets song to undefined so need to check that and ignore it
+    let songInfo = parseMetadata(song);     // FIXME Broadcasting silence sets song to undefined so need to check that and ignore it
     nameDOM.textContent = songInfo[2];
     artistDOM.textContent = `By ${songInfo[1]}`;
     console.log(songInfo);
     // Reducing font size if title is long
     songInfo[2].length > 15 ? nameDOM.classList.add("small") : nameDOM.classList.remove("small");
     songInfo[1].length > 20 ? artistDOM.classList.add("small") : artistDOM.classList.remove("small");
-    try {
-        if (songInfo.length == 3){
-            console.log("Only artist and title");
-            // Search recoding by artist and recoding
-            // Search for release from recording IDs
-            // Search for cover art by filtered release
-            let recordings = await searchRecordings(songInfo[1], songInfo[2]);
-            let MBID = filterRadios(songInfo[1], recordings["recordings"]);
-            if (MBID == "NONE"){
-                document.getElementsByTagName("img")[1].src = defaultPhoto;
-            }
-            else{
-                addCoverArt(MBID, true);
-            }
-        }
-        else if ((songInfo[3].match(/.-./g) || []).length >= 2) {   // If album or MBID has more than '-', then it's MBID
-            console.log("MBID: " + songInfo[3].slice(1));
-            // Search for cover art by release MBID
-            addCoverArt(songInfo[3].slice(1), false);
-        }
-        else {      // FIXME: Say So - Japanese Version (Single) This is NOT MBID soo In love with E-Girl is also
-            console.log("Album: " + songInfo[3].slice(1));
-            // Search for release by artist and album name
-            // Search for cover art by release
-            let MBID = await searchRelease(songInfo[1], songInfo[3].slice(1));
-            addCoverArt(MBID, true);
-        }
-        // else console.error("Uhm, something went wrong. Most probably the DJ or Admin set the audio metadata wrong. Sorry :/", songInfo);
-    } catch (error) {
-        console.error(`There was an error trying to get cover art for this [${songInfo}] audio.\nSwitching to default photo`);
-        document.getElementById("cover-art").src = defaultPhoto;
-    }
+    // try {
+    //     if (songInfo.length == 3){
+    //         console.log("Only artist and title");
+    //         // Search recoding by artist and recoding
+    //         // Search for release from recording IDs
+    //         // Search for cover art by filtered release
+    //         let recordings = await searchRecordings(songInfo[1], songInfo[2]);
+    //         let MBID = filterRadios(songInfo[1], recordings["recordings"]);
+    //         if (MBID == "NONE"){
+    //             document.getElementsByTagName("img")[1].src = defaultPhoto;
+    //         }
+    //         else{
+    //             addCoverArt(MBID, true);
+    //         }
+    //     }
+    //     else if ((songInfo[3].match(/.-./g) || []).length >= 2) {   // If album or MBID has more than 2 '-', then it's MBID
+    //         console.log("MBID: " + songInfo[3].slice(1));
+    //         // Search for cover art by release MBID
+    //         addCoverArt(songInfo[3].slice(1), false);
+    //     }
+    //     else {      // FIXME Say So - Japanese Version (Single) This is NOT MBID soo In love with E-Girl is also
+    //         console.log("Album: " + songInfo[3].slice(1));
+    //         // Search for release by artist and album name
+    //         // Search for cover art by release
+    //         let MBID = await searchRelease(songInfo[1], songInfo[3].slice(1));
+    //         addCoverArt(MBID, true);
+    //     }
+    //     // else console.error("Uhm, something went wrong. Most probably the DJ or Admin set the audio metadata wrong. Sorry :/", songInfo);
+    // } catch (error) {
+    //     console.error(`There was an error trying to get cover art for this [${songInfo}] audio.\nSwitching to default photo`);
+    //     document.getElementById("cover-art").src = defaultPhoto;
+    // }
 }
 
+
+// (.+) - (.+) #(.+) ((\$live\$)?)+
+// (.+) - (.+) (#.+[^\\$live\\$])(?: \\$live\\$)?
+/**
+ * Parses data from Icecast source and splits into artist, title, mbid and checks if dj has connected
+ * @param {String} data title of the Icecast source
+ * @returns Returns the parsed data as groups (artist, title, album)
+ */
 function parseMetadata(data){
-    let parsedData = data.match("(.+) - (.+) (#.+)");
-    if (parsedData === null) { return data.match("(.+) - (.+)"); }   // Group 3 is missing (no added album or MBID)
+    if (data.slice(-6) === "$live$"){
+        console.log("We are live");
+        document.querySelector('.live-indicator-blink').classList.add("on");
+        weAreLive = true;
+        data = data.slice(0, -7);
+    }   // Fuck regex, hate it, just burn, just fuck that. Would be nicer to add another capturing group which catches $live$ but noo, regex has to suck >:C
+    else {
+        weAreLive = false;
+        document.querySelector('.live-indicator-blink').classList.remove("on");
+    }
+    let parsedData = data.match("(.+) - (.+) #(.+)");
+    if (parsedData === null)    return data.match("(.+) - (.+)");   // Group 3 is missing (no added album or MBID)
     return parsedData;
 }
 
@@ -316,4 +303,10 @@ async function addCoverArt(MBID, group){
         photo = defaultPhoto;
     }
     document.getElementsByTagName("img")[1].src = photo;
+}
+
+
+function clickedpod(){
+    // Basically then has a confirmation if you want to listen to this one
+    console.log("pod", new Date().getSeconds());
 }

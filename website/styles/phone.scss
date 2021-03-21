@@ -23,7 +23,7 @@ a{
 }
 
 // Removing from desktop
-.boombox-buttons, #boombox, #HUD, footer{
+.boombox-buttons, #boombox, #HUD, #live-indicator, #radio-description-container, footer{
     display: none;
 }
 #radio {
@@ -36,20 +36,30 @@ a{
     background-color: rgba(10, 10, 10, 0.6);
     position: fixed;
     width: 100%;
-    height: 80%;
+    height: 83%;
     top: 10vmax;
     border-radius: 20px;
     z-index: 2;
     cursor: pointer;
+    font-size: 2.5vmax;
+    color: white;
+    text-align: center;
+    // display: flex;
+    // flex-direction: column;
     #overlay-text {
-        position: relative;
-        margin-right: 20px;
-        top: 50%;
-        left: 50%;
-        font-size: 3vmax;
-        color: white;
-        text-align: center;
-        transform: translate(-50%,-50%);
+        // width: 100%;
+        // position: relative;
+        // margin-right: 20px;
+        // top: 50%;
+        // left: 50%;
+        // transform: translate(-50%,-50%);
+        // align-self: flex-end;
+        // flex-grow: 1;
+        position: absolute;
+        bottom: 20px;
+        width: 100%;
+        // height: 100%;
+        // background-color: rgb(131, 131, 82);
     }
 }
 
@@ -60,6 +70,7 @@ a{
     left: 0;
     width: 100%;
     height: 100%;
+    pointer-events: none;
 }
 
 main {
@@ -236,7 +247,7 @@ $chat-color: #32383d;
                 padding: 20px 5px 10px 5px;
                 border-bottom: 1px solid #383a3a;
                 opacity: 0;
-                transition: opacity .3s ease-in-out;
+                transition: opacity .4s ease-in-out;
                 .name {
                     color: lightcoral;
                     font-size: .8em;

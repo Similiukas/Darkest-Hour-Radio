@@ -46,6 +46,95 @@ body {
   opacity: 0.2;
 }
 
+.overlay.podcasts {
+  cursor: initial;
+  background-color: rgba(10, 10, 10, 0.9);
+}
+
+.overlay.podcasts #podcast-description {
+  padding-top: 20px;
+  width: 100%;
+  height: 30%;
+}
+
+.overlay.podcasts #podcast-description p {
+  font-size: 30px;
+}
+
+.overlay.podcasts #podcast-main {
+  width: 100%;
+  height: 70%;
+}
+
+.overlay.podcasts #podcast-main #podcast-show-buttons {
+  height: 10%;
+  text-align: left;
+  margin-left: 20px;
+}
+
+.overlay.podcasts #podcast-main #podcast-show-buttons span {
+  font-size: 1.5rem;
+  border: 5px solid gray;
+  border-bottom: 0;
+  cursor: pointer;
+}
+
+.overlay.podcasts #podcast-main #podcast-show-description {
+  height: 25%;
+  font-size: 1.2rem;
+  text-align: left;
+  padding: 20px 0 0 20px;
+  border: solid gray;
+  border-width: 1px 0 1px 0;
+}
+
+.overlay.podcasts #podcast-main #podcast-recordings-container {
+  width: 100%;
+  height: 65%;
+}
+
+.overlay.podcasts #podcast-main #podcast-recordings-container .podcast-show {
+  height: 100%;
+  display: none;
+}
+
+.overlay.podcasts #podcast-main #podcast-recordings-container .podcast-show.active {
+  display: block;
+}
+
+.overlay.podcasts #podcast-main #podcast-recordings-container #podcast-recording {
+  background-color: darkgreen;
+  width: 20%;
+  height: 100%;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.overlay.podcasts #podcast-main #podcast-recordings-container #podcast-recording img {
+  max-width: 100%;
+  height: auto;
+}
+
+.overlay.podcasts #podcast-main #podcast-recordings-container #podcast-recording div {
+  background-color: peru;
+}
+
+.overlay.podcasts #podcast-main #podcast-recordings-container #podcast-recording #recording-name {
+  font-size: 1.2rem;
+}
+
+.overlay.podcasts #podcast-main #podcast-recordings-container #podcast-recording #recording-length {
+  font-size: 1rem;
+}
+
+.overlay.podcasts #podcast-main #podcast-recordings-container #podcast-recording #recording-date {
+  font-size: 1rem;
+}
+
+.overlay.podcasts #podcast-main #podcast-recordings-container #podcast-recording.is-selected {
+  background-color: darkkhaki;
+}
+
 main {
   height: 100%;
 }
@@ -203,6 +292,64 @@ main {
   text-align: center;
   font-size: 1.8vmax;
   font-family: 'Share Tech Mono', monospace;
+}
+
+#live-indicator {
+  background-color: #0b0b0b;
+  position: absolute;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border-radius: 50%;
+}
+
+#live-indicator .live-indicator-blink {
+  background-color: #b61414;
+  width: 65%;
+  height: 65%;
+  border-radius: 50%;
+  opacity: .25;
+}
+
+#live-indicator .live-indicator-blink.on {
+  -webkit-animation: blink-animation 7s infinite;
+          animation: blink-animation 7s infinite;
+}
+
+@-webkit-keyframes blink-animation {
+  0% {
+    opacity: 1;
+  }
+  75% {
+    opacity: .25;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes blink-animation {
+  0% {
+    opacity: 1;
+  }
+  75% {
+    opacity: .25;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+#radio-description-container {
+  position: absolute;
+  display: block;
+  background-color: white;
 }
 
 #player {

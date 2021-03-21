@@ -54,6 +54,8 @@
     
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Nova+Square&family=Share+Tech+Mono&display=swap" rel="stylesheet"> 
+    <!-- Carousel style sheet -->
+    <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
 
     <!-- PWA and service workers -->
     <link rel="manifest" href="manifest.json" type="text/json">
@@ -71,13 +73,15 @@
 </head>
 <body onload="setPlayerSize()" onresize="setPlayerSize()">
 
-    <!-- TODO: Need to make this prettier -->
-    <div class="overlay" style="display: none;" onclick="toggleOverlay()">
+    <!-- TODO Need to make this prettier -->
+    <!-- Also say, that past recordings are in _podcast_ -->
+    <div class="overlay" style="display: none" onclick="toggleOverlay(0)">
+        <h3 style="padding-top: 20px;">Welcome to the <i><strong>Darkest Hour Radio</strong></i></h3>
+        <h5>We pirate for your entertainment.</h5>
         <div id="overlay-text">
-            <h4>Welcome to the <i><strong>Darkest Hour Radio</strong></i>.</h4><h4 style="font-size: smaller;">We pirate for your entertainment.</h4><hr><br><br>
             <h5 id="schedule-header">Live radio show schedule:</h5><hr><br>
             <p id="schedule-main">Evening Vibes <time>21:00 [2021/03/03]</time><br>
-                                  Darkest Hour <time>20:00 [2021/03/05]</time>
+                                  Darkest Hour <time>21:00 [2021/03/05]</time>
             </p><br>
             <br><h6 style="font-size: 1.5vmax;">Contacts</h6><hr>
             <p id="overlay-description"><br>Darkest Hour Radio is an open source project and the whole code is at github: <a href="https://github.com/Similiukas/Darkest-Hour-Radio" target="_blank" rel="noopener noreferrer" style="font-size: .8vmax;">Similiukas</a>
@@ -87,10 +91,84 @@
         </div>
     </div>
 
-    <div class="overlay timeout" style="display: none;" onclick="toggleOverlay('timeout')">
-        <div id="overlay-text">Are you still listening?</div>
+    <div class="overlay podcasts" style="display: none;">
+        <div id="podcast-description">
+            <h3>Something here podcasts</h3>
+            <p>This is some description which probably has some text about oh, you missed, well do not worry we got you so here are<br>the things and ye, it also has breaks</p>
+        </div>
+        <div id="podcast-main">
+            <div id="podcast-show-buttons">
+                <span onclick="toggleShow(0)">Button here</span>
+                <span onclick="toggleShow(1)">Another show</span>
+                <span>Third show</span>
+            </div>
+            <div id="podcast-show-description">
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptate aliquid molestias <br>praesentium tenetur? Ut harum dicta blanditiis fuga ea sequi dele<br>ctus minus laudantium, ipsum eos vitae odio, molestias vero aliquam?
+            </div>
+            <!-- TODO while there aren't enough shows to fill the screen width, don't pust wrapAround. Also check if contain: true is needed -->
+            <div id="podcast-recordings-container">
+                <!-- data-flickity='{"cellAlign": "center", "contain": true, "freeScroll": true, "wrapAround": true }' -->
+                <div class="podcast-show active"  data-flickity='{"cellAlign": "center", "contain": true, "freeScroll": true, "wrapAround": true }'>
+                    <div id="podcast-recording" onclick="clickedpod()">
+                        <img id="recording-photo" src="images/cassette-min.png" alt="some alt">
+                        <div id="recording-name">Welcome to recording 1</div>
+                        <div id="recording-length">Listeners: 123</div>
+                        <div id="recording-length">Length: 1:47:12</div>
+                        <div id="recording-date">Date: 2021/04/12</div>
+                    </div>
+                    <div id="podcast-recording" onclick="clickedpod()">
+                        <img id="recording-photo" src="images/cassette-min.png" alt="some alt">
+                        <div id="recording-name">Welcome to recording 2</div>
+                        <div id="recording-length">Listeners: 123</div>
+                        <div id="recording-length">Length: 1:47:12</div>
+                        <div id="recording-date">Date: 2021/04/12</div>
+                    </div>
+                    <div id="podcast-recording" onclick="clickedpod()">
+                        <img id="recording-photo" src="images/cassette-min.png" alt="some alt">
+                        <div id="recording-name">Welcome to recording 3</div>
+                        <div id="recording-length">Listeners: 123</div>
+                        <div id="recording-length">Lenght: 1:47:12</div>
+                        <div id="recording-date">Date: 2021/04/12</div>
+                    </div>
+                    <div id="podcast-recording" onclick="clickedpod()">
+                        <img id="recording-photo" src="images/cassette-min.png" alt="some alt">
+                        <div id="recording-name">Welcome to recording 4</div>
+                        <div id="recording-length">Listeners: 123</div>
+                        <div id="recording-length">Lenght: 1:47:12</div>
+                        <div id="recording-date">Date: 2021/04/12</div>
+                    </div>
+                    <div id="podcast-recording" onclick="clickedpod()">
+                        <img id="recording-photo" src="images/cassette-min.png" alt="some alt">
+                        <div id="recording-name">Welcome to recording 5</div>
+                        <div id="recording-length">Listeners: 123</div>
+                        <div id="recording-length">Lenght: 1:47:12</div>
+                        <div id="recording-date">Date: 2021/04/12</div>
+                    </div>
+                </div>
+                <div class="podcast-show"  data-flickity='{"cellAlign": "center", "contain": true, "freeScroll": true, "wrapAround": true}'>
+                    <div id="podcast-recording">
+                        <img id="recording-photo" src="images/cassette-min.png" alt="some alt">
+                        <div id="recording-name">Another show 1</div>
+                        <div id="recording-length">Listeners: 123</div>
+                        <div id="recording-length">Length: 1:47:12</div>
+                        <div id="recording-date">Date: 2021/04/12</div>
+                    </div>
+                    <div id="podcast-recording">
+                        <img id="recording-photo" src="images/cassette-min.png" alt="some alt">
+                        <div id="recording-name">Another show 2</div>
+                        <div id="recording-length">Listeners: 123</div>
+                        <div id="recording-length">Length: 1:47:12</div>
+                        <div id="recording-date">Date: 2021/04/12</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    
+
+    <div class="overlay timeout" style="display: none;" onclick="toggleOverlay(2)">
+        <h3 style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%;">Are you still listening?</h3>
+    </div>
+
     <canvas id="canvas"></canvas>
 
     <main>
@@ -115,7 +193,10 @@
                 <div class="button volume_up" onclick="volumeChange(this, true)">
                     <span class="material-icons">volume_up</span>
                 </div>
-                <div class="button info" onclick="toggleOverlay('simple')">
+                <div class="button podcast" onclick="toggleOverlay(1)">
+                    <span class="material-icons">podcasts</span>
+                </div>
+                <div class="button info" onclick="toggleOverlay(0)">
                     <span class="material-icons">info</span>
                 </div>
             </div>  <!-- Hide on mobile -->
@@ -133,15 +214,22 @@
                 <canvas id="visualize"></canvas>
                 <div id="listeners">
                     Current Listeners:<br>
-                    <span id="listener-count">0</span>
+                    <span id="listener-count">00</span>
                 </div>
             </div> <!-- Hide on mobile -->
+            
+            <div id="live-indicator">
+                <div class="live-indicator-blink">
+                </div>
+            </div>
 
-
+            <div id="radio-description-container">
+                <div id="radio-description-text"></div>
+            </div> <!-- Hide on mobile -->
 
             <div id="player">
                 <div id="player-controls">
-                    <!-- TODO: Need to read about it before deployment http://google.github.io/material-design-icons/ -->
+                    <!-- TODO Need to read about it before deployment http://google.github.io/material-design-icons/ -->
                     <span class="control play material-icons md-48" onclick="togglePlay(this, 'phone')">play_circle</span>   <!-- Hide in desktop-->
                     <div class="song info">
                         <span class="name">Loading...</span>
@@ -152,10 +240,10 @@
                     </div>  <!-- Hide in desktop-->
                 </div>
                 <img id="cover-art" src="images/default.jpeg" alt="Album cover photo">
-                <audio id="player-test" preload="none" crossorigin="anonymous"><source></audio>
+                <audio id="player-test" preload="none" crossorigin="anonymous" volume="0.6"><source></audio>
             </div>
 
-            <img id="boombox" src="images/desktop-template-min.png" alt="Old style boombox player">
+            <img id="boombox" src="images/desktop-template-3.png" alt="Old style boombox player">
 
         </div>
 
@@ -163,7 +251,7 @@
             <img src="images/logo-min.png" alt="DHR logo">
             <p><strong style="font-size: larger;">Darkest Hour Radio</strong><br><subtitle style="font-size: small;">We pirate for your entertainment</subtitle><br><br>
             Next live show schedule:<br>
-            <strong>Evening Vibes número dos<br><time style="font-size: smaller;">21:00 [2021/03/03]</time></strong></p>
+            <strong>Darkest Hour<br><time style="font-size: smaller;">21:00 [2021/03/05]</time></strong></p>
         </div>
 
         <div id="chat-container">
@@ -232,34 +320,6 @@
         
         <footer><a href="https://github.com/Similiukas" target="_blank" rel="noopener noreferrer">©Similiukas 2021</a></footer>
     </main>
-
-    <!-- <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
-    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
-    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
-    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
-    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
-    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
-    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
-    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
-    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
-    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
-    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
-    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
-    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
-    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
-    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
-    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
-    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
-    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
-    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
-    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
-    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
-    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
-    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
-    <audio class="players" preload="none" crossorigin="anonymous"><source></audio>
-    <audio class="players" preload="none" crossorigin="anonymous"><source></audio> -->
-
-
     
         <!-- <h1>Programming in da plane, let's go</h1>
         <p>Zodziu, css vel pamirsau ir oof, kaip daiktus i vidury padet, neprisimenu, noic. Btw, she wonderful</p> -->
@@ -272,13 +332,24 @@
         
     <!-- Import and configure the Firebase SDK -->
     <!-- These scripts are made available when the app is served or deployed on Firebase Hosting -->
-    <script src="/__/firebase/8.2.9/firebase-app.js"></script>
-    <script src="/__/firebase/8.2.9/firebase-analytics.js"></script>
-    <script src="/__/firebase/8.2.9/firebase-firestore.js"></script>
-    <script src="/__/firebase/8.2.9/firebase-performance.js"></script>
-    <!-- TODO: Remove emulator -->
-    <script src="/__/firebase/init.js?useEmulator=true"></script>
+    <!-- <script src="/__/firebase/8.3.1/firebase-app.js"></script>
+    <script src="/__/firebase/8.3.1/firebase-analytics.js"></script>
+    <script src="/__/firebase/8.3.1/firebase-firestore.js"></script>
+    <script src="/__/firebase/8.3.1/firebase-performance.js"></script> -->
+    <!-- TODO Remove emulator -->
+    <!-- <script src="/__/firebase/init.js?useEmulator=true"></script> -->
 
     <script src="script/chat.js"></script>
+    <!-- Carousel -->
+    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+    <script>
+        function carResize(id){
+            console.log("resizing carousel");
+            // FIXME This is the worst thing ever, need to change to React ASAP. If there'll be enough recording for using carousels (at least 6) then I guess before going React, this is the workaround
+            document.getElementsByClassName("flickity-viewport")[id].style.height = window.innerHeight * .83 * .7 * .65 + "px"; // Overlay, podcast-main, podcast-recordings-container % height
+            flk = new Flickity(document.getElementsByClassName("podcast-show")[id]);
+            flk.resize();
+        }
+    </script>
 </body>
 </html>

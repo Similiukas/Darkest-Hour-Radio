@@ -15,148 +15,181 @@
  */
 'use strict';
 
-// Returns the signed-in user's display name.
+const WORD_1 = ["khaki", "orchid", "light blue", "dark salmon", "medium spring green", "cyan", "pink", "chartreuse", "plum", "gold", "magenta", "lime", "green yellow", "hot pink", "violet"];
+const WORD_2 = ["angry", "sad", "happy", "hungry", "surprised", "confused", "disappointed"]
+const WORD_3 = ["woodchuck", "elephant", "monkey", "porpoise", "panda", "fox", "owl", "starfish", "cow", "octopus", "cat", "doggo", "hippopotamus"];
+
+// Generating random user name
+function generateName() {
+    const colour = WORD_1[Math.floor(Math.random() * WORD_1.length)];
+    localStorage.setItem("colour", colour.replace("/\s/g", ""));
+    return colour + " " + WORD_2[Math.floor(Math.random() * WORD_2.length)] + " " + WORD_3[Math.floor(Math.random() * WORD_3.length)];
+}
+
+// Returns name of user from browser storage or gets a new one.
 function getUserName() {
-  return `Random user + ${Math.random() * 10}`;
+    if (localStorage.getItem("name") == null){
+        localStorage.setItem("name", generateName());
+    }
+return localStorage.getItem("name");
 }
 
 // Saves a new message on the Cloud Firestore.
 function saveMessage(messageText) {
-  // Add a new message entry to the Firebase database.
-  return firebase.firestore().collection('messages').add({
-      name: getUserName(),
-      text: messageText,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp()
-  }).catch(function(error) {
-      console.error('Error writing new message to Firebase Database', error);
-  });
+    // Add a new message entry to the Firebase database.
+    return firebase.firestore().collection('messages').add({
+        name: getUserName(),
+        text: messageText,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    }).catch(function(error) {
+        console.error('Error writing new message to Firebase Database', error);
+    });
 }
 
 // Loads chat messages history and listens for upcoming ones.
 function loadMessages() {
-  // Create the query to load the last 12 messages and listen for new ones.
-  var query = firebase.firestore().collection('messages').orderBy('timestamp', 'desc').limit(12);
+    // Create the query to load the last 12 messages and listen for new ones.
+    var query = firebase.firestore().collection('messages').orderBy('timestamp', 'desc').limit(12);
 
-  // Start listening to the query.
-  query.onSnapshot(function(snapshot) {
-      snapshot.docChanges().forEach(function(change) {
-          if (change.type === 'removed') {
-              deleteMessage(change.doc.id);
-          } else {
-              var message = change.doc.data();
-              console.log("Message data:", message, change);
-              displayMessage(change.doc.id, message.timestamp, message.name, message.text);
-          }
-      });
-  });
+    // Start listening to the query.
+    query.onSnapshot(function(snapshot) {
+        snapshot.docChanges().forEach(function(change) {
+            if (change.type === 'removed') {
+                deleteMessage(change.doc.id);
+            } else {
+                var message = change.doc.data();
+                console.log("Message data:", message, change, snapshot);
+                displayMessage(change.doc.id, message.timestamp, message.name, message.text);
+            }
+        });
+    });
 }
 
 // Triggered when the send new message form is submitted.
+var timeout = false;
 function onMessageFormSubmit(e) {
-  console.log("Event on submit", e);
-  // Pressing enter on textarea submits the form
-  // https://stackoverflow.com/a/49389811/9819103
-  if (e.type === "submit" || (e.which === 13 && !e.shiftKey)){
-    e.preventDefault();
-    // Check that the user entered a message and is signed in.
-    if (messageInputElement.value) {
-      console.log("Submitting", messageInputElement.value);
-      saveMessage(messageInputElement.value).then(function() {
-          // Clear message text field and re-enable the SEND button.
-          messageInputElement.value = '';
-          toggleButton();
-      });
+    // Pressing enter on textarea submits the form
+    // https://stackoverflow.com/a/49389811/9819103
+    if (e.type === "submit" || (e.which === 13 && !e.shiftKey)) {
+        e.preventDefault();
+
+        if (timeout){
+            console.error("Slow down a bit here");
+            return;
+        }
+        timeout = true;
+        
+        // Check that the user entered a message and is signed in.
+        if (messageInputElement.value) {
+            console.log("Submitting", messageInputElement.value);
+            saveMessage(messageInputElement.value).then(function() {
+                // Clear message text field and re-enable the SEND button.
+                messageInputElement.value = '';
+                toggleButton();
+            });
+            // A timeout for user to not spam to DataBase
+            setTimeout(() => timeout = false, 3000);
+        }
     }
-  }
 }
 
 
 // Template for messages.
 var MESSAGE_TEMPLATE =
     '<div class="message-container">' +
-        '<div class="name"></div>' +
-        '<div class="message"></div>' +
+        '<span class="name"></span>' +
+        '<span class="timestamp"></span>' +
+        '<span class="message"></span>' +
     '</div>';
-
-// A loading image URL.
-var LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif?a';
 
 // Delete a Message from the UI.
 function deleteMessage(id) {
-  var div = document.getElementById(id);
-  // If an element for that message exists we delete it.
-  if (div) {
-    div.parentNode.removeChild(div);
-  }
+    var div = document.getElementById(id);
+    // If an element for that message exists we delete it.
+    if (div) {
+        div.parentNode.removeChild(div);
+    }
 }
 
 function createAndInsertMessage(id, timestamp) {
-  const container = document.createElement('div');
-  container.innerHTML = MESSAGE_TEMPLATE;
-  const div = container.firstChild;
-  div.setAttribute('id', id);
+    const container = document.createElement('div');
+    container.innerHTML = MESSAGE_TEMPLATE;
+    const div = container.firstChild;
+    div.setAttribute('id', id);
 
-  // If timestamp is null, assume we've gotten a brand new message.
-  // https://stackoverflow.com/a/47781432/4816918
-  timestamp = timestamp ? timestamp.toMillis() : Date.now();
-  div.setAttribute('timestamp', timestamp);
+    // If timestamp is null, assume we've gotten a brand new message.
+    // https://stackoverflow.com/a/47781432/4816918
+    timestamp = timestamp ? timestamp.toMillis() : Date.now();
+    div.setAttribute('timestamp', timestamp);
 
-  // figure out where to insert new message
-  const existingMessages = messageListElement.children;
+    // figure out where to insert new message
+    const existingMessages = messageListElement.children;
     if (existingMessages.length === 0) {
-    messageListElement.appendChild(div);
-  } else {
-    let messageListNode = existingMessages[0];
+        messageListElement.appendChild(div);
+    } else {
+        let messageListNode = existingMessages[0];
 
-    while (messageListNode) {
-        const messageListNodeTime = messageListNode.getAttribute('timestamp');
+        while (messageListNode) {
+            const messageListNodeTime = messageListNode.getAttribute('timestamp');
 
-        if (!messageListNodeTime) {
-            throw new Error(
-                `Child ${messageListNode.id} has no 'timestamp' attribute`
-            );
+            if (!messageListNodeTime) {
+                throw new Error(
+                    `Child ${messageListNode.id} has no 'timestamp' attribute`
+                );
+            }
+
+            if (messageListNodeTime > timestamp) {
+                break;
+            }
+
+            messageListNode = messageListNode.nextSibling;
         }
 
-        if (messageListNodeTime > timestamp) {
-            break;
-        }
-
-        messageListNode = messageListNode.nextSibling;
+        messageListElement.insertBefore(div, messageListNode);
     }
 
-    messageListElement.insertBefore(div, messageListNode);
-  }
-
-  return div;
+    return div;
 }
 
 // Displays a Message in the UI.
 function displayMessage(id, timestamp, name, text) {
-  var div = document.getElementById(id) || createAndInsertMessage(id, timestamp);
+    var div = document.getElementById(id) || createAndInsertMessage(id, timestamp);
 
-  div.querySelector('.name').textContent = name + ":";
-  var messageElement = div.querySelector('.message');
+    div.querySelector('.name').textContent = name + ":";
+    div.querySelector(".name").style.color = name.match("(.*) (\\w*) (\\w*)")[1].replace(/\s/g, "");    // Adding color to name
+    if (localStorage.getItem("name") === name)  div.classList.add("myself");    // Styling if user sent the message (or another user with same name)
+    if (timestamp) {
+        var timestampElement = div.querySelector(".timestamp");
+        // Same day
+        if (timestamp.toDate().getDay() === new Date().getDay() && timestamp.toDate().getMonth() === new Date().getMonth()){
+            timestampElement.textContent = ` [${timestamp.toDate().toLocaleTimeString()}] `;
+            // Would be cool to know how long ago but timestamps wouldn't be updated
+            // var diff = new Date - timestamp.toDate();
+            // if (diff < 60 * 1000)   timestampElement.textContent = `[${Math.floor(diff / 1000)} seconds ago]`;
+            // else if (diff < 60 * 60 * 1000) timestampElement.textContent = `[${Math.floor(diff / 60 / 1000)} minutes ago]`;
+            // else    timestampElement.textContent = `[${Math.floor(diff / 60 / 60 / 1000)} hours ago]`;
+        }
+        else timestampElement.textContent = ` [${timestamp.toDate().toLocaleDateString()}] `;
+    }
+    var messageElement = div.querySelector('.message');
 
-  messageElement.textContent = text;
-  // Replace all line breaks by <br>.
-  messageElement.innerHTML = messageElement.innerHTML.replace(/\n/g, '<br>');
+    messageElement.textContent = text;
+    // Replace all line breaks by <br>.
+    messageElement.innerHTML = messageElement.innerHTML.replace(/\n/g, '<br>');
 
-  // Show the card fading-in and scroll to view the new message.
-  setTimeout(function() {div.classList.add('visible')}, 1);
-  messageListElement.scrollTop = messageListElement.scrollHeight;
-  messageInputElement.focus();
+    // Show the card fading-in and scroll to view the new message.
+    setTimeout(function() {div.classList.add('visible')}, 1);
+    messageListElement.scrollTop = messageListElement.scrollHeight;
+    messageInputElement.focus();
 }
 
 // Enables or disables the submit button depending on the values of the input fields.
 function toggleButton() {
-  console.log("toggle button");
-  if (messageInputElement.value) {
-    console.log("NOT disabled");
-    submitButtonElement.removeAttribute('disabled');
-  } else {
-    console.log("disabled");
-    submitButtonElement.setAttribute('disabled', 'true');
-  }
+    if (messageInputElement.value) {
+        submitButtonElement.removeAttribute('disabled');
+    } else {
+        submitButtonElement.setAttribute('disabled', 'true');
+    }
 }
 
 // Checks that the Firebase SDK has been correctly setup and configured.
@@ -165,9 +198,7 @@ function checkSetup() {
         window.alert('You have not configured and imported the Firebase SDK. ' +
             'Make sure you go through the codelab setup instructions and make ' +
             'sure you are running the codelab using `firebase serve`');
-        return false;
     }
-    return true;
 }
 
 // Shortcuts to DOM Elements.
@@ -184,27 +215,28 @@ messageInputElement.addEventListener("keypress", onMessageFormSubmit);
 messageInputElement.addEventListener('keyup', toggleButton);
 messageInputElement.addEventListener('change', toggleButton);
 
-
+// When user clicks Open chat
+var initialized = false;
 function openChat(e) {
-    // Essentially gonna have this function in another file maybe and all chat things gonna be there
-    // So when you press on collapse to open chat, only then loaded() runs and all chat stuff
 
     // Opens the chat UI
-    console.log(e.nextElementSibling);
     var chat = e.nextElementSibling;
     chat.style.maxHeight = chat.style.maxHeight ?  null : chat.scrollHeight + "px";
     e.textContent = e.textContent === "Open chat" ? "Close chat" : "Open chat";
     e.classList.toggle("active");
 
     // All back-end-ish stuff
-    // Checks that Firebase has been imported.
-    if (checkSetup()){
-        // TODO: Enable Firebase Performance Monitoring.
-        // firebase.performance();
-    
+    if (!initialized){
+        initialized = true;
+        // Checks that Firebase has been imported.
+        checkSetup();
+
+        // Enabling Firebase Performance Monitoring.
+        firebase.performance();
+        // Can also add custom traces and metrics:
+        // https://firebase.google.com/codelabs/firebase-perf-mon-web#5
+
         // We load currently existing chat messages and listen to new ones.
         loadMessages();
     }
-
-
 }

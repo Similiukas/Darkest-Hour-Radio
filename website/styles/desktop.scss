@@ -67,9 +67,93 @@ body {
             font-size: 0.8vmax;
         }
     }
-
     hr {
         opacity: 0.2;
+    }
+
+    &.podcasts{
+        cursor: initial;
+        background-color: rgba(10, 10, 10, 0.9);
+        #podcast-description{
+            padding-top: 20px;
+            width: 100%;
+            height: 30%;
+            p{
+                font-size: 30px;
+            }
+        }
+        #podcast-main{
+            // background-color: violet;
+            width: 100%;
+            height: 70%;
+            #podcast-show-buttons{
+                height: 10%;
+                text-align: left;
+                margin-left: 20px;
+                span{
+                    font-size: 1.5rem;
+                    border: 5px solid gray;
+                    border-bottom: 0;
+                    cursor: pointer;            // TODO need hower effects as well
+                }
+            }
+            #podcast-show-description{
+                height: 25%;
+                font-size: 1.2rem;
+                text-align: left;
+                padding: 20px 0 0 20px;
+                border: solid gray;
+                border-width: 1px 0 1px 0;
+            }
+            #podcast-recordings-container{
+                width: 100%;
+                // display: table-cell;
+                // vertical-align: top;
+                height: 65%;
+                // overflow: auto;
+                // white-space: nowrap;
+                .podcast-show{
+                    height: 100%;
+                    display: none;
+                    &.active{
+                        display: block;
+                    }
+                }
+                #podcast-recording{
+                    background-color: darkgreen;
+                    width: 20%;
+                    height: 100%;
+                    // display: inline-flex;
+                    // flex-direction: column;
+                    // align-items: stretch;
+                    margin-left: 20px;
+                    margin-right: 20px;
+                    img{
+                        // max-height: 50%;
+                        // width: auto;
+                        max-width: 100%;
+                        height: auto;
+                    }
+                    div{
+                        background-color: peru;
+                        // align-self: stretch;
+                        // justify-self: flex-end;
+                    }
+                    #recording-name{
+                        font-size: 1.2rem;
+                    }
+                    #recording-length{
+                        font-size: 1rem;
+                    }
+                    #recording-date{
+                        font-size: 1rem;
+                    }
+                    &.is-selected{
+                        background-color: darkkhaki;
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -201,6 +285,35 @@ main {
             font-family: 'Share Tech Mono', monospace;
         }
     }
+}
+
+#live-indicator {
+    background-color: #0b0b0b;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    .live-indicator-blink {
+        background-color: rgb(182, 20, 20);
+        width: 65%;
+        height: 65%;
+        border-radius: 50%;
+        opacity: .25;
+        &.on { animation: blink-animation 7s infinite; }
+      }
+      @keyframes blink-animation {
+        0% { opacity: 1; }
+        75% { opacity: .25; }
+        100% { opacity: 1; }
+      }
+}
+
+#radio-description-container {
+    // Currently not on
+    position: absolute;
+    display: block;
+    background-color: white;// #2d2c2b;
 }
 
 #player {

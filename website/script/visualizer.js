@@ -1,4 +1,5 @@
 // https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Visualizations_with_Web_Audio_API
+// https://codepen.io/erikterwan/pen/gMbXaL
 function visualizationInit() {
     ! function() {
         var n = function(t) {
@@ -43,7 +44,6 @@ function visualizationInit() {
     }(),
     function() {
         window.Analyser = function(n) {
-            console.log(n);
             function t() {
                 i++, Analyser.energy = Math.sin(i / u) * s;
                 for (var n = 0; n < Analyser.bands.length; n++) Analyser.bands[n] = Math.sin((n + i) / u) * (255 * Math.random())
@@ -305,21 +305,113 @@ function startVisualization() {
 }
 
 /**
- * Centering HUD for desktop boombox
+ * Gets boombox dimensions, centers the HUD and audio player
+ * Gets called on body load and on body resize
  */
-function centerHUD(){
-  var boomboxCSS = getComputedStyle(document.getElementById("boombox"));
-  var [boomboxHeight, boomboxWidth] = [parseFloat(boomboxCSS.height), parseFloat(boombox.width)];
+function setPlayerSize() {
+    console.log("Setting size");
+    let player = document.getElementById("player");
+    let boomboxCSS = getComputedStyle(document.getElementById("boombox"));
+    let [boomboxHeight, boomboxWidth] = [parseFloat(boomboxCSS.height), parseFloat(boomboxCSS.width)];
 
+    const MARGIN_X = 0.15;       // Relative to the left side of radio player (grided portion)
+    const MARGIN_Y = 0.1;        // Margin (in %) of player from grid
+
+    const gridX = boomboxWidth * .28035;    // Grid horizontal width (538px)
+    const gridY = boomboxHeight * .77301;   // Grid vertical height (739px)
+
+    const horizontalMargin = gridX * MARGIN_X;  // Margin distance from grid edges to player
+    const distanceFromTop = boomboxHeight - gridY; // Distance from boombox top to the grid part
+    const verticalMargin = gridY * MARGIN_Y;    // Margin from grid top and bottom to player
+
+    player.style.marginLeft = horizontalMargin + "px";   // Putting player left of grid
+    player.style.width = gridX - 2 * horizontalMargin + "px";  // Setting player's width
+    player.style.marginTop = distanceFromTop + verticalMargin + "px";
+    player.style.height = gridY - 2 * verticalMargin + "px";
+
+
+    setHUDSize(boomboxHeight, boomboxWidth);
+    setButtonsSize(boomboxHeight, boomboxWidth);
+    setDescriptionSize(boomboxHeight, boomboxWidth);
+    setLiveIndicator();
+
+    // Need to know which one is active
+    // carResize();
+
+    // setTimeout(setLiveIndicator, 1000);
+
+}
+
+/**
+* Sets boombox buttons position and size
+* @param {float} boomboxHeight Boombox height in px
+* @param {float} boomboxWidth Boombox width in px
+*/
+function setButtonsSize(boomboxHeight, boomboxWidth) {
+  let buttons = document.getElementsByClassName("boombox-buttons")[0];
+
+  const buttonHeight = .08;    // .10042
+
+  for (const button of buttons.children) {
+      button.style.height = boomboxHeight * buttonHeight + "px";
+      button.style.width = boomboxWidth * .04273 + "px"; // 82px
+  }
+
+  buttons.style.marginTop = boomboxHeight * .01569 - boomboxHeight * buttonHeight + "px";  // 15px
+}
+
+/**
+ * Centering HUD for desktop boombox
+ * @param {float} boomboxHeight Boombox height in px
+ * @param {float} boomboxWidth Boombox width in px
+ */
+function setHUDSize(boomboxHeight, boomboxWidth) {
   var HUD = document.getElementById("HUD");
 
   const MARGIN_X = 0.05;
   const MARGIN_Y = 0.2;
 
-  HUD.style.width = (boomboxWidth *.41793 - 2 * boomboxWidth * .41793 * MARGIN_X).toString() + "px";
-  HUD.style.height = (boomboxHeight * .20293 - 2 * boomboxHeight * .20293 * MARGIN_Y).toString() + "px";
-  HUD.style.marginLeft = (boomboxWidth * .28035 + boomboxWidth * .41793 * MARGIN_X + (boomboxWidth * .41793 * .04)).toString() + "px";
-  HUD.style.marginTop = (boomboxHeight * .22699 + boomboxHeight * .20293 * MARGIN_Y).toString() + "px";
+  HUD.style.width = boomboxWidth *.41793 - 2 * boomboxWidth * .41793 * MARGIN_X + "px";      // 802px
+  HUD.style.height = boomboxHeight * .20293 - 2 * boomboxHeight * .20293 * MARGIN_Y + "px";  // 194px
+  HUD.style.marginLeft = boomboxWidth * .28035 + boomboxWidth * .41793 * MARGIN_X + (boomboxWidth * .41793 * .04) + "px";  // 538px
+  HUD.style.marginTop = boomboxHeight * .22699 + boomboxHeight * .20293 * MARGIN_Y + "px";   // 217px
+}
+
+/**
+ * Setting description box in place
+ * @param {float} boomboxHeight Boombox height in px
+ * @param {float} boomboxWidth Boombox width in px
+ */
+function setDescriptionSize(boomboxHeight, boomboxWidth) {
+  // TODO making description box with canvas to the page might be better
+  // Then just simply add the text box and not the background
+  var descriptionBox = document.getElementById("radio-description-container");
+
+  const MARGIN_X = 1// 0.05;
+  const MARGIN_Y = 1// 0.1;
+  
+  descriptionBox.style.width = boomboxWidth * .27254 - 2 * boomboxWidth * .27254 * MARGIN_X + "px";    // 523px
+  descriptionBox.style.height = boomboxHeight * .15005 - 2 * boomboxHeight * .15005 * MARGIN_Y + "px"; // 143px
+  descriptionBox.style.marginLeft = boomboxWidth * .70141 + boomboxWidth * .27254 * MARGIN_X + "px";   // 1346px
+  descriptionBox.style.marginTop = boomboxHeight * .32427 + boomboxHeight * .15005 * MARGIN_Y + "px";  // 310px
+}
+
+function setLiveIndicator() {
+  console.log("Putting the indicator?");
+  // Uhm, resizing the window does not put the blink in it's correct place for some reason
+  // So for some reason need to get height and width here and not as arguments???
+  // Why that happens no idea but I guess this works
+  let boomboxCSS = getComputedStyle(document.getElementById("boombox"));
+  let [boomboxHeight, boomboxWidth] = [parseFloat(boomboxCSS.height), parseFloat(boomboxCSS.width)];
+
+  var light = document.getElementById("live-indicator");
+
+  const size = 40 *boomboxHeight / 956;            // 40px size (calculating from top)
+
+  light.style.width = size + "px";
+  light.style.height = size + "px";
+  light.style.marginLeft = 1408 * boomboxWidth / 1919 + "px"; // 1417px from left
+  light.style.marginTop = 272 * boomboxHeight / 956 + "px";   // 273px from top
 }
 
 /**
@@ -334,6 +426,7 @@ function setSound(amount){
 
 // Bottle radio visualizer
 function visualHUD() {
+  // https://codepen.io/nfj525/pen/rVBaab
   var audio = document.getElementById("player-test");
   var context = new (window.AudioContext || window.webkitAudioContext)();
   var src = context.createMediaElementSource(audio);
@@ -352,7 +445,7 @@ function visualHUD() {
   function renderFrame() {
     requestAnimationFrame(renderFrame);
 
-    centerHUD();
+    // setHUDSize();
 
     var canvas = document.getElementById("visualize");
     
