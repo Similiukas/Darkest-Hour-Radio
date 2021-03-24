@@ -22,7 +22,6 @@ const WORD_3 = ["woodchuck", "elephant", "monkey", "porpoise", "panda", "fox", "
 // Generating random user name
 function generateName() {
     const colour = WORD_1[Math.floor(Math.random() * WORD_1.length)];
-    localStorage.setItem("colour", colour.replace("/\s/g", ""));
     return colour + " " + WORD_2[Math.floor(Math.random() * WORD_2.length)] + " " + WORD_3[Math.floor(Math.random() * WORD_3.length)];
 }
 
@@ -31,7 +30,7 @@ function getUserName() {
     if (localStorage.getItem("name") == null){
         localStorage.setItem("name", generateName());
     }
-return localStorage.getItem("name");
+    return localStorage.getItem("name");
 }
 
 // Saves a new message on the Cloud Firestore.
@@ -46,23 +45,46 @@ function saveMessage(messageText) {
     });
 }
 
+// Listening when the user authentication changes
+function initAuthentication(){
+    firebase.auth().onAuthStateChanged((user) => {
+        console.log("Authentication changed", user);
+        if(user){
+            console.log("Signed in then?");
+            if(user.displayName == null)    user.updateProfile({ displayName: getUserName() });   
+        }
+        else{
+            console.log("User singed out?", user);  // This probably never gets executed
+        }
+    })
+}
+
 // Loads chat messages history and listens for upcoming ones.
 function loadMessages() {
-    // Create the query to load the last 12 messages and listen for new ones.
-    var query = firebase.firestore().collection('messages').orderBy('timestamp', 'desc').limit(12);
+    // First we authenticate anonymous user
+    firebase.auth().signInAnonymously()
+    .then((user) => {
+        console.log(user);
+        // Can ban a single user if needed, even if anonymous
+        // https://medium.com/@hajimenakamura/how-to-disable-firebase-anonymous-user-account-df5d0955c7a
+        // Create the query to load the last 12 messages and listen for new ones.
+        var query = firebase.firestore().collection('messages').orderBy('timestamp', 'desc').limit(12);
 
-    // Start listening to the query.
-    query.onSnapshot(function(snapshot) {
-        snapshot.docChanges().forEach(function(change) {
-            if (change.type === 'removed') {
-                deleteMessage(change.doc.id);
-            } else {
-                var message = change.doc.data();
-                console.log("Message data:", message, change, snapshot);
-                displayMessage(change.doc.id, message.timestamp, message.name, message.text);
-            }
+        // Start listening to the query.
+        query.onSnapshot(function(snapshot) {
+            snapshot.docChanges().forEach(function(change) {
+                if (change.type === 'removed') {
+                    deleteMessage(change.doc.id);
+                } else {
+                    var message = change.doc.data();
+                    displayMessage(change.doc.id, message.timestamp, message.name, message.text);
+                }
+            });
         });
-    });
+    })
+    .catch((error) => {
+        console.error("There's been an error authenticating an anonymous user", error);
+    })
 }
 
 // Triggered when the send new message form is submitted.
@@ -70,7 +92,7 @@ var timeout = false;
 function onMessageFormSubmit(e) {
     // Pressing enter on textarea submits the form
     // https://stackoverflow.com/a/49389811/9819103
-    if (e.type === "submit" || (e.which === 13 && !e.shiftKey)) {
+    if (!!firebase.auth().currentUser && e.type === "submit" || (e.which === 13 && !e.shiftKey)) {
         e.preventDefault();
 
         if (timeout){
@@ -225,7 +247,7 @@ function openChat(e) {
     e.textContent = e.textContent === "Open chat" ? "Close chat" : "Open chat";
     e.classList.toggle("active");
 
-    // All back-end-ish stuff
+    // All chat stuff
     if (!initialized){
         initialized = true;
         // Checks that Firebase has been imported.
@@ -235,6 +257,9 @@ function openChat(e) {
         firebase.performance();
         // Can also add custom traces and metrics:
         // https://firebase.google.com/codelabs/firebase-perf-mon-web#5
+
+        // Initializing authentication listener
+        initAuthentication();
 
         // We load currently existing chat messages and listen to new ones.
         loadMessages();
