@@ -2,6 +2,7 @@
 firebase.json
 firestore.rules
 .env
+config
 
 # React production
 /build
