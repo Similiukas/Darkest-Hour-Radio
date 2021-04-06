@@ -1,0 +1,505 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background: url("../images/bakgraunds-min.jpg") no-repeat center center;
+    background-size: cover;
+    background-color: black;
+    height: 100vmax;
+    // overflow: hidden;
+}
+
+#root{
+    height: 100%;
+}
+
+span, div, a {
+    font-family: 'Roboto', sans-serif;
+}
+
+a{
+    text-decoration: none;
+    color: gray;
+    font-size: 0.8em;
+}
+
+// Removing from desktop
+.boombox-buttons, #boombox, #HUD, #live-indicator, #radio-description-container, footer{
+    display: none;
+}
+// -------------------
+
+@keyframes fade-in {
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}
+
+@keyframes fade-out {
+    from{
+        opacity: 1;
+    }
+    to{
+        opacity: 0;
+    }
+}
+
+.material-icons.md-36 { font-size: 36px; }
+
+.overlay {
+    background-color: rgba(10, 10, 10, 0.6);
+    position: fixed;
+    width: 100%;
+    height: 83%;
+    top: 10vmax;
+    border-radius: 20px;
+    z-index: 2;
+    cursor: pointer;
+    font-size: 2.5vmax;
+    color: white;
+    text-align: center;
+    animation: .3s fade-in ease-out forwards;
+    #overlay-text {
+        position: absolute;
+        bottom: 20px;
+        width: 100%;
+    }
+    &.fade-out{
+        cursor: initial;
+        animation: .4s fade-out ease-in forwards;
+    }
+}
+
+.podcasts{
+    background-color: rgba(10, 10, 10, 0.9);
+    cursor: initial;
+    height: 100%;   // not on pc
+    top: 0;         // not on pc
+    #podcast-description{
+        // background-color: purple;
+        padding-top: 20px;
+        width: 100%;
+        height: 10%;
+        // height: 30%; pc
+        p{
+            display: none;
+            // font-size: 30px; pc
+        }
+        #podcast-close-button{
+            position: absolute;
+            top: 2%;
+            right: 2%;
+            cursor: pointer;
+            color: #dcdcdc;
+            user-select: none;
+        }
+    }
+    #podcast-main{
+        width: 100%;
+        height: 90%;
+        @import "button.scss";
+        #podcast-show-description{
+            height: 23%;
+            // font-size: 1.2rem; pc
+            font-size: 1rem;
+            text-align: left;
+            padding: 20px 20px 0 20px;
+            border-bottom: 2px solid gray;
+            div{
+                animation: .9s fade-in linear forwards;
+            }
+            // border-width: 1px 0 1px 0;
+        }
+        #podcast-recordings-container{
+            width: 100%;
+            // display: table-cell;
+            // vertical-align: top;
+            height: 67%;
+            // overflow: auto;
+            // white-space: nowrap;
+            .podcast-show{
+                height: 100%;
+                .podcast-recording{
+                    // background-color: darkgreen;
+                    background-color: rgba(128, 128, 128, 0.15);
+                    height: 100%;
+                    // border: 5px 0 5px 0 solid green;
+                    border-top: 2px solid rgba(128, 128, 128, 0.3);
+                    border-bottom: 2px solid rgba(128, 128, 128, 0.3);
+    
+                    position: relative;
+                    // width: 20%;
+                    // height: auto;
+                    // max-width: 100%;
+                    // display: inline-flex;
+                    display: flex;
+                    // flex-direction: column;
+                    // align-items: stretch;
+                    // margin-left: 20px;
+                    // margin-right: 20px;
+                    transition: transform 0.1s ease;
+                    .recording-photo-container{
+                        // background-color: purple;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        width: 60%;
+                        height: 100%;
+                        img{
+                            // max-height: 50%;
+                            // width: auto;
+                            // max-width: 100%; pc
+                            max-width: 95%; //mobile
+                            height: auto;
+                        }
+                    }
+                    .recording-info{
+                        // background-color: rebeccapurple;
+                        // display: inline-block;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        margin-left: auto;
+                        margin-right: auto;
+                        user-select: none;
+                        // align-items: center;
+                        // width: 30%;
+                        // height: 100%;
+                        #recording-name{
+                            font-size: 1.2rem;
+                        }
+                        #recording-listeners{
+                            font-size: 1rem;
+                        }
+                        #recording-length{
+                            font-size: 1rem;
+                        }
+                        #recording-date{
+                            font-size: 1rem;
+                        }
+                    }
+                    &:active{
+                        transform: scale(0.95);
+                    }
+                }
+                animation: .7s fade-in linear forwards;
+            }
+        }
+    }
+}
+
+#canvas {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+main {
+    height: 100vmax;
+}
+
+#cassette-container{
+    position: relative;
+    display: block;
+    height: 15vmax;
+    text-align: center;
+    img {
+        margin-left: auto;
+        margin-right: auto;
+        width: auto;
+        height: 100%;
+    }
+    span {
+        position: absolute;
+        top: 15%;
+        left: 23%;
+    }
+}
+
+#radio {
+    #player{
+        height: 50vmax;
+        margin-right: auto;
+        margin-left: auto;
+        color: white;
+        #player-controls{
+            height: 25%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            span{
+                display: block;
+                margin-top: auto;
+                margin-bottom: auto;
+                width: 100%;
+                float: left;
+                text-align: center;
+                font-size: 20px;
+                &.artist {
+                    padding-top: 0;
+                    font-size: 15px;
+                }
+                &.name.small {
+                    font-size: 15px;
+                }
+                &.artist.small {
+                    font-size: 12px;
+                }
+            }
+        
+            .control {
+                display: block;
+                width: 25%;
+            }
+            .song {
+                width: 50%;
+                float: left;
+            }
+            .sound {
+                height: 80%;
+            }
+            .volume-slider-track{
+                width: 8px;
+                height: 100%;
+                margin: auto;
+                .volume-slider-track-inner{
+                    width: 8px;
+                    height: 100%;
+                    border-radius: 4px;
+                    .volume-slider-thumb{
+                        background-color: #FFF;
+                        height: 15px;
+                        width: 15px;
+                        border-radius: 50%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        .volume-slider-thumb-inner{
+                            width: 5px;
+                            height: 5px;
+                        }
+                    }
+                }
+            }
+
+            .material-icons.md-48 { font-size: 48px; }
+
+            &::after{           // Don't know if this is needed but clearing float values by https://www.w3schools.com/css/tryit.asp?filename=trycss_website_layout_grid2
+                content: "";
+                display: table;
+                clear: both;
+            }
+        }
+
+        img{
+            position: relative;
+            height: 75%;
+            width: auto;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+}
+
+#informacija{
+    // background-color: blue;
+    display: block;
+    height: 20vmax;
+    overflow: auto;
+    img {
+        background-color: tan;
+        max-width: 33%;
+        height: auto;
+        float: right;
+        // margin: 10px 10px 0 10px;
+        margin: 10px 3% 0 10px;
+        border-radius: 20px 0 20px 0;
+    }
+    p{
+        color: white;
+        padding-top: 10px;
+        text-align: center;
+        font-size: .8rem;
+        height: 100%;
+        font-family: 'Roboto', sans-serif;
+    }
+}
+
+#recordings-dashboard{
+    // background-color: forestgreen;
+    height: 15vmax;
+    color: white;
+    text-align: center;
+    #recordings-info{
+        // background-color: yellowgreen;
+        display: inline-block;
+        width: 62%;
+        // margin-top: 10px;
+        padding-top: 10px;      // Gives padding/marging to both info and button
+        font-size: .8rem;
+    }
+    #recordings-button{
+        // background-color: powderblue;
+        background-color: rgba(42, 46, 49, 1);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 33%;
+        height: 5vmax;  // 40px
+        margin-right: 3%;
+        margin-left: 2%;
+        font-size: .9rem;
+        color: lightgoldenrodyellow;
+        border: 2px solid #32383d;
+        border-radius: 10%;
+        // cursor: pointer;
+        font-family: 'Nova Square', cursive;
+        user-select: none;
+        transition: transform 0.1s ease-out;
+        &:active{
+            transform: scale(0.95);
+        }
+    }
+}
+
+$chat-color: #32383d;
+#chat-container {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    .collapse-btn {
+        background-color: $chat-color;
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
+        color: lightgoldenrodyellow;
+        padding: 10px;
+        border-radius: 10px 10px 0 0;
+        border: 0;
+        outline: none;
+        font-family: 'Nova Square', cursive;
+        &:after {   // Adding '+' on the right
+            content: '\002B';
+            color: black;
+            font-weight: bold;
+            float: right;
+            margin-left: 5px;
+        }
+        &.active::after{
+            content: '\2212';
+        }
+        &:hover {
+            background-color: darken($chat-color, 5);
+        }
+    }
+    .chat {
+        overflow: hidden;
+        max-height: 0;
+        transition: max-height 0.4s ease-in-out;
+        #all-messages {
+            background-color: darken(rgba($chat-color, .9), 5) ;
+            height: 60vh;
+            overflow: auto;
+            .message-container {
+                display: block;
+                padding: 20px 5px 10px 5px;
+                border-bottom: 1px solid #383a3a;
+                opacity: 0;
+                transition: opacity .6s ease-in-out;
+                .name {
+                    color: lightcoral;
+                    font-size: .8em;
+                    box-sizing: border-box;
+                    font-family: 'Nova Square', cursive;
+                }
+                .timestamp {
+                    font-size: .6em;
+                    color: dimgray;
+                }
+                .message {
+                    font-size: .9em;
+                    font-family: 'Nova Square', roboto;
+                    color: lightgoldenrodyellow;
+                }
+                &.visible {
+                    opacity: 1;
+                }
+                &.myself {
+                    text-align: right;
+                    .name, .timestamp{
+                        float: right;
+                    }
+                    .timestamp {
+                        line-height: 22px;
+                    }
+                    .message {
+                        display: inline-block;
+                    }
+                }
+            }
+        }
+        form {
+            background-color: $chat-color;
+            padding: 15px 0 15px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            textarea {
+                resize: none;
+                overflow: hidden;
+                border: none;
+                border-bottom: 1px solid rgba(0,0,0,.12);
+                display: inline-block;
+                font-size: .9em;
+                font-family: 'Nova Square', roboto;
+                padding: 4px 5px;
+                margin-left: 1%;
+                width: 75%;
+                background: 0;
+                text-align: left;
+                color: lightgoldenrodyellow;
+                &::placeholder {
+                    color: lightcoral;
+                    line-height: 35px;  // 65px
+                }
+                &:focus{
+                    outline: none;
+                    border: 1px solid darken($chat-color, 8);
+                    border-radius: 15px;
+                }
+            }
+            button {
+                display: inline-block;
+                width: 24%;
+                height: 40px;
+                margin-left: 10px;
+                font-family: 'Nova Square', cursive;
+                cursor: pointer;
+                background-color: lighten($chat-color, 5);
+                outline: none;
+                border-radius: 15px;
+                border-color: $chat-color;
+                color: blanchedalmond;
+                transition: all .2s ease-in-out;
+                &:disabled {
+                    background-color: darken($chat-color, 5);
+                    color: black;
+                }
+                &:hover:enabled{
+                    background-color: darken($chat-color, 1);
+                }
+            }
+        }
+    }
+}

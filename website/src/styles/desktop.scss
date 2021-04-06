@@ -1,0 +1,318 @@
+// https://jesse.sh/makes-3d-buttons-with-sass/
+@function button3D($offset, $color){
+// this function takes two arguments: an offset (how 3d the button will be)
+  // and a color: we'll use Sass to darken the color to get alternating
+  // box shadow colors.
+
+  // create an empty variable: this will be the string to which we
+  // append our box-shadow values
+  $box-shadow:();
+
+  //loop through however many numbers ($offset)
+  @for $i from 0 through $offset{
+
+    // create the value for the box-shadow visible to the right
+    $first: $i+1+px (-1)*$i+px 0px darken($color, 15%);
+
+    // create the value for the box-shadow visible to the bottom
+    $second: $i+px (-1)*($i+1)+px 0px darken($color, 18%);
+
+    // add the box shadow visible to the bottom string to our $box-shadow variable
+    $box-shadow: append($box-shadow, $second, comma);
+
+    // add the box shadow visible to the right string to our $box-shadow variable
+    $box-shadow: append($box-shadow, $first, comma);
+
+  }
+  // return the string of all of these values
+  @return $box-shadow;
+}
+
+body {
+    height: 87vh;
+}
+
+#cassette-container, .control, #informacija {
+    display: none;
+}
+
+#canvas{
+    display: block;
+}
+
+.overlay {
+    width: 90%;
+    top: 7vh;
+    left: 5%;
+    #overlay-text {
+        #schedule-header {
+            font-size: 2vmax;
+            margin-left: 20px;
+            text-align: left;
+        }
+        p {
+            font-size: 1.2vmax;
+            margin-left: 40px;
+            text-align: left;
+            time {
+                font-size: 1vmax;
+                font-style: italic;
+            }
+        }
+        #schedule-main {
+            margin-left: 80px;
+            line-height: 40px;
+        }
+        #overlay-description {
+            font-size: 0.8vmax;
+        }
+    }
+    hr {
+        opacity: 0.2;
+    }
+}
+
+.podcasts{
+    height: 83%;
+    #podcast-description{
+        height: 30%;
+        p{
+            display: block;
+            padding-top: 20px;
+            font-size: 1.4rem;
+        }
+    }
+    #podcast-main{
+        height: 70%;
+        #podcast-show-description{
+            font-size: 1.2rem;
+        }
+        #podcast-recordings-container .podcast-show .podcast-recording{
+            height: auto;
+            max-width: 100%;
+            flex-direction: column;
+            border: 2px solid rgba(128, 128, 128, 0.3);
+            transition: transform 0.1s ease;
+            .recording-photo-container{
+                width: 80%;
+                margin-left: auto;
+                margin-right: auto;
+                img{
+                    max-width: 100%;
+                }
+            }
+            &:hover{
+                transform: scale(1.03);
+            }
+        }
+    }
+}
+
+main {
+    height: 100%;
+}
+
+
+#boombox {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.boombox-buttons {
+    position: absolute;
+    display: block;
+    margin-left: 10px;
+    user-select: none;
+    .button {
+        background-color: #6d7277;  // #78828a
+        display: inline-block;
+        margin-left: 15px;;
+        box-shadow: button3D(5, #78828a);
+        overflow: hidden;
+        border: 0;
+        transition: height .1s ease-in;
+        span {
+            display: block;
+            margin-top: 5%;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            line-height: 2.6vmax;
+            font-size: 2.2vmax;
+            height: 100%;
+            top: 50%;
+        }
+        &:active{       // Pressing the button
+            height: 4vh !important;
+        }
+        &:hover{
+            cursor: pointer;
+            background-color: darken(#6d7277, 5%);
+        }
+    }
+
+    .active {   // When button is pressed
+        background-color: darken(#6d7277, 10%);
+        height: 3vh !important;
+    }
+}
+
+#HUD {
+    position: absolute;
+    display: block;
+    user-select: none;
+    #sound-container {
+        display: block;
+        width: 20%;
+        height: 100%;
+        float: left;
+        #sound-bar {
+            position: relative;
+            $yellow2: #999900;
+            $red2: #880b0b;
+            background: linear-gradient(to bottom, $red2, $red2 10%, $yellow2 10%, $yellow2 40%, rgb(49, 78, 32) 40%);
+            float: left;
+            width: 10px;
+            height: 100%;
+            .sound-inner {
+                background-color: rgb(60, 60, 60);
+                width: 100%;
+                height: 0%;
+            }
+        }
+        #sound-text {
+            display: flex;
+            justify-content: center;
+            align-content: center;
+            flex-direction: column;
+            float: left;
+            color: #4e4d4d;
+            width: 60%;
+            height: 100%;
+            text-align: center;
+            font-family: 'Nova Square', cursive;
+            font-size: 0.7vmax;
+        }
+    }
+
+
+    #visualize {
+        background-color: #1f1f1f;
+        display: block;
+        width: 56%;
+        height: 100%;
+        float: left;
+        border-radius: 20px;
+    }
+
+    #listeners {
+        display: flex;
+        text-align: center;
+        justify-content: space-evenly;
+        flex-direction: column;
+        align-items: center;
+        width: 24%;
+        height: 100%;
+        float: left;
+        color: #4e4d4d;
+        font-family: 'Nova Square', cursive;
+        font-size: 1vmax;
+        span {
+            background-color: black;
+            color: lightcyan;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            font-size: 1.8vmax;
+            font-family: 'Share Tech Mono', monospace;
+        }
+    }
+}
+
+#live-indicator {
+    background-color: #0b0b0b;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    .live-indicator-blink {
+        background-color: rgb(182, 20, 20);
+        width: 65%;
+        height: 65%;
+        border-radius: 50%;
+        opacity: .25;
+        &.on { animation: blink-animation 7s infinite; }
+    }
+    @keyframes blink-animation {
+        0% { opacity: 1; }
+        75% { opacity: .25; }
+        100% { opacity: 1; }
+    }
+}
+
+#radio-description-container {
+    // Currently not on
+    position: absolute;
+    display: block;
+    background-color: white;// #2d2c2b;
+}
+
+#radio {
+    position: relative;
+    display: block;
+    margin-top: 10vh;
+    max-width: 80%;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    #player {
+        position: absolute;
+        img {
+            width: 100%;
+            height: auto;
+        }
+        
+        // Changing from phone design
+        #player-controls{
+            span {
+                font-size: 1.5vmax;
+                font-family: 'Nova Square', monospace;
+                &.name.small {
+                    font-size: 1.3vmax;
+                }
+                &.artist.small {
+                    font-size: .8vmax;
+                }
+            }
+            .song {
+                width: 100%;
+            }
+            .control {
+                display: none;
+            }
+        }
+    }
+}
+
+#chat-container {
+    right: 0;
+    width: 35vw;
+    .chat #all-messages .message-container {
+        .name {
+            font-size: 1em;
+        }
+        .message {
+            font-size: 1.1em;
+        }
+    }
+        
+}
+
+footer {
+    display: block;
+    height: 3vh;
+    background-color: black;
+    text-align: center;
+}

@@ -1,0 +1,28 @@
+{
+    "templateWidth": 1916,
+    "templateHeight": 955,
+    "boomboxButtons": {        
+        "containerMarginTop": 15,
+        "width": 82,
+        "height": 96
+    },
+    "HUD": {
+        "width": 802,
+        "height": 194,
+        "marginLeft": 538,
+        "marginTop": 217,
+        "MARGIN_X": 0.05,
+        "MARGIN_Y": 0.2
+    },
+    "LiveIndicator": {
+        "size": 40,
+        "marginLeft": 1407,
+        "marginTop": 271
+    },
+    "Player": {
+        "width": 538,
+        "height": 739,
+        "MARGIN_X": 0.15,
+        "MARGIN_Y": 0.1
+    }
+}
