@@ -2,7 +2,7 @@
 const admin = require("firebase-admin");
 
 // TODO: Hide this in git
-const serviceAccount = require("./firebaseAccountKey.json");
+const serviceAccount = require("../../config/firebaseAccountKey.json");
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
