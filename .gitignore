@@ -1,12 +1,2 @@
-.todo
-firebase.json
-firestore.rules
-.env
-
-# React production
-/build
-
-# dependencies
 node_modules
-/.pnp
-.pnp.js
+firebaseAccountKey.json
