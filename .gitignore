@@ -1,11 +1,13 @@
 .todo
 firebase.json
 firestore.rules
+.env
+config
 
 # React production
 /build
 
 # dependencies
-/node_modules
+node_modules
 /.pnp
 .pnp.js
