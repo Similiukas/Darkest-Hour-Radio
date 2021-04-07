@@ -2,6 +2,7 @@
 import firebase from 'firebase/app'; // doing import firebase from 'firebase' or import * as firebase from firebase is not good practice. 
 import 'firebase/auth';
 import 'firebase/firestore';
+import 'firebase/analytics';
 
 // Initialize Firebase
 firebase.initializeApp({
@@ -16,5 +17,6 @@ firebase.initializeApp({
 
 const auth = firebase.auth();
 const firestore = firebase.firestore();
+firebase.analytics();
 
 export { firebase, auth, firestore };

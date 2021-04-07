@@ -9,7 +9,6 @@ const ChatContainer = () => {
     const [buttonText, setButtonText] = useState("Open chat");
 
     function openChat(){
-        console.log("int", initialized);
         setChatHeight(chatHeight ? null : "650px");   // I guess the actual height doesn't matter? As long as it's not null
         setButtonText(buttonText === "Open chat" ? "Close chat" : "Open chat");
         

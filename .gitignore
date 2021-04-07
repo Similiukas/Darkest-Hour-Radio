@@ -5,7 +5,7 @@ firestore.rules
 config
 
 # React production
-/build
+build
 
 # dependencies
 node_modules

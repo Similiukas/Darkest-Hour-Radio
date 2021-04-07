@@ -65,7 +65,6 @@ export function useAudio(url, volume=0.4){
     // Initial values
     useEffect(() => {
         // audio.preload = "none";
-        console.log("Initial audio values");
         audio.preload = "auto";
         audio.crossOrigin = "none";
         audio.volume = volume;

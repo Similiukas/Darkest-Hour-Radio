@@ -4,9 +4,8 @@ import BoomboxButtons from "./BoomboxButtons";
 import HUD from "./HUD";
 import LiveIndicator from "./LiveIndicator";
 import Player from "./Player";
-import radioTemplate from "../../images/desktop-template-3.png";
+import radioTemplate from "../../images/desktop-template-3-min.png";
 
-// TODO: Need to test whether this changes properly
 let offline = true;
 
 const Radio = ({ overlayType, toggleOverlay, toggleTimeout, audio, audioToggle, audioVolume, pastRecordData, stopCloud }) => {
@@ -18,11 +17,6 @@ const Radio = ({ overlayType, toggleOverlay, toggleTimeout, audio, audioToggle, 
     const [timeoutReached, setTimeoutReached] = useState(false);        // For enabling/disabling boombox buttons pointer events
     const templateRef = useRef(null);   // Ref for template image div
 
-    /**
-     * Main function turning off and on the radio
-     * @param {DOM element} element DOM element which turns on/off the player
-     * @param {String} boomboxButton If from desktop, signalizing which button was pressed
-     */
     function togglePlay(startPlaying){
         console.log("toggle play?", startPlaying, offline, audio);
 
@@ -72,9 +66,9 @@ const Radio = ({ overlayType, toggleOverlay, toggleTimeout, audio, audioToggle, 
             setCurrentSong(null);   // This way, Player.jsx doesn't do anything with current song and when changing back to live, immediately updating to current live song
         }
         getInfo();  // Gets called on load
-        const timer = setInterval(getInfo, 20000);
+        const timer = setInterval(getInfo, 14000);
         return () => { clearInterval(timer); }
-    }, [currentSong, pastRecordData]); // TODO: Ignore the warning: https://stackoverflow.com/q/58579426/9819103 or actually just move getInfo into the hook https://stackoverflow.com/q/55840294/9819103
+    }, [currentSong, pastRecordData]);
 
     // Timeout useEffect hook for pausing/playing the audio when timeout is reached/ended (also, notifies boombox buttons to change)
     useEffect(() => {
@@ -99,7 +93,6 @@ const Radio = ({ overlayType, toggleOverlay, toggleTimeout, audio, audioToggle, 
 
     return (
         <div id="radio">
-            {/* TODO: Don't need to hide element with css now */}
             { window.innerWidth > 1025 &&
             <>
                 <BoomboxButtons

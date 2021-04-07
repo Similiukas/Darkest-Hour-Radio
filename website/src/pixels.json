@@ -1,10 +1,10 @@
 {
-    "templateWidth": 1916,
-    "templateHeight": 955,
+    "templateWidth": 1915,
+    "templateHeight": 954,
     "boomboxButtons": {        
         "containerMarginTop": 15,
         "width": 82,
-        "height": 96
+        "height": 85
     },
     "HUD": {
         "width": 802,

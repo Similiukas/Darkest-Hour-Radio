@@ -4,7 +4,6 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 import ChatMessage from "./ChatMessage";
 import MessageSubmit from "./MessageSubmit";
 
-
 const WORD_1 = ["khaki", "orchid", "light blue", "dark salmon", "medium spring green", "cyan", "pink", "chartreuse", "plum", "gold", "magenta", "lime", "green yellow", "hot pink", "violet", "purple", "rebecca purple"];
 const WORD_2 = ["angry", "sad", "happy", "hungry", "surprised", "confused", "disappointed"]
 const WORD_3 = ["woodchuck", "elephant", "monkey", "porpoise", "panda", "fox", "owl", "starfish", "cow", "octopus", "cat", "doggo", "hippopotamus", "potato"];

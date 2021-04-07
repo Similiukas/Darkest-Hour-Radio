@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SwiperCore, { Navigation, Pagination } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import PodcastShowRecording from "./PodcastShowRecording";
@@ -8,13 +8,36 @@ import 'swiper/components/pagination/pagination.scss';
 
 SwiperCore.use([Navigation, Pagination]);
 
-const Podcast = ({ mounting, startCloud, close }) => {
-    const [activeShowID, setActiveShowID] = useState(0);
+async function getRecordList(){
+    return fetch("http://127.0.0.1:3002/recordList")
+        .then(response => response.json())
+        .catch(err => {
+            console.error("Error fetching record list", err);
+        })
+}
 
-    const callCloud = (id, name, listeners) => {
-        startCloud(id, name, listeners);
+const Podcast = ({ mounting, startCloud, close }) => {
+    const [activeShowID, setActiveShowID] = useState(-1);
+    const [firstShowRecords, setFirstShowRecords] = useState([]);
+    const [secondShowRecords, setSecondShowRecords] = useState([]);
+
+
+    const callCloud = (showName, id, name, listeners) => {
+        startCloud(showName, id, name, listeners);
         close();
     }
+
+    useEffect(() => {
+        let results;
+        async function fetchData(){
+            results = await getRecordList();
+            setFirstShowRecords(results["test show 1"]);
+            setSecondShowRecords(results["test-show-2"]);
+            setActiveShowID(0);
+            console.log("Results:", results, results["test show 1"]);
+        }
+        fetchData();
+    }, []);
 
     return (
         <div className={`overlay podcasts ${mounting ? "" : "fade-out"}`}>
@@ -29,7 +52,6 @@ const Podcast = ({ mounting, startCloud, close }) => {
                     <button className={activeShowID === 1 ? "active" : ""} onClick={() => setActiveShowID(1)}>Another show</button>
                     <button className={activeShowID === 2 ? "active" : ""} >Third show</button>
                 </div>
-                {/* TODO: Text fades-in when changing the show (adding a delay after which adding another class like with messages) */}
                 <div id="podcast-show-description">
                     { activeShowID === 0 &&
                         <div>
@@ -42,41 +64,65 @@ const Podcast = ({ mounting, startCloud, close }) => {
                         </div>
                     }
                 </div>
-                {/* TODO while there aren't enough shows to fill the screen width, don't pust wrapAround. Also check if contain: true is needed */}
                 <div id="podcast-recordings-container">
                     { activeShowID === 0 && 
                         <Swiper
                             className="podcast-show"
                             direction={window.innerWidth > 1025 ? "horizontal" : "vertical"}
-                            spaceBetween={window.innerWidth > 1025 ? 20 : 10}    // 0 on mobile
-                            slidesPerView={window.innerWidth > 1025 ? 4 : 2}   // 2 on mobile
+                            spaceBetween={window.innerWidth > 1025 ? 20 : 10}
+                            slidesPerView={window.innerWidth > 1025 ? 4 : 2}
                             freeMode={true}
                             freeModeSticky={true}
-                            loop={true}
+                            loop={false}
                             navigation={window.innerWidth > 1025}
                             pagination={{ clickable: true }}
-                            onSlideChange={() => console.log('slide change')}
-                            onSwiper={(swiper) => console.log(swiper)}
-                      >
-                        <SwiperSlide><PodcastShowRecording id={"A1"} text={"First show 1"} callCloud={callCloud}/></SwiperSlide>
+                        >
+                        { firstShowRecords.map(show => {
+                            return <SwiperSlide>
+                                    <PodcastShowRecording
+                                            key={show.id}
+                                            id={show.id}
+                                            show={"first show 1"}
+                                            text={show.name}
+                                            listeners={show.listeners}
+                                            length={show.length}
+                                            date={show["creation-date"]}
+                                            callCloud={callCloud} />
+                                    </SwiperSlide>
+                        })}
+                        {/* <SwiperSlide><PodcastShowRecording id={"A1"} text={"First show 1"} callCloud={callCloud}/></SwiperSlide>
                         <SwiperSlide><PodcastShowRecording id={"A2"} text={"First show 2"} /></SwiperSlide>
                         <SwiperSlide><PodcastShowRecording id={"A3"} text={"First show 3"} /></SwiperSlide>
                         <SwiperSlide><PodcastShowRecording id={"A4"} text={"First show 4"} /></SwiperSlide>
-                        <SwiperSlide><PodcastShowRecording id={"A5"} text={"First show 5"} /></SwiperSlide>
-                      </Swiper>
+                        <SwiperSlide><PodcastShowRecording id={"A5"} text={"First show 5"} /></SwiperSlide> */}
+                        </Swiper>
                     }
                     { activeShowID === 1 && 
                         <Swiper
-                        className="podcast-show"
-                        spaceBetween={50}
-                        slidesPerView={4}
-                        onSlideChange={() => console.log('slide change')}
-                        onSwiper={(swiper) => console.log(swiper)}
-                      >
-                        <SwiperSlide><PodcastShowRecording id={"B1"} text={"Another show 1"} /></SwiperSlide>
-                        <SwiperSlide><PodcastShowRecording id={"B2"} text={"Another show 2"} /></SwiperSlide>
-                        ...
-                      </Swiper>
+                            className="podcast-show"
+                            direction={window.innerWidth > 1025 ? "horizontal" : "vertical"}
+                            spaceBetween={window.innerWidth > 1025 ? 20 : 10}
+                            slidesPerView={window.innerWidth > 1025 ? 4 : 2}
+                            freeMode={true}
+                            freeModeSticky={true}
+                            loop={false}
+                            navigation={window.innerWidth > 1025}
+                            pagination={{ clickable: true }}
+                        >
+                        { secondShowRecords.map(show => {
+                            return <SwiperSlide>
+                                    <PodcastShowRecording
+                                            key={show.id}
+                                            id={show.id}
+                                            show={"first show 1"}
+                                            text={show.name}
+                                            listeners={show.listeners}
+                                            length={show.length}
+                                            date={show["creation-date"]}
+                                            callCloud={callCloud} />
+                                    </SwiperSlide>
+                        })}
+                        </Swiper>
                     }
                 </div>
         </div>

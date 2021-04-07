@@ -25,7 +25,7 @@ const SecretCanvas = () => {
     stars_color_2 = `rgb(${stars_color_2_red}, ${stars_color_2_green}, ${stars_color_2_blue})`,//#B5BFD4
     stars_color_special = "#00F",//#F451BA
     TOTAL_STARS = window.innerWidth > 1025 ? 7000 : 400, // 1500
-    STARS_BREAK_POINT = 300,    // 140
+    STARS_BREAK_POINT = 140,    // 140
     stars = [],
     
     waveform_color = "rgba(29, 36, 57, 0.05)",          // Jumpy thing fill colour when still or low
@@ -46,7 +46,7 @@ const SecretCanvas = () => {
     bubble_avg_line_color_2 = "rgba(77, 218, 248, 1)",
     // bubble_avg_tick = 0.001,
     // TOTAL_AVG_POINTS = 64,
-    AVG_BREAK_POINT = 60,
+    AVG_BREAK_POINT = 85,  // 100
     // avg_points = [],
 
     SHOW_STAR_FIELD = true,
@@ -95,8 +95,8 @@ const SecretCanvas = () => {
 
         analyser.fftSize = fftSize;
         analyser.minDecibels = -120;
-        analyser.maxDecibels = -30;
-        analyser.smoothingTimeConstant = 0.8;
+        analyser.maxDecibels = -20;
+        analyser.smoothingTimeConstant = 0.8;   // 0.8
 
         gainNode.connect(analyser);
         analyser.connect(actx.destination);
@@ -110,7 +110,7 @@ const SecretCanvas = () => {
         playing = true;
         asource.connect(gainNode);
         asource.start();
-        toggleAudio();
+        toggleAudio(true);
         animate();
     }
 

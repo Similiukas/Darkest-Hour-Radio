@@ -1,10 +1,8 @@
 // import { createSliderWithTooltip } from 'rc-slider';
 import { useState, useEffect } from 'react';
 import { useDidMount } from '../hooks/EffectExceptFirst';
-import defaultPhoto from "../../images/default.jpeg";
+import defaultPhoto from "../../images/logo-min.png";
 import pixels from "../../pixels.json";
-// import Slider, { createSliderWithTooltip } from "rc-slider";
-// import "rc-slider/assets/index.css";
 import { Range, Direction, getTrackBackground } from "react-range";
 
 /**
@@ -12,57 +10,57 @@ import { Range, Direction, getTrackBackground } from "react-range";
  * @param {String} artist Artist name string
  * @param {String} song Song name string
  */
-// async function searchRecordings(artist, song){
-//     let recordings = await fetch(`https://musicbrainz.org/ws/2/recording/?query=artist:${artist} AND recording:${song}&fmt=json`)
-//     let recordingsJSON = await recordings.json();
-//     return recordingsJSON;
-// }
+async function searchRecordings(artist, song){
+    let recordings = await fetch(`https://musicbrainz.org/ws/2/recording/?query=artist:${artist} AND recording:${song}&fmt=json`)
+    let recordingsJSON = await recordings.json();
+    return recordingsJSON;
+}
 
-// /**
-//  * Filters radios and playlist albums (releases) and returns best fit release group MBID
-//  * @param {String} artist Artist name string
-//  * @param {JSON} recordings Recordings JSON
-//  */
-// function filterRadios(artist, recordings){
-//     try{
-//         var backup = recordings[0]["releases"][0]["release-group"]["id"];
-//     } catch (error){
-//         console.error("Error in filtering radios (getting backup)", error);
-//         return "NONE"   // Failed to find a backup
-//     }
-//     try {
-//         for (let recordingIndex = 0; recordingIndex < recordings.length; recordingIndex++) {
-//             const record = recordings[recordingIndex];
-//             for (let releaseIndex = 0; releaseIndex < record["releases"].length; releaseIndex++) {
-//                 const release = record["releases"][releaseIndex];
-//                 console.log(release);
-//                 if (release["artist-credit"]?.[0]["name"].toLowerCase() === "various artists"){
-//                     console.log("Found radio")
-//                     continue;
-//                 }
-//                 else if (release["artist-credit"]?.[0]["name"].toLowerCase() === artist.toLowerCase()){
-//                     console.log("Right artist");
-//                     return release["release-group"]["id"];
-//                 }
-//             }
-//         }
-//         return backup;
-//     } catch (error) {
-//         console.error("Error in filtering radios (looking through recordings)", error);
-//         return backup
-//     }
-// }
+/**
+ * Filters radios and playlist albums (releases) and returns best fit release group MBID
+ * @param {String} artist Artist name string
+ * @param {JSON} recordings Recordings JSON
+ */
+function filterRadios(artist, recordings){
+    try{
+        var backup = recordings[0]["releases"][0]["release-group"]["id"];
+    } catch (error){
+        console.error("Error in filtering radios (getting backup)", error);
+        return "NONE"   // Failed to find a backup
+    }
+    try {
+        for (let recordingIndex = 0; recordingIndex < recordings.length; recordingIndex++) {
+            const record = recordings[recordingIndex];
+            for (let releaseIndex = 0; releaseIndex < record["releases"].length; releaseIndex++) {
+                const release = record["releases"][releaseIndex];
+                console.log(release);
+                if (release["artist-credit"]?.[0]["name"].toLowerCase() === "various artists"){
+                    console.log("Found radio")
+                    continue;
+                }
+                else if (release["artist-credit"]?.[0]["name"].toLowerCase() === artist.toLowerCase()){
+                    console.log("Right artist");
+                    return release["release-group"]["id"];
+                }
+            }
+        }
+        return backup;
+    } catch (error) {
+        console.error("Error in filtering radios (looking through recordings)", error);
+        return backup
+    }
+}
 
-// /**
-//  * Searches album groups (release-group) and returns the first one's ID
-//  * @param {String} artist Artist name string
-//  * @param {String} album Album name string
-//  */
-// async function searchRelease(artist, album){
-//     let release = await fetch(`https://musicbrainz.org/ws/2/release-group/?query=artist:${artist} AND release:${album}&fmt=json`);
-//     let releaseJSON = await release.json();
-//     return releaseJSON["release-groups"][0]["id"];
-// }
+/**
+ * Searches album groups (release-group) and returns the first one's ID
+ * @param {String} artist Artist name string
+ * @param {String} album Album name string
+ */
+async function searchRelease(artist, album){
+    let release = await fetch(`https://musicbrainz.org/ws/2/release-group/?query=artist:${artist} AND release:${album}&fmt=json`);
+    let releaseJSON = await release.json();
+    return releaseJSON["release-groups"][0]["id"];
+}
 
 
 const Player = ({ templateRatio, currentSong, setLive, togglePlay, volumeChange, timeoutReached, pastRecordData }) => {
@@ -88,7 +86,7 @@ const Player = ({ templateRatio, currentSong, setLive, togglePlay, volumeChange,
             setLive(true);
             data = data.slice(0, -7);
         }   // Fuck regex, hate it, just burn, just fuck that. Would be nicer to add another capturing group which catches $live$ but noo, regex has to suck >:C
-        else setLive(false); // Setting to false once or everytime is the same (LiveIndicator still gets passed false)  // TODO actually check it again
+        else setLive(false);
         let parsedData = data.match("(.+) - (.+) #(.+)");
         if (parsedData === null)    return data.match("(.+) - (.+)");   // Group 3 is missing (no added album or MBID)
         return parsedData;
@@ -99,54 +97,47 @@ const Player = ({ templateRatio, currentSong, setLive, togglePlay, volumeChange,
      * @param {MBID} MBID Release MBID from musicbrainz
      * @param {boolean} group If true, looking for release group. If false -> just for release
      */
-    // async function addCoverArt(MBID, group){
-    //     try {
-    //         let img = await fetch(`https://coverartarchive.org/release${group ? "-group/" : "/"}${MBID}`);
-    //         var imgJSON = await img.json();
-    //         setCoverPhotoUrl(imgJSON.images[0].thumbnails["small"]);
-    //     } catch (error) {
-    //         setCoverPhotoUrl(defaultPhoto);
-    //     }
-    // }
+    async function addCoverArt(MBID, group){
+        try {
+            let img = await fetch(`https://coverartarchive.org/release${group ? "-group/" : "/"}${MBID}`);
+            var imgJSON = await img.json();
+            setCoverPhotoUrl(imgJSON.images[0].thumbnails["small"]);
+        } catch (error) {
+            setCoverPhotoUrl(defaultPhoto);
+        }
+    }
 
     useEffect(() => {
         console.log(`CurrentSong [${currentSong}] ${currentSong === ""}`);
         if (currentSong !== null && currentSong !== ""){
-
-            async function updateCoverArt(song){
-                // console.log(`Song changed to: ${song}`);
-    
+            async function updateCoverArt(song){    
                 let songInfo = parseMetadata(song);
                 setSongName(songInfo[2]);
                 setArtistName(`By ${songInfo[1]}`);
-                // console.log(songInfo);
-                // try {
-                //     if (songInfo.length === 3){
-                //         // console.log("Only artist and title");
-                //         // Search for recording by artist and recoding
-                //         // Search for release from recording IDs (filtering radios)
-                //         // Add cover art from filtered recording or switch to default
-                //         let recordings = await searchRecordings(songInfo[1], songInfo[2]);
-                //         let MBID = filterRadios(songInfo[1], recordings["recordings"]);
-                //         MBID === "NONE" ? setCoverPhotoUrl(defaultPhoto) : addCoverArt(MBID, true);
-                //     }   // TODO Need to check whether this is actually correct once more
-                //     else if ((songInfo[3].match(/.-./g) || []).length >= 2) {   // If album or MBID has more than 2 '-', then it's MBID
-                //         // console.log("MBID: " + songInfo[3]);
-                //         addCoverArt(songInfo[3], false);    // Search for cover art by release MBID
-                //     }
-                //     else {
-                //         // console.log("Album: " + songInfo[3]);
-                //         // Search for release by artist and album name
-                //         // Search for cover art by release
-                //         let MBID = await searchRelease(songInfo[1], songInfo[3]);
-                //         addCoverArt(MBID, true);
-                //     }
-                // } catch (error) {
-                //     console.error(`There was an error trying to get cover art for this [${songInfo}] audio.\nSwitching to default photo\nError:`, error);
-                //     setCoverPhotoUrl(defaultPhoto);
-                // }
+                console.log(`Song changed to: ${songInfo}`);
+                try {
+                    if (songInfo.length === 3){
+                        // Search for recording by artist and recoding
+                        // Search for release from recording IDs (filtering radios)
+                        // Add cover art from filtered recording or switch to default
+                        let recordings = await searchRecordings(songInfo[1], songInfo[2]);
+                        let MBID = filterRadios(songInfo[1], recordings["recordings"]);
+                        MBID === "NONE" ? setCoverPhotoUrl(defaultPhoto) : addCoverArt(MBID, true);
+                    }   // TODO Need to check whether this is actually correct once more
+                    else if ((songInfo[3].match(/.-./g) || []).length >= 2) {   // If album or MBID has more than 2 '-', then it's MBID
+                        addCoverArt(songInfo[3], false);    // Search for cover art by release MBID
+                    }
+                    else {
+                        // Search for release by artist and album name
+                        // Search for cover art by release
+                        let MBID = await searchRelease(songInfo[1], songInfo[3]);
+                        addCoverArt(MBID, true);
+                    }
+                } catch (error) {
+                    console.error(`There was an error trying to get cover art for this [${songInfo}] audio.\nSwitching to default photo\nError:`, error);
+                    setCoverPhotoUrl(defaultPhoto);
+                }
             }
-
             updateCoverArt(currentSong);
         }
         else if (currentSong === "") {    // Initially it's null so not changing anything and default values are set
@@ -191,9 +182,6 @@ const Player = ({ templateRatio, currentSong, setLive, togglePlay, volumeChange,
                 
                 { window.innerWidth < 1025 &&
                     <div className="control sound">
-                        {/* Maybe have some already built slider for simplicity. No need to reinvent the wheel I guess */}
-                        {/* <input label="volume-slider" type="range" id="volume-slider" min="0" max="100" step="10" value={volume} orient="vertical" onChange={(e) => { setVolume(e.target.value); volumeChange(e.target.value / 100); }}/> */}
-                        {/* <Slider min={0} max={10} vertical={true} value={5} onChange={(e) => console.log("changed", e)} onAfterChange={(e) => console.log("after change", e)}/> */}
                         <Range
                             direction={Direction.Up}
                             min={0}
@@ -235,9 +223,6 @@ const Player = ({ templateRatio, currentSong, setLive, togglePlay, volumeChange,
             </div>
             {/* TODO: Above the photo there's a bar showing how much of a recording has passed and left */}
             <img id="cover-art" src={coverPhotoUrl} alt="Album cover" />
-            {/* <audio id="player-test" preload="none" crossOrigin="anonymous" volume="0.6">
-                <source />
-            </audio> */}
         </div>
     )
 }

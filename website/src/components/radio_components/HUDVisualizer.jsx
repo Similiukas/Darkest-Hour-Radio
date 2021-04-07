@@ -6,7 +6,6 @@ const HUDVisualizer = ({ audioPlayer }) => {
     // Calling visualHUD only once
     useEffect(() => {
         // Bottle radio visualizer
-        console.log("Starting visual hud", audioPlayer);
         // https://codepen.io/nfj525/pen/rVBaab
         var audio = audioPlayer;
         var context = new (window.AudioContext || window.webkitAudioContext)();
@@ -81,31 +80,31 @@ const HUDVisualizer = ({ audioPlayer }) => {
                     x += barWidth + 2;
                 }
             }
-            // else if (frameCounter % 2 === 0){
-            //     frameCounter = 1;   // Skipping every other frame
-            //     x = 0;
+            else if (frameCounter % 2 === 0){
+                frameCounter = 1;   // Skipping every other frame
+                x = 0;
             
-            //     ctx.fillStyle = "#1f1f1f";   // Background -> transparent makes background transparent
-            //     ctx.fillRect(0, 0, WIDTH, HEIGHT);
-            //     for (var i = 0; i < 64; i++) {
-            //         barHeight = waveArray[i];
-            //         waveArray[i] = waveArray[(i + 1) % 64];   // Animation part
+                ctx.fillStyle = "#1f1f1f";   // Background -> transparent makes background transparent
+                ctx.fillRect(0, 0, WIDTH, HEIGHT);
+                for (var i = 0; i < 64; i++) {
+                    barHeight = waveArray[i];
+                    waveArray[i] = waveArray[(i + 1) % 64];   // Animation part
                     
-            //         // var r = barHeight + (50 * (i/bufferLength));
-            //         // var g = 800 * (i/bufferLength);
-            //         // var b = 256;
+                    // var r = barHeight + (50 * (i/bufferLength));
+                    // var g = 800 * (i/bufferLength);
+                    // var b = 256;
             
-            //         var r = barHeight + (30 * (i/64));
-            //         var g = 500 * (i/32);
-            //         var b = 256 - new Date().getSeconds();  // This might be a heavy task so maybe just 256 - i
+                    var r = barHeight + (30 * (i/64));
+                    var g = 500 * (i/32);
+                    var b = 256 - new Date().getSeconds();  // This might be a heavy task so maybe just 256 - i
             
-            //         ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
-            //         ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
+                    ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
+                    ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
             
-            //         x += barWidth + 4;
-            //     }
-            // }
-            // else frameCounter++;
+                    x += barWidth + 4;
+                }
+            }
+            else frameCounter++;
         }
         renderFrame();
     }, [audioPlayer]);  // When switching between recording full and short
