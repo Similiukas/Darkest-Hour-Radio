@@ -4,11 +4,14 @@ const got = require("got");
 const recordsRef = firebase.db.collection("recordings");
 const FieldValue = firebase.FieldValue;
 
+/**
+ * Gets the audio link from pcloud sharing file html
+ * @param {string} url 
+ * @returns scraped url from pcloud
+ */
 async function getAudioURL(url){
     try {
-        // cover: https://e.pcloud.link/publink/show?code=XZ4Xx7ZCHcOynfUOyJado0U7RmQRY7yzoNk
-        const response = await got("https://e.pcloud.link/publink/show?code=XZ4Xx7ZCHcOynfUOyJado0U7RmQRY7yzoNk"); //https://e.pcloud.link/publink/show?code=XZ7zx7ZaQk9FHN5dgBzSJ0lalH67kwWY0U7
-        // console.log(response);
+        const response = await got(url);
         var s = response.body.indexOf("audiolink");
         var e = response.body.indexOf("downloadlink");
         return response.body.substring((s + 13), (e - 5)).replace(/\\/g, "");
@@ -21,6 +24,10 @@ exports.test = () => {
     console.log("test goes grr");
 }
 
+/**
+ * Gets all the records from the database
+ * @returns record list
+ */
 exports.getRecordsList = async () => {
     try {
         let result = new Object();
@@ -41,6 +48,13 @@ exports.getRecordsList = async () => {
     }
 }
 
+/**
+ * Gets the url of the given record file from pcloud
+ * @param {string} showName name of the record show
+ * @param {string} id ID of the record
+ * @param {boolean} shortURL trying to get the short clip url or the full record
+ * @returns returns the url of the given record file from pcloud
+ */
 exports.getRecordURL = async (showName, id, shortURL=true) => {
     const documentRef = recordsRef.doc(showName).collection("recording-storage-data").doc(id);
     const document = await documentRef.get();
@@ -59,6 +73,11 @@ exports.getRecordURL = async (showName, id, shortURL=true) => {
     }
 }
 
+/**
+ * Updates the listener count and read time in the database
+ * @param {string} showName name of the show
+ * @param {string} id ID of the show
+ */
 exports.updateRecordViews = async (showName, id) => {
     const storageDocumentRef = recordsRef.doc(showName).collection("recording-storage-data").doc(id);
     const mainDocumentRef = recordsRef.doc(showName).collection("recording-main-info").doc(id);

@@ -4,11 +4,17 @@ const RecordsModel = require("../models/record.model");
 // const accepts = require("accepts");
 // const brotli = require("zlib").createBrotliCompress;
 
+/**
+ * Test test test
+ */
 exports.something = (req, res) => {
     RecordsModel.test();
     res.status(200).send({message: "hello"}).end();
 }
 
+/**
+ * Getting the list of all records
+ */
 exports.recordsList = (req, res) => {
     RecordsModel.getRecordsList()
     .then((result) =>{
@@ -19,6 +25,9 @@ exports.recordsList = (req, res) => {
     });
 }
 
+/**
+ * Getting shorter clip audio file 
+ */
 exports.recordShortURL = (req, res) => {
     RecordsModel.getRecordURL(req.params.showName, req.params.recordId)
     .then(async (result) => {
@@ -56,6 +65,9 @@ exports.recordShortURL = (req, res) => {
     });
 }
 
+/**
+ * Getting the full record audio and adding a listener to database
+ */
 exports.recordFullURL = (req, res) => {
     RecordsModel.getRecordURL(req.params.showName, req.params.recordId, false)
     .then(async (result) => {

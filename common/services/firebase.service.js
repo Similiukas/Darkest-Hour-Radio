@@ -1,7 +1,6 @@
 // Docs: https://firebase.google.com/docs/firestore/quickstart#node.js
 const admin = require("firebase-admin");
 
-// TODO: Hide this in git
 const serviceAccount = require("../../config/firebaseAccountKey.json");
 
 admin.initializeApp({
