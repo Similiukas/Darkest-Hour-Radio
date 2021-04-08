@@ -1,2 +1,5 @@
 node_modules
 config
+.todo
+.env
+build
