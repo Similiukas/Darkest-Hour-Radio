@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useDidMount } from '../hooks/EffectExceptFirst';
+import { useDelayBool } from "../hooks/DelayBool";
 import pixels from '../../pixels.json';
 import HUDVisualizer from "./HUDVisualizer";
 
@@ -10,6 +11,9 @@ const HUD = ({ templateRatio, listenerCount, audioVolumeLevel, audioPlayer, past
     const marginTop = templateRatio * pixels.HUD.marginTop + templateRatio * pixels.HUD.height * pixels.HUD.MARGIN_Y;
     
     const [listenerText, setListenerText] = useState("Current Listeners:");
+
+    // Adding a delay for animating change of listeners
+    const listenerVisible = useDelayBool(listenerCount, 500);
 
     useDidMount(() => {
         if(pastRecordData) setListenerText("Total Listeners:");
@@ -45,7 +49,9 @@ const HUD = ({ templateRatio, listenerCount, audioVolumeLevel, audioPlayer, past
 
             <div id="listeners">
                 {listenerText}<br/>
-                <span id="listener-count">{listenerCount}</span>
+                <span id="listener-count-container">
+                    <span className={`listener-inner ${listenerVisible ? "visible" : ""}`}>{listenerCount}</span>
+                </span>
             </div>
         </div>
     )

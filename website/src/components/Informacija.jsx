@@ -1,17 +1,16 @@
 import logoImage from "../images/logo-min.png";
 
-const Informacija = () => {
+const Informacija = ({ secret }) => {
     return (
         <div id="informacija">
-            <img src={logoImage} alt="DHR logo" />
-            <p>
-                <strong style={{ fontSize: "larger" }}>Darkest Hour Radio</strong><br/>
-                <sup style={{ fontSize: "small" }}>We pirate for your entertainment</sup><br/><br/>
-
-                        Next live show schedule:<br/>
-                <strong>Darkest Hour<br/>
-                <time style={{fontSize: "smaller"}}>21:00 [2021/03/05]</time></strong>
-            </p>
+            <div id="text">
+                Next live show schedule:
+                <strong style={{ paddingTop: 10 }}>Darkest Hour</strong>
+                <time style={{ fontSize: "smaller", paddingTop: 2 }}>21:00 [2021/03/05]</time>
+            </div>
+            <div id="logo-container">
+                <img src={logoImage} alt="DHR logo" onClick={(e) => { if(e.detail === 3) secret(true) }}/>
+            </div>
         </div> /*<!-- Hide on desktop -->*/
     )
 }

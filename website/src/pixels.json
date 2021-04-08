@@ -16,8 +16,14 @@
     },
     "LiveIndicator": {
         "size": 40,
-        "marginLeft": 1407,
+        "marginLeft": 1460,
         "marginTop": 271
+    },
+    "HeartSong": {
+        "width": 90,
+        "height": 35,
+        "marginLeft": 1355,
+        "marginTop": 273
     },
     "Player": {
         "width": 538,

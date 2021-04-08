@@ -3,6 +3,7 @@ import pixels from "../../pixels.json";
 import BoomboxButtons from "./BoomboxButtons";
 import HUD from "./HUD";
 import LiveIndicator from "./LiveIndicator";
+import HeartSong from "./HeartSong";
 import Player from "./Player";
 import radioTemplate from "../../images/desktop-template-3-min.png";
 
@@ -117,11 +118,18 @@ const Radio = ({ overlayType, toggleOverlay, toggleTimeout, audio, audioToggle, 
                     templateRatio={templateRatio}
                     areWeLive={weAreLive}
                 />
+
+                <HeartSong
+                    templateRatio={templateRatio}
+                    currentSong={currentSong}
+                />
             </>
             }
+
             <Player
                 templateRatio={templateRatio}
                 currentSong={currentSong}
+                listenerCount={listenerCount}
                 setLive={setWeAreLive}
                 togglePlay={togglePlay}
                 volumeChange={volumeChange}

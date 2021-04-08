@@ -4,6 +4,7 @@ import { useKonamiCode } from "./components/hooks/KonamiHook";
 import { useAudio } from './components/hooks/AudioHook';
 import cassette from "./images/cassette-min.png";
 import Overlays from "./components/overlay_components/Overlays";
+import Header from "./components/Header";
 import Radio from './components/radio_components/Radio';
 import Informacija from "./components/Informacija";
 import RecrodingsDashboard from "./components/RecordingsDashboard";
@@ -105,9 +106,12 @@ function App() {
 			<>
 				<Overlays overlayType={overlayType} setToggleOverlay={setToggleOverlay} startCloud={startCloudRecording}/>
 				<main>
-					<div id="cassette-container">
+					{/* <div id="cassette-container">
 						<img id="cassette" src={cassette} alt="cassette" onClick={(e) => { if (e.detail === 3) setSecret(true) }}/>
-					</div>
+					</div> */}
+					{ window.innerWidth < 1025 &&
+						<Header />
+					}
 
 					<Radio
 						overlayType={overlayType}
@@ -117,15 +121,21 @@ function App() {
 						audio={audio}
 						audioToggle={toggleAudioPlay}
 						audioVolume={setAudioVolume}
-						stopCloud={stopCloudRecording}/>
+						stopCloud={stopCloudRecording}
+					/>
 
-					<Informacija />
+					{ window.innerWidth < 1025 &&
+						<>
+							<Informacija
+								secret={setSecret}
+							/>
 
-					{ window.innerWidth > 5025 &&
-						<RecrodingsDashboard
-							toggleOverlay={setToggleOverlay}
-							pastRecordData={pastRecordData}
-							stopCloud={stopCloudRecording}/>
+							{/* <RecrodingsDashboard
+								toggleOverlay={setToggleOverlay}
+								pastRecordData={pastRecordData}
+								stopCloud={stopCloudRecording}
+							/> */}
+						</>
 					}
 
 					<ChatContainer />

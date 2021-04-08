@@ -197,14 +197,23 @@ main {
     }
 }
 
+.header{
+    width: 100vmin;
+    height: 10vmax;
+    padding-top: 10px;
+    text-align: center;
+    font-size: 1.2rem;
+    color: white;
+}
+
 #radio {
     #player{
-        height: 50vmax;
+        height: 60vmax; // For podcast set to 50vmax
         margin-right: auto;
         margin-left: auto;
         color: white;
         #player-controls{
-            height: 25%;
+            height: 22%;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -271,10 +280,75 @@ main {
                 clear: both;
             }
         }
-
+        #player-hud{
+            height: 7%;
+            display: flex;
+            align-items: center;
+            #listeners{
+                background-color: #32383d;
+                height: 100%;
+                margin: auto;
+                display: flex;
+                align-items: center;
+                width: fit-content;
+                height: 100%;
+                border-radius: 7px;
+                user-select: none;
+                #text{
+                    margin-left: 10px;
+                    color: lightgoldenrodyellow;
+                    border-right: 1px solid gray;
+                }
+                .listener-count{
+                    padding: 0 6px;
+                    color: lightcyan;
+                    font-family: 'Nova Square', monospace;
+                    transition: opacity .3s ease;
+                    opacity: 0;
+                    &.visible{
+                        opacity: 1;
+                    }
+                }
+            }
+            .heart-song{
+                // background-color: rgba(255, 255, 255, 0.9);
+                background-color: #32383d;
+                width: 20vmin;
+                height: 4vmax;
+                height: 100%;
+                margin: auto;
+                display: flex;
+                align-items: center;
+                text-align: center;
+                border-radius: 7px;
+                user-select: none;
+                .heart{
+                    display: inline-block;
+                    width: 50%;
+                    color: rgb(184, 149, 154);
+                    transition: all 0.5s ease;
+                    &:active{
+                        transform: scale(1.7);
+                    }
+                    &.active{
+                        font-size: 1.2rem;
+                        color: rgb(230, 107, 148);
+                    }
+                }
+                .amount{
+                    display: inline-block;
+                    width: 50%;
+                    // color: lightgoldenrodyellow;
+                    color: lightcyan;
+                    font-family: 'Nova Square', cursive;
+                    border-left: 1px solid gray;
+                }
+            }
+        }
         img{
             position: relative;
-            height: 75%;
+            height: 71%;
+            padding-top: 2%;
             width: auto;
             display: block;
             margin-left: auto;
@@ -285,25 +359,33 @@ main {
 
 #informacija{
     // background-color: blue;
-    display: block;
-    height: 20vmax;
-    overflow: auto;
-    img {
-        background-color: tan;
-        max-width: 33%;
-        height: auto;
-        float: right;
-        // margin: 10px 10px 0 10px;
-        margin: 10px 3% 0 10px;
-        border-radius: 20px 0 20px 0;
-    }
-    p{
+    // display: block;
+    height: 15vmax;
+    // overflow: auto;
+    padding-top: 10px;
+    width: 100%;
+    display: flex;
+    #text{
+        width: 60%;
         color: white;
-        padding-top: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
         text-align: center;
-        font-size: .8rem;
+        font-size: .9rem;
         height: 100%;
         font-family: 'Roboto', sans-serif;
+    }
+    #logo-container{
+        width: 40%;
+        img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            max-height: 100%;
+            width: auto;
+            border-radius: 20px 0 20px 0;
+        }
     }
 }
 

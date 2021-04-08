@@ -1,9 +1,9 @@
-// import { createSliderWithTooltip } from 'rc-slider';
 import { useState, useEffect } from 'react';
 import { useDidMount } from '../hooks/EffectExceptFirst';
 import defaultPhoto from "../../images/logo-min.png";
 import pixels from "../../pixels.json";
 import { Range, Direction, getTrackBackground } from "react-range";
+import PlayerHUD from "./PlayerHUD";
 
 /**
  * Searches songs (releases) and returns all matched songs JSON
@@ -63,7 +63,7 @@ async function searchRelease(artist, album){
 }
 
 
-const Player = ({ templateRatio, currentSong, setLive, togglePlay, volumeChange, timeoutReached, pastRecordData }) => {
+const Player = ({ templateRatio, currentSong, listenerCount, setLive, togglePlay, volumeChange, timeoutReached, pastRecordData }) => {
     const width = window.innerWidth > 1025 ? templateRatio * pixels.Player.width - 2 * templateRatio * pixels.Player.width * pixels.Player.MARGIN_X : null;
     const height = window.innerWidth > 1025 ? templateRatio * pixels.Player.height - 2 * templateRatio * pixels.Player.height * pixels.Player.MARGIN_Y : null;
     const marginLeft = window.innerWidth > 1025 ? templateRatio * pixels.Player.width * pixels.Player.MARGIN_X : null;
@@ -177,7 +177,7 @@ const Player = ({ templateRatio, currentSong, setLive, togglePlay, volumeChange,
 
                 <div className="song info">
                     <span className={`name ${songName.length > 15 ? "small" : ""}`}>{songName}</span>
-                    <span className={`artist ${artistName.length > 20 ? "small" : ""}`}>{artistName}</span>
+                    <span className={`artist ${artistName.length > 15 ? "small" : ""}`}>{artistName}</span>
                 </div>
                 
                 { window.innerWidth < 1025 &&
@@ -217,10 +217,19 @@ const Player = ({ templateRatio, currentSong, setLive, togglePlay, volumeChange,
                                     />
                                 </div>
                             )}
-                            />
+                        />
                     </div>
                 }
             </div>
+            
+            { window.innerWidth < 1025 &&
+                <PlayerHUD 
+                    templateRatio={templateRatio}
+                    listenerCount={listenerCount}
+                    currentSong={currentSong}
+                />
+            }
+        
             {/* TODO: Above the photo there's a bar showing how much of a recording has passed and left */}
             <img id="cover-art" src={coverPhotoUrl} alt="Album cover" />
         </div>

@@ -218,14 +218,21 @@ main {
         color: #4e4d4d;
         font-family: 'Nova Square', cursive;
         font-size: 1vmax;
-        span {
+        #listener-count-container{
             background-color: black;
+        }
+        .listener-inner {
             color: lightcyan;
             margin-left: auto;
             margin-right: auto;
             text-align: center;
             font-size: 1.8vmax;
             font-family: 'Share Tech Mono', monospace;
+            opacity: 0;
+            transition: opacity .35s ease;
+            &.visible{
+                opacity: 1;
+            }
         }
     }
 }
@@ -267,6 +274,42 @@ main {
     height: 100%;
     margin-left: auto;
     margin-right: auto;
+    .heart-song{
+        background-color: rgb(65, 65, 65);
+        position: absolute;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        border: 2px solid rgb(50, 50, 50);
+        border-radius: 10px;
+        user-select: none;
+        .heart{
+            display: inline-block;
+            width: 50%;
+            color: rgb(184, 149, 154);
+            font-size: 1.1vw;
+            border-radius: 10px;
+            transform: transform 0.5s ease;
+            &:hover{
+                background-color: rgb(60, 60, 60);
+                color: rgb(214, 148, 170);
+            }
+            &:active{
+                transform: scale(1.05);
+            }
+            &.active{
+                color: rgb(230, 107, 148);
+            }
+        }
+        .amount{
+            display: inline-block;
+            width: 50%;
+            font-size: 0.9vw;
+            color: lightgoldenrodyellow;
+            font-family: 'Nova Square', cursive;
+            border-left: 2px solid rgb(50, 50, 50);
+        }
+    }
     #player {
         position: absolute;
         img {
@@ -283,7 +326,7 @@ main {
                     font-size: 1.3vmax;
                 }
                 &.artist.small {
-                    font-size: .8vmax;
+                    font-size: .7vmax;
                 }
             }
             .song {
