@@ -87,8 +87,9 @@ const Player = ({ templateRatio, currentSong, listenerCount, setLive, togglePlay
             data = data.slice(0, -7);
         }   // Fuck regex, hate it, just burn, just fuck that. Would be nicer to add another capturing group which catches $live$ but noo, regex has to suck >:C
         else setLive(false);
-        let parsedData = data.match("(.+) - (.+) #(.+)");
-        if (parsedData === null)    return data.match("(.+) - (.+)");   // Group 3 is missing (no added album or MBID)
+        let parsedData = data.match("(.+) - (.+) #(.+)") ?? data.match("(.+) - (.+)");  // Group 3 is missing (no added album or MBID)
+        // Sometimes the server puts the album twice so if it does, then stripping it off
+        if ((/(.+) #(.+)/g).test(parsedData[2])) parsedData[2] = parsedData[2].replace(/(.+) #(.+)/g, "$1");
         return parsedData;
     }
 
@@ -108,13 +109,18 @@ const Player = ({ templateRatio, currentSong, listenerCount, setLive, togglePlay
     }
 
     useEffect(() => {
-        console.log(`CurrentSong [${currentSong}] ${currentSong === ""}`);
-        if (currentSong !== null && currentSong !== ""){
+        console.log(`CurrentSong [${currentSong}] [${typeof currentSong}]`);
+        if (currentSong === "ad"){
+            setSongName("Darkest Hour Radio");
+            setArtistName("");
+            setCoverPhotoUrl(defaultPhoto);
+        }
+        else if (currentSong !== null && currentSong !== ""){
             async function updateCoverArt(song){    
                 let songInfo = parseMetadata(song);
                 setSongName(songInfo[2]);
                 setArtistName(`By ${songInfo[1]}`);
-                console.log(`Song changed to: ${songInfo}`);
+                console.log("Song changed to:",songInfo);
                 try {
                     if (songInfo.length === 3){
                         // Search for recording by artist and recoding
@@ -138,7 +144,14 @@ const Player = ({ templateRatio, currentSong, listenerCount, setLive, togglePlay
                     setCoverPhotoUrl(defaultPhoto);
                 }
             }
-            updateCoverArt(currentSong);
+
+            // Mainly for testing songs
+            const parseHTMLEntities = (code) =>{
+                const parser = new DOMParser();
+                return parser.parseFromString(code, "text/html").documentElement.textContent;
+            }
+
+            updateCoverArt(parseHTMLEntities(currentSong));
         }
         else if (currentSong === "") {    // Initially it's null so not changing anything and default values are set
             setSongName("Temporarily offline");

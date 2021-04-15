@@ -17,13 +17,15 @@ async function getHearts(songName){
     .catch(err => console.error("server", err.message));
 }
 
-async function postHearts(songName){
+function postHearts(songName){
     fetch(`https://nameless-citadel-71535.herokuapp.com/song/${songName}`, {
         mode: "cors",
         method: "POST"
     })
     .catch(err => console.log("Server err", err.message));
 }
+
+let lastSong = null;
 
 const HeartSong = ({ templateRatio, currentSong }) => {
     const width = window.innerWidth > 1025 ? templateRatio * pixels.HeartSong.width : null;
@@ -36,17 +38,16 @@ const HeartSong = ({ templateRatio, currentSong }) => {
     const [hearts, setHearts] = useState("0");
 
     useEffect(() => {
-        if (currentSong && currentSong !== ""){
+        if (currentSong && currentSong !== "" && currentSong !== "ad"){
             if (active){
-                console.log("User hearted this song", currentSong);
+                console.log("User hearted this song", lastSong);
                 setActive(false);
-                postHearts(parseMetadata(currentSong));
+                postHearts(lastSong);
             }
-            else{
-                getHearts(parseMetadata(currentSong))
-                .then(result => { if (result) setHearts(result) })
-                .catch(err => console.error("Error getting song hearts", err));
-            }
+            lastSong = parseMetadata(currentSong);
+            getHearts(lastSong)
+            .then(result => { if (result) setHearts(result) })
+            .catch(err => console.error("Error getting song hearts", err));
         }
     }, [currentSong]);
 

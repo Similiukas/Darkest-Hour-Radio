@@ -275,12 +275,12 @@ main {
     margin-left: auto;
     margin-right: auto;
     .heart-song{
-        background-color: rgb(65, 65, 65);
+        background-color: rgb(50, 50, 50);
         position: absolute;
         display: flex;
         align-items: center;
         text-align: center;
-        border: 2px solid rgb(50, 50, 50);
+        border: 2px solid rgb(40, 40, 40);
         border-radius: 10px;
         user-select: none;
         .heart{
@@ -291,7 +291,7 @@ main {
             border-radius: 10px;
             transform: transform 0.5s ease;
             &:hover{
-                background-color: rgb(60, 60, 60);
+                background-color: rgb(55, 55, 55);
                 color: rgb(214, 148, 170);
             }
             &:active{
@@ -307,7 +307,7 @@ main {
             font-size: 0.9vw;
             color: lightgoldenrodyellow;
             font-family: 'Nova Square', cursive;
-            border-left: 2px solid rgb(50, 50, 50);
+            border-left: 2px solid rgb(40, 40, 40);
         }
     }
     #player {

@@ -58,12 +58,13 @@ const HUDVisualizer = ({ audioPlayer }) => {
                 dataArray[0] = dataArray[5];
                 dataArray[2] = dataArray[7];
                 dataArray[4] = dataArray[9];
+                dataArray[44] = dataArray[41];
                 dataArray[46] = dataArray[43];
                 // bufferLength= 64 imax = 50
                 for (var i = 0; i < bufferLength; i+=2) {
                     barHeight = dataArray[i];
                     if (i < 12) barHeight -= 50 - 2 * i;   // Reducing first couple bars height (reducing by less and less)
-                    else if (bufferLength - i < 26) barHeight = barHeight * (i / 35);
+                    else if (bufferLength - i < 26) barHeight = barHeight * (i / 33);
                     barHeight *= 1.5;
                     
                     var r = barHeight + 2 * (i/bufferLength);

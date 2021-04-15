@@ -50,8 +50,10 @@ const Radio = ({ overlayType, toggleOverlay, toggleTimeout, audio, audioToggle, 
                 setListenerCount(source["listeners"].toString().padStart(2, '0'));
                 if (currentSong !== source.title){   // If changed back to live, immediately changing song info to current live
                     offline = false;
-                    // console.log(`title [${source.title}] ${source.title }`);
-                    if (source.title !== "undefined" && source.title !== "Unknown" && source.title !== " $live$"){
+                    if (source.title === "radio-ad-1"){
+                        setCurrentSong("ad");
+                    }
+                    else if (source.title !== undefined && source.title !== "Unknown" && source.title !== " $live$"){
                         setCurrentSong(source.title);
                     }
                 }
@@ -67,7 +69,7 @@ const Radio = ({ overlayType, toggleOverlay, toggleTimeout, audio, audioToggle, 
             setCurrentSong(null);   // This way, Player.jsx doesn't do anything with current song and when changing back to live, immediately updating to current live song
         }
         getInfo();  // Gets called on load
-        const timer = setInterval(getInfo, 14000);
+        const timer = setInterval(getInfo, 12000);
         return () => { clearInterval(timer); }
     }, [currentSong, pastRecordData]);
 

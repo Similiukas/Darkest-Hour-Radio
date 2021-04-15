@@ -2,7 +2,6 @@ import './styles/style.scss';
 import { useState } from 'react';
 import { useKonamiCode } from "./components/hooks/KonamiHook";
 import { useAudio } from './components/hooks/AudioHook';
-import cassette from "./images/cassette-min.png";
 import Overlays from "./components/overlay_components/Overlays";
 import Header from "./components/Header";
 import Radio from './components/radio_components/Radio';
@@ -49,7 +48,7 @@ function App() {
 			clearTimeout(playbackTimeoutID);
 			playbackTimeoutID = -1;
 		}
-		else    playbackTimeoutID = setTimeout(setToggleOverlay, 2.4 * 60 * 60 * 1000, "timeout start");
+		else    playbackTimeoutID = setTimeout(setToggleOverlay, 2.6 * 60 * 60 * 1000, "timeout start");
 	}
 
 	const startCloudRecording = async (showName, id, name, listeners) =>{
@@ -106,9 +105,6 @@ function App() {
 			<>
 				<Overlays overlayType={overlayType} setToggleOverlay={setToggleOverlay} startCloud={startCloudRecording}/>
 				<main>
-					{/* <div id="cassette-container">
-						<img id="cassette" src={cassette} alt="cassette" onClick={(e) => { if (e.detail === 3) setSecret(true) }}/>
-					</div> */}
 					{ window.innerWidth < 1025 &&
 						<Header />
 					}
