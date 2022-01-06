@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { auth } from "../../firebaseConfig";
+import { auth, signInAnonymously } from "../../firebaseConfig";
 import ChatRoom from "./ChatRoom";
 // If opened the chat the first time
 let initialized = false;
@@ -13,7 +13,7 @@ const ChatContainer = () => {
         setButtonText(buttonText === "Open chat" ? "Close chat" : "Open chat");
         
         if (!initialized){
-            auth.signInAnonymously()
+            signInAnonymously(auth)
             .then((userr) => {
                 console.log("User", userr);
             })

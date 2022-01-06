@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { firebase, firestore } from "../../firebaseConfig";
+import { firestore, collection, addDoc, serverTimestamp } from "../../firebaseConfig";
 
 const MessageSubmit = ({ name }) => {
     const [formValue, setFormValue] = useState("");
@@ -7,10 +7,10 @@ const MessageSubmit = ({ name }) => {
     async function sendMessage(e){
         if ((/\S/).test(formValue)){
             e.preventDefault();
-            await firestore.collection("messages").add({
+            await addDoc(collection(firestore, "messages"), {
                 name: name(),
                 text: /\n/.test(formValue[0]) ? formValue.slice(1) : formValue, // Prevents from first character as newline but the chat doesn't show any newlines either
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                timestamp: serverTimestamp()
             })
             .catch((error) => {
                 console.error("Error writing new message to Database", error);

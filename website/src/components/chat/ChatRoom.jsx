@@ -1,5 +1,5 @@
 import { useRef, useEffect } from 'react';
-import { auth, firestore } from "../../firebaseConfig";
+import { auth, onAuthStateChanged, firestore, query, collection, orderBy, limit } from "../../firebaseConfig";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import ChatMessage from "./ChatMessage";
 import MessageSubmit from "./MessageSubmit";
@@ -20,7 +20,7 @@ function getUserName() {
     return localStorage.getItem("name");
 }
 
-auth.onAuthStateChanged((user) => {
+onAuthStateChanged(auth, (user) => {
     // console.log("Authentication changed", user.displayName, user);
     if(user){
         console.log("Signed in then?");
@@ -33,7 +33,7 @@ auth.onAuthStateChanged((user) => {
 
 const ChatRoom = ({ chatHeight }) => {
     const dummyRef = useRef(null);
-    const [messages] = useCollectionData(firestore.collection("messages").orderBy("timestamp", "desc").limit(12));
+    const [messages] = useCollectionData(query(collection(firestore, "messages"), orderBy("timestamp", "desc"), limit(12)));
 
     // Scrolling to the bottom
     useEffect(() => {

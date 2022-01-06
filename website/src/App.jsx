@@ -13,7 +13,7 @@ import SecretCanvas from "./components/SecretCanvas";
 
 // TODO: Minimize all the photos if not already wrote somewhere else. Also, look at other .todo
 // TODO: Add liquidsoap backup playlist and see if that helps
-
+// TODO: Sumazint tuos visus console log
 let startingCloudRecord = false;
 let playbackTimeoutID = -1;
 

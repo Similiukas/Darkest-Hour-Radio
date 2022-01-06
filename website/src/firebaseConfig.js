@@ -1,11 +1,11 @@
-// Based on: https://stackoverflow.com/a/57289401/9819103
-import firebase from 'firebase/app'; // doing import firebase from 'firebase' or import * as firebase from firebase is not good practice. 
-import 'firebase/auth';
-import 'firebase/firestore';
-import 'firebase/analytics';
+// All the docs for transitioning: https://firebase.google.com/docs/build
+import { initializeApp } from 'firebase/app'
+import { getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth'
+import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, limit } from 'firebase/firestore';
+import { getAnalytics } from 'firebase/analytics';
 
 // Initialize Firebase
-firebase.initializeApp({
+const firebaseApp = initializeApp({
     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
     authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
     projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
@@ -15,8 +15,19 @@ firebase.initializeApp({
     measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 });
 
-const auth = firebase.auth();
-const firestore = firebase.firestore();
-firebase.analytics();
+const auth = getAuth(firebaseApp);
+const firestore = getFirestore(firebaseApp);
+getAnalytics(firebaseApp);
 
-export { firebase, auth, firestore };
+export {
+    auth,
+    signInAnonymously,
+    onAuthStateChanged,
+    firestore,
+    collection,
+    addDoc,
+    serverTimestamp,
+    query,
+    orderBy,
+    limit,
+}
