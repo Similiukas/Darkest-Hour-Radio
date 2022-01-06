@@ -43,43 +43,54 @@ const HUDVisualizer = ({ audioPlayer }) => {
         var x = 0;
         
         var frameCounter = 1;
+        // When user first time starts the audio, need to resume audio context on chrome
+        // https://goo.gl/7K7WLu
+        var firstTimePlaying = true;
 
         function renderFrame() {
             requestAnimationFrame(renderFrame);
-            if (!audioPlayer.paused){   // Only doing all the audio analization if audio is playing (performance boost?)
-                x = 0;
-            
-                analyser.getByteFrequencyData(dataArray);
-            
-                ctx.fillStyle = "#1f1f1f";   // Background -> transparent makes background transparent
-                ctx.fillRect(0, 0, WIDTH, HEIGHT);
-                // dataArray[0] = 0;
-                // dataArray[48] = 255;
-                dataArray[0] = dataArray[5];
-                dataArray[2] = dataArray[7];
-                dataArray[4] = dataArray[9];
-                dataArray[44] = dataArray[41];
-                dataArray[46] = dataArray[43];
-                // bufferLength= 64 imax = 50
-                for (var i = 0; i < bufferLength; i+=2) {
-                    barHeight = dataArray[i];
-                    if (i < 12) barHeight -= 50 - 2 * i;   // Reducing first couple bars height (reducing by less and less)
-                    else if (bufferLength - i < 26) barHeight = barHeight * (i / 33);
-                    barHeight *= 1.5;
-                    
-                    var r = barHeight + 2 * (i/bufferLength);
-                    var g = 600 * (i/bufferLength);
-                    var b = 100 + i * 2.5;   
-            
-                    // var r = barHeight + (50 * (i/bufferLength));
-                    // var g = 800 * (i/bufferLength);
-                    // var b = 1000; 
-            
-                    ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
-                    ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
-            
-                    x += barWidth + 2;
+            if (!audioPlayer.paused){
+                const renderOnPlay = () => {
+                    x = 0;
+                    analyser.getByteFrequencyData(dataArray);
+                
+                    ctx.fillStyle = "#1f1f1f";   // Background -> transparent makes background transparent
+                    ctx.fillRect(0, 0, WIDTH, HEIGHT);
+                    // dataArray[0] = 0;
+                    // dataArray[48] = 255;
+                    dataArray[0] = dataArray[5];
+                    dataArray[2] = dataArray[7];
+                    dataArray[4] = dataArray[9];
+                    dataArray[44] = dataArray[41];
+                    dataArray[46] = dataArray[43];
+                    // bufferLength= 64 imax = 50
+                    for (var i = 0; i < bufferLength; i+=2) {
+                        barHeight = dataArray[i];
+                        if (i < 12) barHeight -= 50 - 2 * i;   // Reducing first couple bars height (reducing by less and less)
+                        else if (bufferLength - i < 26) barHeight = barHeight * (i / 33);
+                        barHeight *= 1.5;
+                        
+                        var r = barHeight + 2 * (i/bufferLength);
+                        var g = 600 * (i/bufferLength);
+                        var b = 100 + i * 2.5;   
+                
+                        // var r = barHeight + (50 * (i/bufferLength));
+                        // var g = 800 * (i/bufferLength);
+                        // var b = 1000; 
+                
+                        ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
+                        ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);
+                
+                        x += barWidth + 2;
+                    }
                 }
+                // Resuming context only the first time
+                if (firstTimePlaying){
+                    context.resume().then(_ => renderOnPlay());
+                    firstTimePlaying = false;
+                }
+                else    renderOnPlay();
+
             }
             else if (frameCounter % 2 === 0){
                 frameCounter = 1;   // Skipping every other frame

@@ -53,7 +53,7 @@ const Radio = ({ overlayType, toggleOverlay, toggleTimeout, audio, audioToggle, 
                     if (source.title === "radio-ad-1"){
                         setCurrentSong("ad");
                     }
-                    else if (source.title !== undefined && source.title !== "Unknown" && source.title !== " $live$"){
+                    else if (source.title !== undefined && source.title !== "Unknown" && source.title.trim() !== "$live$"){
                         setCurrentSong(source.title);
                     }
                 }

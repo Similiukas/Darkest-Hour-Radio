@@ -1,12 +1,13 @@
 import logoImage from "../images/logo-min.png";
 
 const Informacija = ({ secret }) => {
+    const date1 = new Date(Date.UTC(2021, 4, 20, 18));
     return (
         <div id="informacija">
             <div id="text">
                 Next live show schedule:
-                <strong style={{ paddingTop: 10 }}>Darkest Hour</strong>
-                <time style={{ fontSize: "smaller", paddingTop: 2 }}>21:00 [2021/03/05]</time>
+                <strong style={{ paddingTop: 10 }}>Evening Vibes</strong>
+                <time style={{ fontSize: "smaller", paddingTop: 2 }}>{` ${date1.getHours()}:00 [${date1.getFullYear()}/${date1.getMonth().toString().padStart(2, "0")}/${date1.getDate().toString().padStart(2, "0")}]`}</time>
             </div>
             <div id="logo-container">
                 <img src={logoImage} alt="DHR logo" onClick={(e) => { if(e.detail === 3) secret(true) }}/>

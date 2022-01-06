@@ -15,6 +15,8 @@ import { ExpirationPlugin } from "workbox-expiration";
 
 import { precacheAndRoute, createHandlerBoundToURL } from "workbox-precaching";
 
+// For now this will do. Hopefully
+self.skipWaiting();
 
 clientsClaim();
 

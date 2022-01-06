@@ -250,11 +250,12 @@ main {
         height: 65%;
         border-radius: 50%;
         opacity: .25;
-        &.on { animation: blink-animation 7s infinite; }
+        &.on { animation: blink-animation 12s infinite; }
     }
     @keyframes blink-animation {
         0% { opacity: 1; }
-        75% { opacity: .25; }
+        70% { opacity: .35; }
+        95% { opacity: 1; }
         100% { opacity: 1; }
     }
 }

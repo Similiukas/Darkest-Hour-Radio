@@ -5,6 +5,8 @@ function parseMetadata(data){
     // Fuck regex, hate it, just burn, just fuck that. Would be nicer to add another capturing group which catches $live$ but noo, regex has to suck >:C
     if (data.slice(-6) === "$live$") data = data.slice(0, -7);
     let parsedData = data.match("(.+) - (.+) #(.+)") ?? data.match("(.+) - (.+)");  // Group 3 is missing (no added album or MBID)
+    if ((/(.+) #(.+)/g).test(parsedData[2])) parsedData[2] = parsedData[2].replace(/(.+) #(.+)/g, "$1");
+    console.log("This is the song", parsedData, `final: [${parsedData[1] + " " + parsedData[2]}]`);
     return parsedData[1] + " " + parsedData[2];
 }
 // https://nameless-citadel-71535.herokuapp.com/song
