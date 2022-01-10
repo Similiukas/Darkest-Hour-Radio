@@ -1,7 +1,7 @@
 // All the docs for transitioning: https://firebase.google.com/docs/build
 import { initializeApp } from 'firebase/app'
-import { getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth'
-import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, limit } from 'firebase/firestore';
+import { getAuth, signInAnonymously, onAuthStateChanged, updateProfile } from 'firebase/auth'
+import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, limit, Timestamp } from 'firebase/firestore';
 import { getAnalytics } from 'firebase/analytics';
 
 // Initialize Firebase
@@ -23,6 +23,7 @@ export {
     auth,
     signInAnonymously,
     onAuthStateChanged,
+    updateProfile,
     firestore,
     collection,
     addDoc,
@@ -30,4 +31,5 @@ export {
     query,
     orderBy,
     limit,
+    Timestamp,
 }
