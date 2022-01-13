@@ -1,0 +1,122 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": [
+        "plugin:react/recommended",
+        "plugin:react/jsx-runtime",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:react-hooks/recommended",
+        "plugin:import/recommended",
+        "plugin:import/typescript",
+        "airbnb"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 13,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react",
+        "@typescript-eslint"
+    ],
+    "settings": {
+        "import/resolver": {
+            "typescript": {
+                "alwaysTryTypes": true
+            }
+        }
+    },
+    // Some cool rules: https://stackoverflow.com/questions/65602807/eslint-import-order-react-typescript
+    "ignorePatterns": ["SecretCanvas.tsx", "HUDVisualizer.tsx", "reportWebVitals.ts", "service-worker.ts", "serviceWorkerRegistration.ts"],
+    "rules": {
+        "react/jsx-filename-extension": [ "error", {"extensions": [".tsx"]} ],
+        "react/react-in-jsx-scope": "off",   // React v17 does not require to import react,
+        // "react-hooks/rules-of-hooks": "error",
+        // "react-hooks/exhaustive-deps": "warn",
+        "react/prop-types": "off",  // Disable default prop validation (basically js type validation)
+        "react/require-default-props": "off",
+        // Making functional components be arrow function https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/function-component-definition.md
+        "react/function-component-definition": [ "warn", { "namedComponents": "arrow-function" } ],
+        "jsx-a11y/click-events-have-key-events": "off", // So divs could have onClick without keyboard events
+        "jsx-a11y/no-noninteractive-element-interactions": "off", // So divs could have onClick events,
+        "no-unused-vars": 0, // eslint just kinda pukes on type definition vars: https://stackoverflow.com/a/63767419
+        // Indentation -> 4 spaces
+        // "indent": ["error", 4, { "MemberExpression": 0 }],
+        "indent": "off", // To enfore consistent indentation it's better to disable base rule
+        "@typescript-eslint/indent": ["error", 4, { "MemberExpression": 0 }],   // Member expressions are chained expressions (like .then() .catch(), etc.)
+        "react/jsx-indent": ["error", 4],
+        "react/jsx-indent-props": ["error", 4],
+        "operator-linebreak": ["warn", "before", { "overrides": { "&&": "after" } }], // https://eslint.org/docs/rules/operator-linebreak
+        // Import/export to be on one line https://eslint.org/docs/rules/object-curly-newline#importdeclaration-and-exportdeclaration
+        "object-curly-newline": ["error", { "ImportDeclaration": "never" }],
+        "no-nested-ternary": "off", // Just so you could have a ? (b ? c : d) : e
+        "radix": ["error", "as-needed"],    // Just so parseInt("10") wouldn't require base
+        "no-plusplus": "off",   // C'mon ++ and -- is better
+        "import/extensions": ["error", { "tsx": "never" }],  // Don't require tsx elements to be important as *.tsx
+        "max-len": ["warn", { "code": 190, "comments": 130 }],
+        "react/jsx-one-expression-per-line": "off", // This just allows multiple expressions in one line like: <p></p><br/>
+        "import/order":[
+            "error",
+            {
+              "groups": ["builtin", "external", "internal"],
+            //   "pathGroups":[{
+            //     "pattern": "react",
+            //     "group": "external",
+            //     "position": "before"
+            //   }],
+              "pathGroupsExcludedImportTypes": ["react"],
+              "newlines-between": "always",
+              "alphabetize": {
+                "order": "asc",
+                "caseInsensitive": true
+              }
+            }
+        ]
+        // "import-group-ordering": {
+        //     "options": {
+        //       "imports-groups": [
+        //         {
+        //           "name": "dependencies"
+        //         },
+        //         {
+        //           "name": "app"
+        //         },
+        //         {
+        //           "name": "other"
+        //         },
+        //         {
+        //           "name": "styling"
+        //         }
+        //       ],
+        //       "matching-rules": [
+        //         {
+        //           "type": "dependencies",
+        //           "imports-group": "dependencies",
+        //           "disable-native-nodejs-modules": true,
+        //           "from-package.json": true
+        //         },
+        //         {
+        //           "type": "project",
+        //           "matches": "^app(/.*$)?",
+        //           "imports-group": "app"
+        //         },
+        //         {
+        //           "type": "project",
+        //           "matches": "^[.]/.*(?<![.]scss)$",
+        //           "imports-group": "other"
+        //         },
+        //         {
+        //           "type": "project",
+        //           "matches": "^[.]/.*[.]scss$",
+        //           "imports-group": "styling"
+        //         }
+        //       ]
+        //     }
+        //   }
+    }
+}

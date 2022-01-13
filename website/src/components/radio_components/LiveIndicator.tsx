@@ -1,4 +1,4 @@
-import pixels from "pixels.json";
+import pixels from 'pixels.json';
 
 type Props = {
     templateRatio: number,
@@ -13,15 +13,18 @@ const LiveIndicator = ({ templateRatio, areWeLive }: Props) => {
 
     // TODO: Need to check the placing of the inside of the blink. For some reason not perfectly in the middle?
     return (
-        <div id="live-indicator" style={{
-            width: size,
-            height: size,
-            marginLeft: marginLeft,
-            marginTop: marginTop
-        }}>
-            <div className={`live-indicator-blink ${areWeLive ? "on" : ""}`} />
+        <div
+            id="live-indicator"
+            style={{
+                width: size,
+                height: size,
+                marginLeft,
+                marginTop,
+            }}
+        >
+            <div className={`live-indicator-blink ${areWeLive ? 'on' : ''}`} />
         </div>
-    )
-}
+    );
+};
 
-export default LiveIndicator
+export default LiveIndicator;

@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useDelayUnmount } from "../hooks/DelayUnmountHook";
-import Info from "./Info";
-import Podcast from "./Podcast";
-import Timeout from "./Timeout";
+
+import { useDelayUnmount } from 'hooks/DelayUnmountHook';
+
+import Info from './Info';
+import Podcast from './Podcast';
+import Timeout from './Timeout';
 
 type Props = {
     overlayType: string,
@@ -22,47 +24,49 @@ const Overlays = ({ overlayType, setToggleOverlay, startCloud }: Props) => {
 
     useEffect(() => {
         // console.log("Overlays use effect", overlayType);
-        if (overlayType === "info"){
+        if (overlayType === 'info') {
             setInfoIsActive(true);
             // setToggleOverlay("");
-        }
-        else if (overlayType === "podcast"){
+        } else if (overlayType === 'podcast') {
             setPodcastIsActive(true);
             // setToggleOverlay("");
-        }
-        else if (overlayType === "timeout start"){
+        } else if (overlayType === 'timeout start') {
             setTimeoutIsActive(true);
         }
-        return () => { setToggleOverlay(""); }
-    }, [overlayType]);
+        return () => { setToggleOverlay(''); };
+    }, [overlayType, setToggleOverlay]);
 
     return (
         <>
-            { shouldRenderInfo &&
+            { shouldRenderInfo && (
                 <Info
                     mounting={infoIsActive}
                     onClick={() => {
                         setInfoIsActive(false);
-                }}/>
-            }
+                    }}
+                />
+            )}
 
-            { shouldRenderPodcast &&
+            { shouldRenderPodcast && (
                 <Podcast
                     mounting={podcastIsActive}
                     startCloud={startCloud}
                     close={() => {
                         setPodcastIsActive(false);
-                }}/>
-            }
+                    }}
+                />
+            )}
 
-            { timeoutIsActive && 
-                <Timeout onClick={() => {
-                    setTimeoutIsActive(false);
-                    setToggleOverlay("timeout end");
-                }}/>
-            }
+            { timeoutIsActive && (
+                <Timeout
+                    onClick={() => {
+                        setTimeoutIsActive(false);
+                        setToggleOverlay('timeout end');
+                    }}
+                />
+            )}
         </>
-    )
+    );
 };
 
-export default Overlays
+export default Overlays;

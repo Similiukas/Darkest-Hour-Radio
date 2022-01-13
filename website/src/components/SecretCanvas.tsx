@@ -1,6 +1,6 @@
 //@ts-nocheck
 import { useRef, useEffect } from 'react';
-import { useAudio } from "./hooks/AudioHook";
+import { useAudio } from "hooks/AudioHook";
 
 const SecretCanvas = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);

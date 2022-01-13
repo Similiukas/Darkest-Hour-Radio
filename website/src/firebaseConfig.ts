@@ -1,8 +1,8 @@
 // All the docs for transitioning: https://firebase.google.com/docs/build
-import { initializeApp } from 'firebase/app'
-import { getAuth, signInAnonymously, onAuthStateChanged, updateProfile } from 'firebase/auth'
-import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, limit, Timestamp } from 'firebase/firestore';
 import { getAnalytics } from 'firebase/analytics';
+import { initializeApp } from 'firebase/app';
+import { getAuth, signInAnonymously, onAuthStateChanged, updateProfile } from 'firebase/auth';
+import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, limit, Timestamp } from 'firebase/firestore';
 
 // Initialize Firebase
 const firebaseApp = initializeApp({
@@ -12,7 +12,7 @@ const firebaseApp = initializeApp({
     storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
     messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
     appId: process.env.REACT_APP_FIREBASE_APP_ID,
-    measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
+    measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 });
 
 const auth = getAuth(firebaseApp);
@@ -32,4 +32,4 @@ export {
     orderBy,
     limit,
     Timestamp,
-}
+};

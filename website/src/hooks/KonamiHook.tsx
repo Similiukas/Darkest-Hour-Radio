@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 
-export function useKonamiCode(handler: Function) {
+// eslint-disable-next-line import/prefer-default-export
+export function useKonamiCode(handler: CallableFunction) {
     // State to hold array of recently pressed keys
     const [keys, setKeys] = useState<string[]>([]);
 
     // Convert stored keys to string and match against konami code string
-    const isKonamiCode = keys.join(' ') === "ArrowUp ArrowUp ArrowDown ArrowDown ArrowLeft ArrowRight ArrowLeft ArrowRight b a";
+    const isKonamiCode = keys.join(' ') === 'ArrowUp ArrowUp ArrowDown ArrowDown ArrowLeft ArrowRight ArrowLeft ArrowRight b a';
 
     useEffect(() => {
+        // eslint-disable-next-line no-undef
         let timeout: NodeJS.Timeout;
         // When a key is pressed
         window.document.onkeydown = (e) => {
