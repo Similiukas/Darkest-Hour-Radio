@@ -1,24 +1,13 @@
 import { useState, useEffect } from 'react';
 
 import pixels from 'pixels.json';
+import { parseMetadata } from 'utils';
 
 type Props = {
     templateRatio: number,
     currentSong: string | null,
 }
-// TODO: sita funkcija turi buti lib/commons
-function parseMetadata(data: string | null) {
-    if (!data) return '';
-    // Fuck regex, hate it, just burn, just fuck that.
-    // Would be nicer to add another capturing group which catches $live$ but noo, regex has to suck >:C
-    // eslint-disable-next-line no-param-reassign
-    if (data.slice(-6) === '$live$') data = data.slice(0, -7);
-    const parsedData = data.match('(.+) - (.+) #(.+)') ?? data.match('(.+) - (.+)'); // Group 3 is missing (no added album or MBID)
-    if (!parsedData) return '';
-    if ((/(.+) #(.+)/g).test(parsedData[2])) parsedData[2] = parsedData[2].replace(/(.+) #(.+)/g, '$1');
-    console.log('This is the song', parsedData, `final: [${`${parsedData[1]} ${parsedData[2]}`}]`);
-    return `${parsedData[1]} ${parsedData[2]}`;
-}
+
 // https://nameless-citadel-71535.herokuapp.com/song
 async function getHearts(songName: string) {
     return fetch(`https://nameless-citadel-71535.herokuapp.com/song/${songName}`, {
@@ -40,7 +29,7 @@ function postHearts(songName: string | null) {
     .catch((err) => console.log('Server err', err.message));
 }
 
-let lastSong: string | null = null;
+let lastSong: RegExpMatchArray | undefined;
 
 const HeartSong = ({ templateRatio, currentSong }: Props) => {
     const width = window.innerWidth > 1025 ? templateRatio * pixels.HeartSong.width : undefined;
@@ -57,12 +46,17 @@ const HeartSong = ({ templateRatio, currentSong }: Props) => {
             if (active) {
                 console.log('User hearted this song', lastSong);
                 setActive(false);
-                postHearts(lastSong);
+                if (lastSong) {
+                    postHearts(`${lastSong[1]} ${lastSong[2]}`);
+                }
             }
             lastSong = parseMetadata(currentSong);
-            getHearts(lastSong)
-            .then((result) => { if (result) setHearts(result); })
-            .catch((err) => console.error('Error getting song hearts', err));
+            if (lastSong) {
+                getHearts(`${lastSong[1]} ${lastSong[2]}`)
+                .then((result) => { if (result) setHearts(result); })
+                .catch((err) => console.error('Error getting song hearts', err));
+            }
+            // getHearts(lastSong)
         }
     }, [currentSong]);
 

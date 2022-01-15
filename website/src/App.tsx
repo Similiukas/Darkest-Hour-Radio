@@ -2,15 +2,14 @@ import { useState } from 'react';
 
 import ChatContainer from 'components/chat/ChatContainer';
 import Header from 'components/Header';
-import useAudio from 'hooks/AudioHook';
-import { useKonamiCode } from 'hooks/KonamiHook';
 import Informacija from 'components/Informacija';
 import Overlays from 'components/overlay_components/Overlays';
 import Radio from 'components/radio_components/Radio';
 // import RecrodingsDashboard from 'components/RecordingsDashboard';
 import SecretCanvas from 'components/SecretCanvas';
-
+import { useAudio, useKonamiCode } from 'hooks';
 import 'styles/style.scss';
+import { OverlayType, PastRecordData } from 'types';
 
 // TODO: Minimize all the photos if not already wrote somewhere else. Also, look at other .todo
 // TODO: Add liquidsoap backup playlist and see if that helps
@@ -39,9 +38,9 @@ async function getRemoteURL(showName: string, id: string, shortURL = true) {
 const App = () => {
     // TODO: If we start by playing the cloud record, how the timeout gonna be? I guess maybe then we don't need the timeout function? But still, when we press to go back to live, then we need to start timeout
     // TODO: Also, when the cloud record ends, what to do with UI?
-    const [overlayType, setToggleOverlay] = useState('');
+    const [overlayType, setToggleOverlay] = useState<OverlayType>(OverlayType.Empty);
     const [secret, setSecret] = useState(false);
-    const [pastRecordData, setPastRecordData] = useState<any>(null);
+    const [pastRecordData, setPastRecordData] = useState<PastRecordData|null>(null);
 
     const [audio, toggleAudioPlay, setAudioVolume, playOtherURL, switchToNewAudio] = useAudio('https://stream.dhradio.tk/playlist.ogg');
 
@@ -49,10 +48,10 @@ const App = () => {
         if (playbackTimeoutID !== null) {
             clearTimeout(playbackTimeoutID);
             playbackTimeoutID = null;
-        } else playbackTimeoutID = setTimeout(setToggleOverlay, 2.6 * 60 * 60 * 1000, 'timeout start');
+        } else playbackTimeoutID = setTimeout(setToggleOverlay, 2.6 * 60 * 60 * 1000, OverlayType.TimeoutStart);
     };
 
-    const startCloudRecording = async (showName: string, id: string, name: string, listeners: number) => {
+    const startCloudRecording = async (showName: string, id: string, name: string, listeners: string) => {
         console.log('From app to cloud', id);
         setPastRecordData({
             name: 'Loading...',

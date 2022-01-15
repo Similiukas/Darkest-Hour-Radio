@@ -1,4 +1,4 @@
-import { useDelayBool } from 'hooks/DelayBool';
+import { useDelayBool } from 'hooks';
 
 import HeartSong from './HeartSong';
 

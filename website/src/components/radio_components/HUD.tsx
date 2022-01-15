@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
-import { useDidMount } from 'hooks/EffectExceptFirst';
+import { useDelayBool, useDidMount } from 'hooks';
 import pixels from 'pixels.json';
+import { PastRecordData } from 'types';
 
-import { useDelayBool } from '../../hooks/DelayBool';
 import HUDVisualizer from './HUDVisualizer';
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
     listenerCount: string,
     audioVolumeLevel: number,
     audioPlayer: HTMLAudioElement,
-    pastRecordData: any,
+    pastRecordData: PastRecordData | null,
 }
 
 const HUD = ({ templateRatio, listenerCount, audioVolumeLevel, audioPlayer, pastRecordData }: Props) => {

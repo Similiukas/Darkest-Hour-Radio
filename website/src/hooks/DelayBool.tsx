@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-// eslint-disable-next-line import/prefer-default-export
-export const useDelayBool = (delay: number, dependencies?: React.DependencyList) => {
+export default function useDelayBool(delay: number, dependencies?: React.DependencyList) {
     const [bool, setBool] = useState(false);
 
     useEffect(() => {
@@ -14,4 +13,4 @@ export const useDelayBool = (delay: number, dependencies?: React.DependencyList)
     }, dependencies);
 
     return bool;
-};
+}

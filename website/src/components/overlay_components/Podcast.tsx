@@ -10,7 +10,7 @@ import 'swiper/components/pagination/pagination.scss';
 
 type Props = {
     mounting: boolean,
-    startCloud: (showName: string, id: string, name: string, listeners: number) => Promise<void>,
+    startCloud: (showName: string, id: string, name: string, listeners: string) => Promise<void>,
     close: () => void,
 }
 
@@ -29,7 +29,7 @@ const Podcast = ({ mounting, startCloud, close }: Props) => {
     const [firstShowRecords, setFirstShowRecords] = useState([]);
     const [secondShowRecords, setSecondShowRecords] = useState([]);
 
-    const callCloud = (showName: string, id: string, name: string, listeners: number) => {
+    const callCloud = (showName: string, id: string, name: string, listeners: string) => {
         startCloud(showName, id, name, listeners);
         close();
     };

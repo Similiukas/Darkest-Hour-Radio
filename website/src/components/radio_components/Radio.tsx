@@ -1,7 +1,8 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 import radioTemplate from 'images/desktop-template-3-min.png';
 import pixels from 'pixels.json';
+import { OverlayType, PastRecordData } from 'types';
 
 import BoomboxButtons from './BoomboxButtons';
 import HeartSong from './HeartSong';
@@ -10,13 +11,13 @@ import LiveIndicator from './LiveIndicator';
 import Player from './Player';
 
 type Props = {
-    overlayType: string,
-    toggleOverlay: (overlayType: string) => void,
+    overlayType: OverlayType,
+    toggleOverlay: (overlayType: OverlayType) => void,
     toggleTimeout: () => void,
     audio: HTMLAudioElement,
     audioToggle: (toggleLive: boolean) => void,
     audioVolume: (increase: boolean) => void,
-    pastRecordData: any,
+    pastRecordData: PastRecordData | null,
     stopCloud: () => void,
 }
 
@@ -31,7 +32,7 @@ const Radio = ({ overlayType, toggleOverlay, toggleTimeout, audio, audioToggle, 
     const [timeoutReached, setTimeoutReached] = useState(false); // For enabling/disabling boombox buttons pointer events
     const templateRef = useRef<HTMLDivElement>(null); // Ref for template image div
 
-    const togglePlay = useCallback((startPlaying: boolean) => {
+    const togglePlay = (startPlaying: boolean) => {
         console.log('toggle play?', startPlaying, offline, audio);
 
         if (pastRecordData && audio.paused === startPlaying) {
@@ -40,15 +41,15 @@ const Radio = ({ overlayType, toggleOverlay, toggleTimeout, audio, audioToggle, 
             audioToggle(true);
             toggleTimeout();
         } else console.error('We are probably offline?', offline, audio, startPlaying);
-    }, []);
+    };
 
-    function volumeChange(increase: boolean | number) {
+    const volumeChange = (increase: boolean | number) => {
         if (typeof increase === 'boolean') {
             audioVolume(increase);
             setAudioVolumeUI(audio.volume);
         // eslint-disable-next-line no-param-reassign
         } else audio.volume = increase;
-    }
+    };
 
     // Hook for calling radio server for info
     useEffect(() => {
@@ -86,10 +87,10 @@ const Radio = ({ overlayType, toggleOverlay, toggleTimeout, audio, audioToggle, 
     // Timeout useEffect hook for pausing/playing the audio when timeout is reached/ended
     // Also, notifies boombox buttons to change
     useEffect(() => {
-        if (overlayType === 'timeout start') {
+        if (overlayType === OverlayType.TimeoutStart) {
             togglePlay(false);
             setTimeoutReached(true);
-        } else if (overlayType === 'timeout end') {
+        } else if (overlayType === OverlayType.TimeoutEnd) {
             togglePlay(true);
             setTimeoutReached(false);
         }

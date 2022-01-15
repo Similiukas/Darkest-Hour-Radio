@@ -7,7 +7,7 @@ type Props = {
     listeners: number,
     length: number,
     date: any,
-    callCloud: (show: string, id: string, text: string, a: number) => void
+    callCloud: (show: string, id: string, text: string, a: string) => void
 }
 
 function getDate(date: any) {
@@ -25,7 +25,7 @@ function getLegnth(length: number) {
 }
 
 const PodcastShowRecording = ({ id, show, text, listeners, length, date, callCloud }: Props) => (
-    <div className="podcast-recording" role="button" tabIndex={0} onClick={() => callCloud(show, id, text, 12)}>
+    <div className="podcast-recording" role="button" tabIndex={0} onClick={() => callCloud(show, id, text, '12')}>
         <div className="recording-photo-container">
             <img id="recording-photo" src={cassette} alt="some alt" />
         </div>

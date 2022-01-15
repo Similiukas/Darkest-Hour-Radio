@@ -7,7 +7,7 @@ type OwnProps = [
     changeAndPlayURL: (audioUrl: string) => Promise<void>,
     switchToNewAudio: (audioUrl: string) => void,
 ]
-// TODO: kai bus index.d.ts, tai nereiks default ir tada gales import { hook1, hook2 }
+
 export default function useAudio(url: string, volume = 0.4): OwnProps {
     const [audio, setAudio] = useState(new Audio());
     const [playing, setPlaying] = useState(false);

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 
-// eslint-disable-next-line import/prefer-default-export
-export function useKonamiCode(handler: CallableFunction) {
+export default function useKonamiCode(handler: CallableFunction) {
     // State to hold array of recently pressed keys
     const [keys, setKeys] = useState<string[]>([]);
 

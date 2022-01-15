@@ -1,18 +1,18 @@
 import { useState } from 'react';
 
-import { useDidMount } from 'hooks/EffectExceptFirst';
+import { useDidMount } from 'hooks';
 import pixels from 'pixels.json';
+import { OverlayType, PastRecordData } from 'types';
 
-// TODO: prie hooks pridet tiesiog index.d.ts kur butu visi export
 import Button from './Button';
 
 type Props = {
     templateRatio: number,
     togglePlay: (play: boolean) => void,
     volumeChange: (increaseVolume: boolean | number) => void,
-    toggleOverlay: (overlayType: string) => void,
+    toggleOverlay: (overlayType: OverlayType) => void,
     timeoutReached: boolean,
-    pastRecordData: any,
+    pastRecordData: PastRecordData | null,
     stopCloud: () => void,
 }
 
@@ -64,7 +64,6 @@ const BoomboxButtons = ({ templateRatio, togglePlay, volumeChange, toggleOverlay
                 />
             )}
             <Button
-            // TODO: perziet ar reik skirtingu tu type ir name
                 buttonType="volume_down"
                 buttonName="volume_down"
                 buttonHeight={buttonHeight}
@@ -92,7 +91,7 @@ const BoomboxButtons = ({ templateRatio, togglePlay, volumeChange, toggleOverlay
                 buttonHeight={buttonHeight}
                 buttonWidth={buttonWidth}
                 somethingLikeOnClick={() => {
-                    toggleOverlay('info');
+                    toggleOverlay(OverlayType.Info);
                 }}
             />
         </div>

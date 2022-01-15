@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
 
-import { useDelayUnmount } from 'hooks/DelayUnmountHook';
+import { useDelayUnmount } from 'hooks';
+import { OverlayType } from 'types';
 
 import Info from './Info';
 import Podcast from './Podcast';
 import Timeout from './Timeout';
 
 type Props = {
-    overlayType: string,
-    setToggleOverlay: (overlayType: string) => void,
-    startCloud: (showName: string, id: string, name: string, listeners: number) => Promise<void>,
+    overlayType: OverlayType,
+    setToggleOverlay: (overlayType: OverlayType) => void,
+    startCloud: (showName: string, id: string, name: string, listeners: string) => Promise<void>,
 }
 
 // Idk, whether it would be better to do this. Tipo calling through parent (App.jsx) closing and opening overlays
@@ -24,16 +25,16 @@ const Overlays = ({ overlayType, setToggleOverlay, startCloud }: Props) => {
 
     useEffect(() => {
         // console.log("Overlays use effect", overlayType);
-        if (overlayType === 'info') {
+        if (overlayType === OverlayType.Info) {
             setInfoIsActive(true);
             // setToggleOverlay("");
-        } else if (overlayType === 'podcast') {
+        } else if (overlayType === OverlayType.Podcast) {
             setPodcastIsActive(true);
             // setToggleOverlay("");
-        } else if (overlayType === 'timeout start') {
+        } else if (overlayType === OverlayType.TimeoutStart) {
             setTimeoutIsActive(true);
         }
-        return () => { setToggleOverlay(''); };
+        return () => { setToggleOverlay(OverlayType.Empty); };
     }, [overlayType, setToggleOverlay]);
 
     return (
@@ -61,7 +62,7 @@ const Overlays = ({ overlayType, setToggleOverlay, startCloud }: Props) => {
                 <Timeout
                     onClick={() => {
                         setTimeoutIsActive(false);
-                        setToggleOverlay('timeout end');
+                        setToggleOverlay(OverlayType.TimeoutEnd);
                     }}
                 />
             )}

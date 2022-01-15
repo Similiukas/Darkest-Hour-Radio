@@ -1,6 +1,8 @@
+import { PastRecordData } from 'types';
+
 type Props = {
     toggleOverlay: (overlayType: string) => void,
-    pastRecordData: any,
+    pastRecordData: PastRecordData | null,
     stopCloud: () => void
 }
 

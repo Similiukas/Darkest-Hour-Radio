@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Range, Direction, getTrackBackground } from 'react-range';
 
-import { useDidMount } from 'hooks/EffectExceptFirst';
+import { useDidMount } from 'hooks';
 import defaultPhoto from 'images/logo-min.png';
 import pixels from 'pixels.json';
+import { PastRecordData } from 'types';
+import { filterRadios, parseMetadata, searchRecordings, searchRelease } from 'utils';
 
 import PlayerHUD from './PlayerHUD';
 
@@ -15,64 +17,7 @@ type Props = {
     togglePlay: (startPlaying: boolean) => void,
     volumeChange: (increase: boolean | number) => void,
     timeoutReached: boolean,
-    pastRecordData: any,
-}
-
-/**
- * Searches songs (releases) and returns all matched songs JSON
- * @param {String} artist Artist name string
- * @param {String} song Song name string
- */
-async function searchRecordings(artist: string, song: string) {
-    const recordings = await fetch(`https://musicbrainz.org/ws/2/recording/?query=artist:${artist} AND recording:${song}&fmt=json`);
-    const recordingsJSON = await recordings.json();
-    return recordingsJSON;
-}
-
-/**
- * Filters radios and playlist albums (releases) and returns best fit release group MBID
- * @param {String} artist Artist name string
- * @param {JSON} recordings Recordings JSON
- */
-function filterRadios(artist: string, recordings: any) {
-    let backup;
-    try {
-        backup = recordings[0].releases[0]['release-group'].id;
-    } catch (error) {
-        console.error('Error in filtering radios (getting backup)', error);
-        return 'NONE'; // Failed to find a backup
-    }
-    try {
-        for (let recordingIndex = 0; recordingIndex < recordings.length; recordingIndex++) {
-            const record = recordings[recordingIndex];
-            for (let releaseIndex = 0; releaseIndex < record.releases.length; releaseIndex++) {
-                const release = record.releases[releaseIndex];
-                console.log(release);
-                if (release['artist-credit']?.[0].name.toLowerCase() === 'various artists') {
-                    console.log('Found radio');
-                    // continue;
-                } else if (release['artist-credit']?.[0].name.toLowerCase() === artist.toLowerCase()) {
-                    console.log('Right artist');
-                    return release['release-group'].id;
-                }
-            }
-        }
-        return backup;
-    } catch (error) {
-        console.error('Error in filtering radios (looking through recordings)', error);
-        return backup;
-    }
-}
-
-/**
- * Searches album groups (release-group) and returns the first one's ID
- * @param {String} artist Artist name string
- * @param {String} album Album name string
- */
-async function searchRelease(artist: string, album: string) {
-    const release = await fetch(`https://musicbrainz.org/ws/2/release-group/?query=artist:${artist} AND release:${album}&fmt=json`);
-    const releaseJSON = await release.json();
-    return releaseJSON['release-groups'][0].id;
+    pastRecordData: PastRecordData | null,
 }
 
 const Player = ({ templateRatio, currentSong, listenerCount, setLive, togglePlay, volumeChange, timeoutReached, pastRecordData }: Props) => {
@@ -86,25 +31,6 @@ const Player = ({ templateRatio, currentSong, listenerCount, setLive, togglePlay
     const [coverPhotoUrl, setCoverPhotoUrl] = useState(defaultPhoto);
     const [playButtonText, setPlayButtonText] = useState('play_circle');
     const [volume, setVolume] = useState([0.4]);
-
-    /**
-     * Parses data from Icecast source and splits into artist, title, mbid and checks if dj has connected
-     * @param {String} data title of the Icecast source
-     * @returns Returns the parsed data as groups (artist, title, album)
-     */
-    function parseMetadata(data: string) {
-        if (data.slice(-6) === '$live$') {
-            console.log('We are live');
-            setLive(true);
-            // eslint-disable-next-line no-param-reassign
-            data = data.slice(0, -7);
-        } else setLive(false);
-        const parsedData = data.match('(.+) - (.+) #(.+)') ?? data.match('(.+) - (.+)'); // Group 3 is missing (no added album or MBID)
-        if (!parsedData) return undefined;
-        // Sometimes the server puts the album twice so if it does, then stripping it off
-        if ((/(.+) #(.+)/g).test(parsedData[2])) parsedData[2] = parsedData[2].replace(/(.+) #(.+)/g, '$1');
-        return parsedData;
-    }
 
     /**
      * Adds album cover art to HTML
@@ -132,7 +58,7 @@ const Player = ({ templateRatio, currentSong, listenerCount, setLive, togglePlay
             // eslint-disable-next-line no-inner-declarations
             async function updateCoverArt(song: string | null) {
                 if (!song) return;
-                const songInfo = parseMetadata(song);
+                const songInfo = parseMetadata(song, setLive);
                 if (!songInfo) return;
                 setSongName(songInfo[2]);
                 setArtistName(`By ${songInfo[1]}`);
@@ -149,7 +75,6 @@ const Player = ({ templateRatio, currentSong, listenerCount, setLive, togglePlay
                         } else {
                             addCoverArt(MBID, true);
                         }
-                        // MBID === 'NONE' ? setCoverPhotoUrl(defaultPhoto) : addCoverArt(MBID, true);
                         // TODO Need to check whether this is actually correct once more
                     } else if ((songInfo[3].match(/.-./g) || []).length >= 2) { // If album or MBID has more than 2 '-', then it's MBID
                         addCoverArt(songInfo[3], false); // Search for cover art by release MBID
