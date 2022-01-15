@@ -124,6 +124,7 @@ a{
                     border-top: 2px solid rgba(128, 128, 128, 0.3);
                     border-bottom: 2px solid rgba(128, 128, 128, 0.3);
                     transition: transform 0.1s ease;
+                    animation: .6s fade-in linear forwards;
                     .recording-photo-container{
                         display: flex;
                         justify-content: center;

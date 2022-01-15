@@ -1,7 +1,7 @@
-import { PastRecordData } from 'types';
+import { OverlayType, PastRecordData } from 'types';
 
 type Props = {
-    toggleOverlay: (overlayType: string) => void,
+    toggleOverlay: (overlayType: OverlayType) => void,
     pastRecordData: PastRecordData | null,
     stopCloud: () => void
 }
@@ -16,7 +16,7 @@ const RecordingsDashboard = ({ toggleOverlay, pastRecordData, stopCloud }: Props
         {/* for the role tag: https://stackoverflow.com/a/54274507 */}
         {/* for the tabindex tag: https://stackoverflow.com/a/58980034 */}
         { !pastRecordData &&
-            <span role="button" tabIndex={0} id="recordings-button" onClick={() => toggleOverlay('podcast')}>past recordings</span>}
+            <span role="button" tabIndex={0} id="recordings-button" onClick={() => toggleOverlay(OverlayType.Podcast)}>past recordings</span>}
         { pastRecordData &&
             <span role="button" tabIndex={0} id="recordings-button" onClick={stopCloud}>back to live</span>}
     </div>

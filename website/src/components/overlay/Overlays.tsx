@@ -1,16 +1,16 @@
 import { useState, useEffect } from 'react';
 
 import { useDelayUnmount } from 'hooks';
-import { OverlayType } from 'types';
+import { OverlayType, StartCloudRecoding } from 'types';
 
 import Info from './Info';
-import Podcast from './Podcast';
+import PodcastContainer from './PodcastContainer';
 import Timeout from './Timeout';
 
 type Props = {
     overlayType: OverlayType,
     setToggleOverlay: (overlayType: OverlayType) => void,
-    startCloud: (showName: string, id: string, name: string, listeners: string) => Promise<void>,
+    startCloud: StartCloudRecoding,
 }
 
 // Idk, whether it would be better to do this. Tipo calling through parent (App.jsx) closing and opening overlays
@@ -24,7 +24,6 @@ const Overlays = ({ overlayType, setToggleOverlay, startCloud }: Props) => {
     const [timeoutIsActive, setTimeoutIsActive] = useState(false);
 
     useEffect(() => {
-        // console.log("Overlays use effect", overlayType);
         if (overlayType === OverlayType.Info) {
             setInfoIsActive(true);
             // setToggleOverlay("");
@@ -49,7 +48,7 @@ const Overlays = ({ overlayType, setToggleOverlay, startCloud }: Props) => {
             )}
 
             { shouldRenderPodcast && (
-                <Podcast
+                <PodcastContainer
                     mounting={podcastIsActive}
                     startCloud={startCloud}
                     close={() => {

@@ -3,14 +3,14 @@ import { useState } from 'react';
 import ChatContainer from 'components/chat/ChatContainer';
 import Header from 'components/Header';
 import Informacija from 'components/Informacija';
-import Overlays from 'components/overlay_components/Overlays';
-import Radio from 'components/radio_components/Radio';
+import Overlays from 'components/overlay/Overlays';
+import Radio from 'components/radio/Radio';
 // import RecrodingsDashboard from 'components/RecordingsDashboard';
 import SecretCanvas from 'components/SecretCanvas';
 import { useAudio, useKonamiCode } from 'hooks';
-import 'styles/style.scss';
-import { OverlayType, PastRecordData } from 'types';
+import { OverlayType, PastRecordData, StartCloudRecoding } from 'types';
 
+import 'styles/style.scss';
 // TODO: Minimize all the photos if not already wrote somewhere else. Also, look at other .todo
 // TODO: Add liquidsoap backup playlist and see if that helps
 // TODO: Sumazint tuos visus console log
@@ -51,7 +51,7 @@ const App = () => {
         } else playbackTimeoutID = setTimeout(setToggleOverlay, 2.6 * 60 * 60 * 1000, OverlayType.TimeoutStart);
     };
 
-    const startCloudRecording = async (showName: string, id: string, name: string, listeners: string) => {
+    const startCloudRecording: StartCloudRecoding = async (showName, id, name, listeners) => {
         console.log('From app to cloud', id);
         setPastRecordData({
             name: 'Loading...',

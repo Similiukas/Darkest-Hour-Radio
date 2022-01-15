@@ -81,10 +81,15 @@ const BoomboxButtons = ({ templateRatio, togglePlay, volumeChange, toggleOverlay
                     volumeChange(true);
                 }}
             />
-            {/* <Button buttonType="podcast" buttonName="podcasts" buttonHeight={buttonHeight} buttonWidth={buttonWidth}
-                    somethingLikeOnClick={() => {
-                        toggleOverlay("podcast");
-                    }}/> */}
+            <Button
+                buttonType="podcast"
+                buttonName="podcasts"
+                buttonHeight={buttonHeight}
+                buttonWidth={buttonWidth}
+                somethingLikeOnClick={() => {
+                    toggleOverlay(OverlayType.Podcast);
+                }}
+            />
             <Button
                 buttonType="info"
                 buttonName="info"

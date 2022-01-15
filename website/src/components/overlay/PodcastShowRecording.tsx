@@ -1,3 +1,4 @@
+import { Timestamp } from 'firebaseConfig';
 import cassette from 'images/cassette-min.png';
 
 type Props = {
@@ -6,13 +7,14 @@ type Props = {
     text: string,
     listeners: number,
     length: number,
-    date: any,
+    date: Timestamp,
     callCloud: (show: string, id: string, text: string, a: string) => void
 }
 
-function getDate(date: any) {
-    // For some reason date.toLocaleString() returns [object Object]
-    // TODO: paziet kaip cia tas underscore
+function getDate(date: Timestamp) {
+    // For some reason date.toLocaleString() returns [object Object] and it's not even a Timestamp object even tho it should be?
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     // eslint-disable-next-line no-underscore-dangle
     return new Date(date._seconds * 1000).toLocaleDateString();
 }

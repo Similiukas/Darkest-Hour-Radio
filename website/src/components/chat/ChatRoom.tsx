@@ -10,6 +10,7 @@ type Props = {
     chatHeight?: string
 };
 
+// eslint-disable-next-line max-len
 const WORD_1 = ['khaki', 'orchid', 'light blue', 'dark salmon', 'cyan', 'pink', 'chartreuse', 'plum', 'gold', 'magenta', 'lime', 'green yellow', 'hot pink', 'violet', 'purple', 'rebecca purple'];
 const WORD_2 = ['angry', 'sad', 'happy', 'hungry', 'surprised', 'confused', 'disappointed'];
 const WORD_3 = ['woodchuck', 'elephant', 'monkey', 'porpoise', 'panda', 'fox', 'owl', 'starfish', 'cow', 'octopus', 'cat', 'doggo', 'hippopotamus', 'potato'];
@@ -27,13 +28,12 @@ function getUserName() {
 }
 
 onAuthStateChanged(auth, (user) => {
+    // When user opens website and if previously has been logged in
     if (user) {
-        console.log('Signed in then?');
+        console.log('Signed in then?', user);
         if (!user.displayName) {
             updateProfile(user, { displayName: getUserName() });
         }
-    } else {
-        console.log('User singed out?', user); // This probably never gets executed
     }
 });
 

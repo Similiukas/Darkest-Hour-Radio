@@ -17,9 +17,6 @@ const ChatContainer = () => {
 
         if (!initialized) {
             signInAnonymously(auth)
-            .then((userr) => {
-                console.log('User', userr);
-            })
             .catch((err) => {
                 console.error('woops', err);
             });
