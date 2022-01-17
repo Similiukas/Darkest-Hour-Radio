@@ -1,6 +1,6 @@
-const Loader = () => (
+const Loader = ({ scale = 0.5 }) => (
     // Original: https://codepen.io/nikhil8krishnan/pen/rVoXJa
-    <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
+    <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', transform: `scale(${scale})` }}>
         <svg
             version="1.1"
             id="L9"

@@ -74,3 +74,25 @@ export async function searchRelease(artist: string, album: string) {
     const releaseJSON = await release.json();
     return releaseJSON['release-groups'][0].id;
 }
+
+export async function getRemoteURL(showName: string, id: string, shortURL = true) {
+    return fetch(`https://nameless-citadel-71535.herokuapp.com/${shortURL ? 'recordShortURL' : 'recordFullURL'}/${showName}/${id}`, {
+        mode: 'cors',
+        method: 'GET',
+    })
+    .then((response) => response.blob())
+    .then((blob) => {
+        const url = URL.createObjectURL(blob);
+        return url;
+    })
+    .catch((err) => {
+        console.error('woops', err);
+        return null;
+    });
+}
+
+// Mainly for testing songs
+export function parseHTMLEntities(code: string) {
+    const parser = new DOMParser();
+    return parser.parseFromString(code, 'text/html').documentElement.textContent;
+}

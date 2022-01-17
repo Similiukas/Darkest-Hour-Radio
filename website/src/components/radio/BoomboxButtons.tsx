@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
+import { SettingsContext } from 'context';
 import { useDidMount } from 'hooks';
 import pixels from 'pixels.json';
 import { OverlayType, PastRecordData } from 'types';
@@ -10,14 +11,14 @@ type Props = {
     templateRatio: number,
     togglePlay: (play: boolean) => void,
     volumeChange: (increaseVolume: boolean | number) => void,
-    toggleOverlay: (overlayType: OverlayType) => void,
-    timeoutReached: boolean,
     pastRecordData: PastRecordData | null,
     stopCloud: () => void,
 }
 
-const BoomboxButtons = ({ templateRatio, togglePlay, volumeChange, toggleOverlay, timeoutReached, pastRecordData, stopCloud }: Props) => {
+const BoomboxButtons = ({ templateRatio, togglePlay, volumeChange, pastRecordData, stopCloud }: Props) => {
     const [playing, setPlaying] = useState(false);
+
+    const { overlayType, setOverlay } = useContext(SettingsContext);
 
     const buttonHeight = templateRatio * pixels.boomboxButtons.height;
     const buttonWidth = templateRatio * pixels.boomboxButtons.width;
@@ -31,11 +32,11 @@ const BoomboxButtons = ({ templateRatio, togglePlay, volumeChange, toggleOverlay
             className="boombox-buttons"
             style={{
                 marginTop: templateRatio * pixels.boomboxButtons.containerMarginTop - buttonHeight,
-                pointerEvents: timeoutReached ? 'none' : 'auto',
+                pointerEvents: overlayType === OverlayType.TimeoutStart ? 'none' : 'auto',
             }}
         >
             <Button
-                buttonType={`play ${timeoutReached ? '' : (playing ? 'active' : '')}`}
+                buttonType={`play ${overlayType === OverlayType.TimeoutStart ? '' : (playing ? 'active' : '')}`}
                 buttonName="play_arrow"
                 buttonHeight={buttonHeight}
                 buttonWidth={buttonWidth}
@@ -45,7 +46,7 @@ const BoomboxButtons = ({ templateRatio, togglePlay, volumeChange, toggleOverlay
                 }}
             />
             <Button
-                buttonType={`pause ${timeoutReached ? 'active' : (playing ? '' : 'active')}`}
+                buttonType={`pause ${overlayType === OverlayType.TimeoutStart ? 'active' : (playing ? '' : 'active')}`}
                 buttonName="pause"
                 buttonHeight={buttonHeight}
                 buttonWidth={buttonWidth}
@@ -87,7 +88,7 @@ const BoomboxButtons = ({ templateRatio, togglePlay, volumeChange, toggleOverlay
                 buttonHeight={buttonHeight}
                 buttonWidth={buttonWidth}
                 somethingLikeOnClick={() => {
-                    toggleOverlay(OverlayType.Podcast);
+                    setOverlay(OverlayType.Podcast);
                 }}
             />
             <Button
@@ -96,7 +97,7 @@ const BoomboxButtons = ({ templateRatio, togglePlay, volumeChange, toggleOverlay
                 buttonHeight={buttonHeight}
                 buttonWidth={buttonWidth}
                 somethingLikeOnClick={() => {
-                    toggleOverlay(OverlayType.Info);
+                    setOverlay(OverlayType.Info);
                 }}
             />
         </div>

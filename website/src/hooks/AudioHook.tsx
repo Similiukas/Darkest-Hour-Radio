@@ -71,8 +71,7 @@ export default function useAudio(url: string, volume = 0.4): OwnProps {
         } else {
             audio.pause();
         }
-        // TODO: exhaust dep perziet
-    }, [playing]);
+    }, [playing, audio]);
 
     // Initial values
     useEffect(() => {
@@ -80,6 +79,7 @@ export default function useAudio(url: string, volume = 0.4): OwnProps {
         audio.preload = 'auto';
         audio.crossOrigin = 'none';
         audio.volume = volume;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return [audio, toggleAudio, changeVolume, changeAndPlayURL, switchToNewAudio];

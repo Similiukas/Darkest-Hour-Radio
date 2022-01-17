@@ -1,8 +1,10 @@
-import { parseMetadata, filterRadios, searchRecordings, searchRelease } from './utils';
+import { parseMetadata, filterRadios, searchRecordings, searchRelease, getRemoteURL, parseHTMLEntities } from './utils';
 
 export {
     parseMetadata,
     filterRadios,
     searchRecordings,
     searchRelease,
+    getRemoteURL,
+    parseHTMLEntities,
 };

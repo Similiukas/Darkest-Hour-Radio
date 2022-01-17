@@ -17,7 +17,7 @@ async function getHearts(songName: string) {
     // eslint-disable-next-line consistent-return
     .then((res) => { if (res.ok) return res.text(); })
     .catch((err) => console.error('server', err.message));
-    // TODO: perziet kaip cia yra su tuo return
+    // TODO: perziet kaip cia yra su tuo return. Maybe use .finally()
 }
 
 function postHearts(songName: string | null) {

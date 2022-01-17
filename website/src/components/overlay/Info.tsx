@@ -8,7 +8,7 @@ const Info = ({ mounting, onClick }: Props) => {
     const date1 = new Date(Date.UTC(2021, 4, 20, 18));
     console.log(date1);
     return (
-        <div className={`overlay ${mounting ? '' : 'fade-out'}`} role="button" tabIndex={0} onClick={onClick}>
+        <div className={`overlay ${mounting ? '' : 'fade-out'}`} role="button" tabIndex={-1} onClick={onClick}>
             <h3 style={{ paddingTop: 20 }}>Welcome to the <i><strong>Darkest Hour Radio</strong></i></h3>
             <h5>We pirate for your entertainment.</h5>
             <div id="overlay-text">

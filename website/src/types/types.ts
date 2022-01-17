@@ -6,11 +6,11 @@ export interface PastRecordData {
 }
 
 export enum OverlayType {
+    Empty,
     TimeoutStart,
     TimeoutEnd,
     Podcast,
     Info,
-    Empty
 }
 
 export type StartCloudRecoding = (showName: string, id: string, name: string, listeners: string) => Promise<void>

@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useContext } from 'react';
 
+import { SettingsContext } from 'context';
 import { useDelayUnmount } from 'hooks';
 import { OverlayType, StartCloudRecoding } from 'types';
 
@@ -8,60 +9,42 @@ import PodcastContainer from './PodcastContainer';
 import Timeout from './Timeout';
 
 type Props = {
-    overlayType: OverlayType,
-    setToggleOverlay: (overlayType: OverlayType) => void,
     startCloud: StartCloudRecoding,
 }
 
 // Idk, whether it would be better to do this. Tipo calling through parent (App.jsx) closing and opening overlays
 // https://medium.com/@nugen/react-hooks-calling-child-component-function-from-parent-component-4ea249d00740
 // https://stackoverflow.com/a/37950970/9819103
-const Overlays = ({ overlayType, setToggleOverlay, startCloud }: Props) => {
-    const [infoIsActive, setInfoIsActive] = useState(false);
-    const shouldRenderInfo = useDelayUnmount(infoIsActive, 400);
-    const [podcastIsActive, setPodcastIsActive] = useState(false);
-    const shouldRenderPodcast = useDelayUnmount(podcastIsActive, 400);
-    const [timeoutIsActive, setTimeoutIsActive] = useState(false);
-
-    useEffect(() => {
-        if (overlayType === OverlayType.Info) {
-            setInfoIsActive(true);
-            // setToggleOverlay("");
-        } else if (overlayType === OverlayType.Podcast) {
-            setPodcastIsActive(true);
-            // setToggleOverlay("");
-        } else if (overlayType === OverlayType.TimeoutStart) {
-            setTimeoutIsActive(true);
-        }
-        return () => { setToggleOverlay(OverlayType.Empty); };
-    }, [overlayType, setToggleOverlay]);
+const Overlays = ({ startCloud }: Props) => {
+    const { overlayType, setOverlay } = useContext(SettingsContext);
+    const shouldRenderInfo = useDelayUnmount(overlayType === OverlayType.Info, 400);
+    const shouldRenderPodcast = useDelayUnmount(overlayType === OverlayType.Podcast, 400);
 
     return (
         <>
             { shouldRenderInfo && (
                 <Info
-                    mounting={infoIsActive}
+                    mounting={overlayType === OverlayType.Info}
                     onClick={() => {
-                        setInfoIsActive(false);
+                        setOverlay(OverlayType.Empty);
                     }}
                 />
             )}
 
             { shouldRenderPodcast && (
                 <PodcastContainer
-                    mounting={podcastIsActive}
+                    mounting={overlayType === OverlayType.Podcast}
                     startCloud={startCloud}
                     close={() => {
-                        setPodcastIsActive(false);
+                        setOverlay(OverlayType.Empty);
                     }}
                 />
             )}
 
-            { timeoutIsActive && (
+            { overlayType === OverlayType.TimeoutStart && (
                 <Timeout
                     onClick={() => {
-                        setTimeoutIsActive(false);
-                        setToggleOverlay(OverlayType.TimeoutEnd);
+                        setOverlay(OverlayType.TimeoutEnd);
                     }}
                 />
             )}

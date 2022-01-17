@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useContext, useCallback } from 'react';
 
+import { SettingsContext } from 'context';
 import radioTemplate from 'images/desktop-template-3-min.png';
 import pixels from 'pixels.json';
 import { OverlayType, PastRecordData } from 'types';
@@ -11,9 +12,6 @@ import LiveIndicator from './LiveIndicator';
 import Player from './Player';
 
 type Props = {
-    overlayType: OverlayType,
-    toggleOverlay: (overlayType: OverlayType) => void,
-    toggleTimeout: () => void,
     audio: HTMLAudioElement,
     audioToggle: (toggleLive: boolean) => void,
     audioVolume: (increase: boolean) => void,
@@ -23,16 +21,17 @@ type Props = {
 
 let offline = true;
 
-const Radio = ({ overlayType, toggleOverlay, toggleTimeout, audio, audioToggle, audioVolume, pastRecordData, stopCloud }: Props) => {
+const Radio = ({ audio, audioToggle, audioVolume, pastRecordData, stopCloud }: Props) => {
     const [listenerCount, setListenerCount] = useState('00');
     const [currentSong, setCurrentSong] = useState<string | null>(null);
     const [templateRatio, setTemplateRatio] = useState(0);
     const [audioVolumeUI, setAudioVolumeUI] = useState(0.4); // For setting the height of HUD sound bars
     const [weAreLive, setWeAreLive] = useState(false);
-    const [timeoutReached, setTimeoutReached] = useState(false); // For enabling/disabling boombox buttons pointer events
     const templateRef = useRef<HTMLDivElement>(null); // Ref for template image div
 
-    const togglePlay = (startPlaying: boolean) => {
+    const { overlayType, setOverlay, toggleTimeout } = useContext(SettingsContext);
+
+    const togglePlay = useCallback((startPlaying: boolean) => {
         console.log('toggle play?', startPlaying, offline, audio);
 
         if (pastRecordData && audio.paused === startPlaying) {
@@ -41,7 +40,7 @@ const Radio = ({ overlayType, toggleOverlay, toggleTimeout, audio, audioToggle, 
             audioToggle(true);
             toggleTimeout();
         } else console.error('We are probably offline?', offline, audio, startPlaying);
-    };
+    }, [audio, audioToggle, pastRecordData, toggleTimeout]);
 
     const volumeChange = (increase: boolean | number) => {
         if (typeof increase === 'boolean') {
@@ -89,12 +88,13 @@ const Radio = ({ overlayType, toggleOverlay, toggleTimeout, audio, audioToggle, 
     useEffect(() => {
         if (overlayType === OverlayType.TimeoutStart) {
             togglePlay(false);
-            setTimeoutReached(true);
         } else if (overlayType === OverlayType.TimeoutEnd) {
             togglePlay(true);
-            setTimeoutReached(false);
+            setOverlay(OverlayType.Empty);
         }
-    }, [overlayType]); // TODO: reik sutvarkyt cia irgi su useCallback
+    // If togglePlay is added to dep-array, then it will get called 3 times causing an error on third one
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [overlayType, setOverlay]);
 
     // Hook placing UI objects based on template size
     useEffect(() => {
@@ -117,8 +117,6 @@ const Radio = ({ overlayType, toggleOverlay, toggleTimeout, audio, audioToggle, 
                         templateRatio={templateRatio}
                         togglePlay={togglePlay}
                         volumeChange={volumeChange}
-                        toggleOverlay={toggleOverlay}
-                        timeoutReached={timeoutReached}
                         pastRecordData={pastRecordData}
                         stopCloud={stopCloud}
                     />
@@ -150,7 +148,6 @@ const Radio = ({ overlayType, toggleOverlay, toggleTimeout, audio, audioToggle, 
                 setLive={setWeAreLive}
                 togglePlay={togglePlay}
                 volumeChange={volumeChange}
-                timeoutReached={timeoutReached}
                 pastRecordData={pastRecordData}
             />
 
