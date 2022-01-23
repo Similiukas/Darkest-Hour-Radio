@@ -13,45 +13,45 @@ const Loader = ({ scale = 0.5 }) => (
             xmlSpace="preserve"
             height="150px"
         >
-            <rect x="0" y="50" width="5" height="50" fill="#fff">
+            <rect x="0" y="0" width="5" height="50" fill="#fff">
                 <animateTransform
                     attributeType="xml"
                     attributeName="transform"
                     type="translate"
-                    values="0 -50; 0 0; 0 -50"
+                    values="0 0; 0 50; 0 0"
                     begin="0"
                     dur="1.4s"
                     repeatCount="indefinite"
                 />
             </rect>
-            <rect x="15" y="50" width="5" height="50" fill="#fff">
+            <rect x="15" y="0" width="5" height="50" fill="#fff">
                 <animateTransform
                     attributeType="xml"
                     attributeName="transform"
                     type="translate"
-                    values="0 -50; 0 0; 0 -50"
+                    values="0 0; 0 50; 0 0"
                     begin="0.2s"
                     dur="1.4s"
                     repeatCount="indefinite"
                 />
             </rect>
-            <rect x="30" y="10" width="5" height="50" fill="#fff">
+            <rect x="30" y="0" width="5" height="50" fill="#fff">
                 <animateTransform
                     attributeType="xml"
                     attributeName="transform"
                     type="translate"
-                    values="0 -10; 0 40; 0 -10"
+                    values="0 0; 0 50; 0 0"
                     begin="0.4s"
                     dur="1.4s"
                     repeatCount="indefinite"
                 />
             </rect>
-            <rect x="45" y="10" width="5" height="50" fill="#fff">
+            <rect x="45" y="0" width="5" height="50" fill="#fff">
                 <animateTransform
                     attributeType="xml"
                     attributeName="transform"
                     type="translate"
-                    values="0 -10; 0 40; 0 -10"
+                    values="0 0; 0 50; 0 0"
                     begin="0.6s"
                     dur="1.4s"
                     repeatCount="indefinite"

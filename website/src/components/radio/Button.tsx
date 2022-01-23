@@ -10,8 +10,9 @@ const Button = ({ buttonType, buttonName, somethingLikeOnClick, buttonHeight, bu
     <div
         className={`button ${buttonType}`}
         role="button"
-        tabIndex={0}
-        onClick={somethingLikeOnClick}
+        tabIndex={-1}
+        // Better than onClick since the button goes down as it's clicked https://www.w3schools.com/jsref/event_onmousedown.asp
+        onMouseDown={somethingLikeOnClick}
         style={{ height: buttonHeight, width: buttonWidth }}
     >
         <span className="material-icons">{buttonName}</span>
