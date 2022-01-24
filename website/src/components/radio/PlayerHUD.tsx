@@ -17,10 +17,12 @@ const PlayerHUD = ({ templateRatio, listenerCount, currentSong }: Props) => {
                 <span id="text">Current Listeners:&nbsp;</span>
                 <span className={`listener-count ${active ? 'visible' : ''}`}>{listenerCount}</span>
             </div>
-            <HeartSong
-                templateRatio={templateRatio}
-                currentSong={currentSong}
-            />
+            { currentSong && (
+                <HeartSong
+                    templateRatio={templateRatio}
+                    currentSong={currentSong}
+                />
+            )}
         </div>
     );
 };

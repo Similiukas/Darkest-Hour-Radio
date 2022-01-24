@@ -1,71 +1,105 @@
 import { useState, useEffect } from 'react';
 
+import { useDidMount, useInterval } from 'hooks';
 import pixels from 'pixels.json';
 import { parseMetadata } from 'utils';
 
 type Props = {
     templateRatio: number,
-    currentSong: string | null,
+    currentSong: string,
 }
 
 // https://nameless-citadel-71535.herokuapp.com/song
 async function getHearts(songName: string) {
-    return fetch(`https://nameless-citadel-71535.herokuapp.com/song/${songName}`, {
+    return fetch(`http://192.168.0.52:3002/song/${songName}`, {
         mode: 'cors',
         method: 'GET',
     })
-    // eslint-disable-next-line consistent-return
-    .then((res) => { if (res.ok) return res.text(); })
-    .catch((err) => console.error('server', err.message));
-    // TODO: perziet kaip cia yra su tuo return. Maybe use .finally()
+    .then((res) => {
+        if (res.ok) return res.text();
+        // This happens if the server responds with an error
+        throw new Error('Something wrong');
+    })
+    .catch((err) => {
+        // This happens if the server is down
+        console.info('Error getting hearts for song', songName, err.message);
+        return '0';
+    });
 }
 
-function postHearts(songName: string | null) {
-    if (!songName) return;
-    fetch(`https://nameless-citadel-71535.herokuapp.com/song/${songName}`, {
+function postHearts(songName: string, unheart: boolean) {
+    fetch(`http://localhost:3002/${unheart ? 'un' : ''}song/${songName}`, {
         mode: 'cors',
         method: 'POST',
     })
     .catch((err) => console.log('Server err', err.message));
 }
 
-let lastSong: RegExpMatchArray | undefined;
+// eslint-disable-next-line no-undef
+// let timer: NodeJS.Timer;
 
 const HeartSong = ({ templateRatio, currentSong }: Props) => {
     const width = window.innerWidth > 1025 ? templateRatio * pixels.HeartSong.width : undefined;
     const height = window.innerWidth > 1025 ? templateRatio * pixels.HeartSong.height : undefined;
-
     const marginLeft = window.innerWidth > 1025 ? templateRatio * pixels.HeartSong.marginLeft : undefined;
     const marginTop = window.innerWidth > 1025 ? templateRatio * pixels.HeartSong.marginTop : undefined;
 
     const [active, setActive] = useState(false);
-    const [hearts, setHearts] = useState('0');
+    const [hearts, setHearts] = useState(0);
 
-    useEffect(() => {
-        if (currentSong && currentSong !== '' && currentSong !== 'ad') {
-            if (active) {
-                console.log('User hearted this song', lastSong);
-                setActive(false);
-                if (lastSong) {
-                    postHearts(`${lastSong[1]} ${lastSong[2]}`);
-                }
+    const handleHeartClick = () => {
+        const parsedSong = parseMetadata(currentSong);
+        if (parsedSong) postHearts(`${parsedSong[1]} ${parsedSong[2]}`, active);
+        sessionStorage.setItem('currentSong', active ? '0' : '1');
+        setActive(!active);
+    };
+
+    const handleGetHearts = async (forceNonActive: boolean, forceActive: boolean) => {
+        console.log(new Date(), currentSong, active);
+        if (currentSong !== '' && currentSong !== 'ad') {
+            const parsedSong = parseMetadata(currentSong);
+            if (parsedSong) {
+                getHearts(`${parsedSong[1]} ${parsedSong[2]}`).then((res) => {
+                    console.log('res', res, active, forceNonActive, (forceNonActive || !active) && !forceActive);
+                    // Since we update hearts with active (and not making a post then a get request for updated value)
+                    // Need to subtract 1 if the heart is active. However, for some reason when the song changes
+                    // Active state doesn't change in time thus need to force non active to not subtract hearts on the new song
+                    // This might be because this is a promise call, though prolly isn't (quickly tested)
+                    setHearts((forceNonActive || !active) && !forceActive ? parseInt(res) : parseInt(res) - 1);
+                });
             }
-            lastSong = parseMetadata(currentSong);
-            if (lastSong) {
-                getHearts(`${lastSong[1]} ${lastSong[2]}`)
-                .then((result) => { if (result) setHearts(result); })
-                .catch((err) => console.error('Error getting song hearts', err));
-            }
-            // getHearts(lastSong)
         }
+    };
+
+    // Checking hearts every 5 seconds.
+    useInterval(() => handleGetHearts(false, false), 5 * 1000);
+
+    useDidMount(() => {
+        if (currentSong !== '' && currentSong !== 'ad') {
+            setActive(false);
+            handleGetHearts(true, false);
+            sessionStorage.removeItem('currentSong');
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentSong]);
+
+    // We check if on page reload the song has already been hearted
+    useEffect(() => {
+        if (sessionStorage.getItem('currentSong') === '1') {
+            setActive(true);
+            handleGetHearts(false, true);
+        } else {
+            handleGetHearts(false, false);
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <div
             className="heart-song"
             role="button"
             tabIndex={-1}
-            onClick={() => setActive(!active)}
+            onClick={handleHeartClick}
             style={{
                 width,
                 height,
@@ -74,7 +108,7 @@ const HeartSong = ({ templateRatio, currentSong }: Props) => {
             }}
         >
             <span className={`heart ${active ? 'active' : ''}`}>&hearts;</span>
-            <span className="amount">{active ? parseInt(hearts) + 1 : parseInt(hearts)}</span>
+            <span className="amount">{active ? hearts + 1 : hearts}</span>
         </div>
     );
 };

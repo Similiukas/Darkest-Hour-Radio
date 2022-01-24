@@ -134,10 +134,12 @@ const Radio = ({ audio, audioToggle, audioVolume, pastRecordData, stopCloud }: P
                         areWeLive={weAreLive}
                     />
 
-                    <HeartSong
-                        templateRatio={templateRatio}
-                        currentSong={currentSong}
-                    />
+                    { currentSong && (
+                        <HeartSong
+                            templateRatio={templateRatio}
+                            currentSong={currentSong}
+                        />
+                    )}
                 </>
             )}
 
