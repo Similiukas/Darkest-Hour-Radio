@@ -1,6 +1,6 @@
 import { FC, useState, useCallback } from 'react';
 
-import { OverlayType } from 'types';
+import { OverlayType, ScheduleInfo } from 'types';
 
 import { DEFAULT_SETTINGS, SettingsContext } from './settingsContext';
 
@@ -15,6 +15,7 @@ import { DEFAULT_SETTINGS, SettingsContext } from './settingsContext';
 // eslint-disable-next-line import/prefer-default-export
 export const SettingsProvider: FC = ({ children }) => {
     const [overlayType, setOverlayType] = useState<OverlayType>(DEFAULT_SETTINGS.overlayType);
+    const [scheduleInfo, setScheduleInfo] = useState<ScheduleInfo[]|undefined>(DEFAULT_SETTINGS.scheduleInfo);
 
     // const setOverlay = useCallback((overlayType: OverlayType) => {
     //     setOverlayType(overlayType);
@@ -42,7 +43,7 @@ export const SettingsProvider: FC = ({ children }) => {
 
     return (
         // eslint-disable-next-line react/jsx-no-constructed-context-values
-        <SettingsContext.Provider value={{ overlayType, setOverlay: setOverlayType, toggleTimeout }}>
+        <SettingsContext.Provider value={{ overlayType, setOverlay: setOverlayType, toggleTimeout, scheduleInfo, setScheduleInfo }}>
             {children}
         </SettingsContext.Provider>
     );

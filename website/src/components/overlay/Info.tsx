@@ -1,3 +1,8 @@
+import { useContext } from 'react';
+
+import { SettingsContext } from 'context';
+import { convertDate } from 'utils';
+
 type Props = {
     mounting: boolean,
     onClick: () => void,
@@ -5,18 +10,19 @@ type Props = {
 // TODO: pridet prie npm scripts dar ir linterio fix
 // TODO: perziet ar tabindex ka daro
 const Info = ({ mounting, onClick }: Props) => {
-    const date1 = new Date(Date.UTC(2021, 4, 20, 18));
-    console.log(date1);
+    const { scheduleInfo } = useContext(SettingsContext);
+
     return (
         <div className={`overlay ${mounting ? '' : 'fade-out'}`} role="button" tabIndex={-1} onClick={onClick}>
             <h3 style={{ paddingTop: 20 }}>Welcome to the <i><strong>Darkest Hour Radio</strong></i></h3>
             <h5>We pirate for your entertainment.</h5>
             <div id="overlay-text">
-                <h5 id="schedule-header">Live radio show schedule:</h5><hr /><br />
-                <p id="schedule-main">Evening Vibes
-                    <time>{` ${date1.getHours()}:00 [${date1.getFullYear()}/${date1.getMonth().toString().padStart(2, '0')}/${date1.getDate().toString().padStart(2, '0')}]`}</time><br />
-                </p>
-                <br /><br />
+                { scheduleInfo && (
+                    <>
+                        <h5 id="schedule-header">Live radio show schedule:</h5><hr /><br />
+                        <p id="schedule-main">{scheduleInfo[0].name}<time>{convertDate(scheduleInfo)}</time><br /></p><br /><br />
+                    </>
+                )}
                 <h6 style={{ fontSize: '1.5vmax' }}>Contacts</h6><hr />
                 <p id="overlay-description">
                     <br />If you love a song, then press on the <b style={{ color: 'pink' }}>&hearts;</b> to show the love!

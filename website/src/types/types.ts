@@ -27,3 +27,8 @@ export interface Podcast {
     name: string,
     recordings: PodcastRecording[]
 }
+
+export interface ScheduleInfo {
+    name: string,
+    date: Timestamp,
+}

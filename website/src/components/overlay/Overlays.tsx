@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 
 import { SettingsContext } from 'context';
 import { useDelayUnmount } from 'hooks';
@@ -16,9 +16,15 @@ type Props = {
 // https://medium.com/@nugen/react-hooks-calling-child-component-function-from-parent-component-4ea249d00740
 // https://stackoverflow.com/a/37950970/9819103
 const Overlays = ({ startCloud }: Props) => {
-    const { overlayType, setOverlay } = useContext(SettingsContext);
+    const { overlayType, setOverlay, setScheduleInfo } = useContext(SettingsContext);
     const shouldRenderInfo = useDelayUnmount(overlayType === OverlayType.Info, 400);
     const shouldRenderPodcast = useDelayUnmount(overlayType === OverlayType.Podcast, 400);
+
+    useEffect(() => {
+        fetch('http://localhost:3002/schedule')
+        .then((res) => res.json())
+        .then((result) => setScheduleInfo(result));
+    }, [setScheduleInfo]);
 
     return (
         <>

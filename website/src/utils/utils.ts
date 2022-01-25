@@ -1,3 +1,5 @@
+import { ScheduleInfo } from 'types';
+
 /**
  * Parses data from Icecast source and splits into artist, title, mbid and checks if dj has connected
  * @param {String} data title of the Icecast source
@@ -95,4 +97,20 @@ export async function getRemoteURL(showName: string, id: string, shortURL = true
 export function parseHTMLEntities(code: string) {
     const parser = new DOMParser();
     return parser.parseFromString(code, 'text/html').documentElement.textContent;
+}
+
+/**
+ * Converts the first date of the schedule.
+ * @param scheduleInfo schedule
+ * @returns converted date
+ */
+export function convertDate(scheduleInfo: ScheduleInfo[] | undefined) {
+    let date = new Date(Date.UTC(2021, 4, 20, 18));
+    if (scheduleInfo) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        // eslint-disable-next-line no-underscore-dangle
+        date = new Date(scheduleInfo[0].date._seconds * 1000);
+    }
+    return ` ${date.getHours()}:${date.getMinutes()} [${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}]`;
 }
