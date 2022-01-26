@@ -76,7 +76,6 @@ const Player = ({ templateRatio, currentSong, listenerCount, setLive, togglePlay
                 } else {
                     addCoverArt(MBID, true);
                 }
-                // TODO Need to check whether this is actually correct once more
             } else if ((songInfo[3].match(/.-./g) || []).length >= 2) { // If album or MBID has more than 2 '-', then it's MBID
                 addCoverArt(songInfo[3], false); // Search for cover art by release MBID
             } else {
@@ -92,7 +91,6 @@ const Player = ({ templateRatio, currentSong, listenerCount, setLive, togglePlay
     }, [setLive]);
 
     useEffect(() => {
-        console.log(`CurrentSong [${currentSong}] [${typeof currentSong}]`);
         if (currentSong === 'ad') {
             setSongInfo({
                 title: 'Darkest Hour Radio',

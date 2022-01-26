@@ -114,10 +114,9 @@ const HUDVisualizer = ({ audioPlayer }: Props) => {
                     // var g = 800 * (i/bufferLength);
                     // var b = 256;
             
-                    var r = barHeight + (30 * (i/64));
-                    var g = 500 * (i/32);
-                    var b = 256 - new Date().getSeconds();  // This might be a heavy task so maybe just 256 - i
-                    // TODO: reik paziet kaip cia tiksliai tuos sekundes
+                    var r = barHeight + (2 * (i/64));
+                    var g = 300 * (i/32);
+                    var b = 255 - i*3;
             
                     ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
                     ctx.fillRect(x, HEIGHT - barHeight, barWidth, barHeight);

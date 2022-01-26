@@ -60,7 +60,7 @@
         "no-shadow": "off", // Default rule does not work with enums https://github.com/typescript-eslint/typescript-eslint/issues/2483
         "no-console": "off", // Allow console.log
         "import/extensions": ["error", { "tsx": "never" }],  // Don't require tsx elements to be important as *.tsx
-        "max-len": ["warn", { "code": 190, "comments": 130 }],
+        "max-len": ["warn", { "code": 190, "comments": 135 }],
         "react/jsx-one-expression-per-line": "off", // This just allows multiple expressions in one line like: <p></p><br/>
         "import/order":[
             "error",

@@ -48,9 +48,13 @@ const PodcastContainer = ({ mounting, startCloud, close }: Props) => {
             </div>
             <div id="podcast-main">
                 <div id="podcast-show-buttons">
-                    <button className={activeShowID === 0 ? 'active' : ''} onClick={() => setActiveShowID(0)} type="button">Button here</button>
-                    <button className={activeShowID === 1 ? 'active' : ''} onClick={() => setActiveShowID(1)} type="button">Another show</button>
-                    <button className={activeShowID === 2 ? 'active' : ''} type="button">Third show</button>
+                    <button className={activeShowID === 0 ? 'active' : ''} onClick={() => setActiveShowID(0)} type="button" style={{ borderRadius: '10px 0 0 10px' }}>
+                        Evening Vibes
+                    </button>
+                    <button className={activeShowID === 1 ? 'active' : ''} onClick={() => setActiveShowID(1)} type="button" style={{ borderRadius: '0 10px 10px 0' }}>
+                        Another show
+                    </button>
+                    {/* <button className={activeShowID === 2 ? 'active' : ''} type="button">Third show</button> */}
                 </div>
                 <div id="podcast-show-description">
                     { activeShowID === 0 && (

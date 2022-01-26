@@ -12,7 +12,7 @@ type Props = {
 
 const Informacija = ({ secret }: Props) => {
     const { scheduleInfo } = useContext(SettingsContext);
-    console.log('cia info', scheduleInfo);
+
     return (
         <div id="informacija">
             { scheduleInfo && (

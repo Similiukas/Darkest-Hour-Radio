@@ -35,9 +35,6 @@ function postHearts(songName: string, unheart: boolean) {
     .catch((err) => console.log('Server err', err.message));
 }
 
-// eslint-disable-next-line no-undef
-// let timer: NodeJS.Timer;
-
 const HeartSong = ({ templateRatio, currentSong }: Props) => {
     const width = window.innerWidth > 1025 ? templateRatio * pixels.HeartSong.width : undefined;
     const height = window.innerWidth > 1025 ? templateRatio * pixels.HeartSong.height : undefined;
@@ -55,12 +52,10 @@ const HeartSong = ({ templateRatio, currentSong }: Props) => {
     };
 
     const handleGetHearts = async (forceNonActive: boolean, forceActive: boolean) => {
-        console.log(new Date(), currentSong, active);
         if (currentSong !== '' && currentSong !== 'ad') {
             const parsedSong = parseMetadata(currentSong);
             if (parsedSong) {
                 getHearts(`${parsedSong[1]} ${parsedSong[2]}`).then((res) => {
-                    console.log('res', res, active, forceNonActive, (forceNonActive || !active) && !forceActive);
                     // Since we update hearts with active (and not making a post then a get request for updated value)
                     // Need to subtract 1 if the heart is active. However, for some reason when the song changes
                     // Active state doesn't change in time thus need to force non active to not subtract hearts on the new song

@@ -50,6 +50,24 @@ a{
     }
 }
 
+@keyframes slide-in {
+    from {
+        top: 100vh;
+    }
+    to {
+        top: 0;
+    }
+}
+
+@keyframes slide-out {
+    from {
+        top: 0;
+    }
+    to {
+        top: 100vh;
+    }
+}
+
 .material-icons.md-36 { font-size: 36px; }
 
 .overlay {
@@ -81,6 +99,10 @@ a{
     cursor: initial;
     height: 100%;   // not on pc
     top: 0;         // not on pc
+    animation: .5s slide-in ease-out forwards;
+    &.fade-out {
+        animation: .4s slide-out ease-in forwards;
+    }
     #podcast-description{
         padding-top: 20px;
         width: 100%;
@@ -108,6 +130,7 @@ a{
             padding: 20px 20px 0 20px;
             border-bottom: 2px solid gray;
             div{
+                opacity: 0;
                 animation: .9s fade-in linear forwards;
             }
         }

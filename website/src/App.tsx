@@ -9,7 +9,6 @@ import { useKonamiCode } from 'hooks';
 import 'styles/style.scss';
 // TODO: Minimize all the photos if not already wrote somewhere else. Also, look at other .todo
 // TODO: Add liquidsoap backup playlist and see if that helps
-// TODO: Sumazint tuos visus console log
 // TODO: Dar ir pakeist background photo, gal ir gif (pirma img, poto kai uzloadin, tada gif or some. Galima ir canvas gif)
 
 const App = () => {

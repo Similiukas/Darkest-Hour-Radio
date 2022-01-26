@@ -6,6 +6,7 @@ import pixels from 'pixels.json';
 import { OverlayType, PastRecordData } from 'types';
 
 import BoomboxButtons from './BoomboxButtons';
+import Cassette from './Cassette';
 import HeartSong from './HeartSong';
 import HUD from './HUD';
 import LiveIndicator from './LiveIndicator';
@@ -27,6 +28,7 @@ const Radio = ({ audio, audioToggle, audioVolume, pastRecordData, stopCloud }: P
     const [templateRatio, setTemplateRatio] = useState(0);
     const [audioVolumeUI, setAudioVolumeUI] = useState(0.4); // For setting the height of HUD sound bars
     const [weAreLive, setWeAreLive] = useState(false);
+    const [isAudioPlaying, setIsAudioPlaying] = useState(false);
     const templateRef = useRef<HTMLDivElement>(null); // Ref for template image div
 
     const { overlayType, setOverlay, toggleTimeout } = useContext(SettingsContext);
@@ -36,9 +38,11 @@ const Radio = ({ audio, audioToggle, audioVolume, pastRecordData, stopCloud }: P
 
         if (pastRecordData && audio.paused === startPlaying) {
             audioToggle(false); // Toggling audio of recording even if we are offline
+            setIsAudioPlaying(startPlaying);
         } else if (!offline && audio.paused === startPlaying) { // If not offline button only starts or pauses (just for PC buttons)
             audioToggle(true);
             toggleTimeout();
+            setIsAudioPlaying(startPlaying);
         } else console.error('We are probably offline?', offline, audio, startPlaying);
     }, [audio, audioToggle, pastRecordData, toggleTimeout]);
 
@@ -140,6 +144,10 @@ const Radio = ({ audio, audioToggle, audioVolume, pastRecordData, stopCloud }: P
                             currentSong={currentSong}
                         />
                     )}
+                    <Cassette
+                        templateRatio={templateRatio}
+                        playing={isAudioPlaying}
+                    />
                 </>
             )}
 

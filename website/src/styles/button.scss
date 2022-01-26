@@ -2,7 +2,7 @@ $border-size: 0.1rem; // 0.125rem
 $duration: 250ms;
 $ease: cubic-bezier(0.215, 0.61, 0.355, 1);
 $font-family: monospace;
-$color-primary: rgb(50, 50, 50);  // white
+$color-primary: #1e1d1d;  // white
 $color-secondary: lightgoldenrodyellow;    // black
 $color-active: rgb(39, 39, 39); // 1e5f74
 $color-tertiary: lightgoldenrodyellow;
@@ -22,12 +22,12 @@ $space:1rem;
                 $space / 1.125
                 0
                 $space;
-        border: $border-size solid #525252;   //black
+        border: 0 solid #525252;   //black
         color: $color-secondary;
         background-color: $color-primary;
         font-size: .9rem;      // 1.5rem 
         font-family: $font-family;
-        text-transform: lowercase;
+        // text-transform: lowercase;
         text-shadow: $shadow 2px 2px;
         transition: flex-grow $duration $ease;
         @media (min-width: 1025px) {

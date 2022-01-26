@@ -30,5 +30,11 @@
         "height": 739,
         "MARGIN_X": 0.15,
         "MARGIN_Y": 0.1
+    },
+    "Cassette": {
+        "width": 533,
+        "height": 372,
+        "marginLeft": 672,
+        "marginTop": 453
     }
 }

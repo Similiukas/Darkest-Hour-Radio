@@ -72,8 +72,30 @@ body {
     }
 }
 
+@keyframes slide-in {
+    from {
+        top: 100vh;
+    }
+    to {
+        top: 7vh;
+    }
+}
+
+@keyframes slide-out {
+    from {
+        top: 7vh;
+    }
+    to {
+        top: 100vh;
+    }
+}
+
 .podcasts{
     height: 83%;
+    animation: .5s slide-in ease-out forwards;
+    &.fade-out {
+        animation: .4s slide-out ease-in forwards;
+    }
     #podcast-description{
         height: 30%;
         p{

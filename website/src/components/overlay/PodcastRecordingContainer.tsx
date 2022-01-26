@@ -17,7 +17,6 @@ type Props = {
 
 const PodcastRecordingContainer = ({ activeShowID, podcasts, callCloud }: Props) => (
     <div id="podcast-recordings-container">
-        {/* TODO: need a loader here for when it loads all the recordings */}
         { podcasts && (
             <Swiper
                 className="podcast-show"
