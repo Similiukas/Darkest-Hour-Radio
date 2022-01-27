@@ -139,6 +139,11 @@ main {
     display: block;
     max-width: 100%;
     height: auto;
+    user-select: none;
+    -webkit-user-drag: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
 }
 
 .boombox-buttons {

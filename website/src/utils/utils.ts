@@ -77,16 +77,20 @@ export async function searchRelease(artist: string, album: string) {
     return releaseJSON['release-groups'][0].id;
 }
 
+/**
+ * Fetches the url as a blog from the API of the specific remote audio.
+ * @param showName name of the show.
+ * @param id name of the audio.
+ * @param shortURL is it a short clip.
+ * @returns URL of the show or null if there's an error.
+ */
 export async function getRemoteURL(showName: string, id: string, shortURL = true) {
-    return fetch(`https://nameless-citadel-71535.herokuapp.com/${shortURL ? 'recordShortURL' : 'recordFullURL'}/${showName}/${id}`, {
+    return fetch(`http://localhost:3002/${shortURL ? 'recordShortURL' : 'recordFullURL'}/${showName}/${id}`, {
         mode: 'cors',
         method: 'GET',
     })
     .then((response) => response.blob())
-    .then((blob) => {
-        const url = URL.createObjectURL(blob);
-        return url;
-    })
+    .then((blob) => URL.createObjectURL(blob))
     .catch((err) => {
         console.error('woops', err);
         return null;

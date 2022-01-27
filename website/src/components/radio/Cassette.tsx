@@ -38,7 +38,7 @@ const Cassette = ({ templateRatio, playing }: Props) => {
             marginTop,
         }}
         >
-            <video ref={videoRef} loop muted playsInline style={{ width: '100%' }}>
+            <video ref={videoRef} loop muted playsInline style={{ width: '100%' }} onContextMenu={(e) => e.preventDefault()}>
                 <source src={full} type="video/webm" />
             </video>
         </div>

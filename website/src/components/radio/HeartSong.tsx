@@ -11,7 +11,7 @@ type Props = {
 
 // https://nameless-citadel-71535.herokuapp.com/song
 async function getHearts(songName: string) {
-    return fetch(`http://192.168.0.52:3002/song/${songName}`, {
+    return fetch(`http://localhost:3002/song/${songName}`, {
         mode: 'cors',
         method: 'GET',
     })

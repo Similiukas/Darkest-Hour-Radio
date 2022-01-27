@@ -2,13 +2,12 @@ import { Timestamp } from 'firebaseConfig';
 import cassette from 'images/cassette-min.png';
 
 type Props = {
-    id: string,
-    show: string,
-    text: string,
-    listeners: number,
+    showName: string,
+    name: string,
+    listeners: string,
     length: number,
     date: Timestamp,
-    callCloud: (show: string, id: string, text: string, a: string) => void
+    callCloud: (showName: string, name: string, listeners: string) => void
 }
 
 function getDate(date: Timestamp) {
@@ -26,13 +25,13 @@ function getLegnth(length: number) {
     return `${hours}:${minutes}:${seconds}`;
 }
 
-const PodcastShowRecording = ({ id, show, text, listeners, length, date, callCloud }: Props) => (
-    <div className="podcast-recording" role="button" tabIndex={0} onClick={() => callCloud(show, id, text, '12')}>
+const PodcastShowRecording = ({ showName, name, listeners, length, date, callCloud }: Props) => (
+    <div className="podcast-recording" role="button" tabIndex={0} onClick={() => callCloud(showName, name, listeners)}>
         <div className="recording-photo-container">
             <img id="recording-photo" src={cassette} alt="some alt" />
         </div>
         <div className="recording-info">
-            <div id="recording-name">{text}</div>
+            <div id="recording-name">{name}</div>
             <div id="recording-listeners">Listeners: {listeners}</div>
             <div id="recording-length">Length: {getLegnth(length)}</div>
             <div id="recording-date">Date: {getDate(date)}</div>

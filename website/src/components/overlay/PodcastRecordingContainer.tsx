@@ -12,7 +12,7 @@ import 'swiper/components/pagination/pagination.scss';
 type Props = {
     activeShowID: number,
     podcasts: Podcast[] | null,
-    callCloud: (showName: string, id: string, name: string, listeners: string) => void,
+    callCloud: (showName: string, id: string, listeners: string) => void,
 }
 
 const PodcastRecordingContainer = ({ activeShowID, podcasts, callCloud }: Props) => (
@@ -31,13 +31,12 @@ const PodcastRecordingContainer = ({ activeShowID, podcasts, callCloud }: Props)
                 observer // So Swiper reinitializes on slide changes
             >
                 { podcasts[activeShowID].recordings.map((show) => (
-                    <SwiperSlide key={show.id}>
+                    <SwiperSlide key={show.name}>
                         <PodcastShowRecording
-                            key={show.id}
-                            id={show.id}
-                            show={podcasts[activeShowID].name}
-                            text={show.name}
-                            listeners={show.listeners}
+                            key={show.name}
+                            showName={podcasts[activeShowID].name}
+                            name={show.name}
+                            listeners={show.listeners.toString().padStart(2, '0')}
                             length={show.length}
                             date={show['creation-date']}
                             callCloud={callCloud}

@@ -33,6 +33,8 @@ onAuthStateChanged(auth, (user) => {
         console.log('Signed in then?', user);
         if (!user.displayName) {
             updateProfile(user, { displayName: getUserName() });
+        } else if (user.displayName === 'light blue surprised cow') {
+            updateProfile(user, { displayName: 'magenta surprised cow' });
         }
     }
 });

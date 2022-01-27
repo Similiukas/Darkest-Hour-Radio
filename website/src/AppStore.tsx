@@ -4,7 +4,7 @@ import Header from 'components/Header';
 import Informacija from 'components/Informacija';
 import Overlays from 'components/overlay/Overlays';
 import Radio from 'components/radio/Radio';
-import RecrodingsDashboard from 'components/RecordingsDashboard';
+// import RecrodingsDashboard from 'components/RecordingsDashboard';
 import { SettingsContext } from 'context';
 import { useAudio } from 'hooks';
 import { PastRecordData, StartCloudRecoding } from 'types';
@@ -14,51 +14,66 @@ type Props = {
     setSecret: (enable: boolean) => void;
 }
 
-let startingCloudRecord = false;
+let preparingToStartCloud = false;
 
 const AppStore = ({ setSecret }: Props) => {
     const [pastRecordData, setPastRecordData] = useState<PastRecordData|null>(null);
     const [audio, toggleAudioPlay, setAudioVolume, playOtherURL, switchToNewAudio] = useAudio('https://stream.dhradio.tk/playlist.ogg');
 
-    const { setOverlay, toggleTimeout } = useContext(SettingsContext);
+    // const { setOverlay, toggleTimeout } = useContext(SettingsContext);
+    const { toggleTimeout } = useContext(SettingsContext);
 
-    const startCloudRecording: StartCloudRecoding = async (showName, id, name, listeners) => {
-        console.log('From app to cloud', id);
+    /**
+     * When the user stops the cloud recording and wants to go back to live.
+     * Need to delete past record data, cancel the switch to full audio and toggle the timeout.
+     */
+    const stopCloudRecording = () => {
+        console.log('Going back to live', pastRecordData, audio);
+        setPastRecordData(null);
+        preparingToStartCloud = false; // To cancel the switch
+        playOtherURL(`https://stream.dhradio.tk/playlist.ogg?_${Math.random()}`);
+        toggleTimeout();
+    };
+
+    /**
+     * Starting recording from the cloud. First, it starts the short clip and after it's close to the end,
+     * Switching to the full audio.
+     * @param showName name of the show.
+     * @param id name of the audio.
+     * @param listeners listener count.
+     */
+    const startCloudRecording: StartCloudRecoding = async (showName, id, listeners) => {
         setPastRecordData({
             name: 'Loading...',
             listeners: '00',
         });
         const url = await getRemoteURL(showName, id);
         if (url) {
-            console.log('name', name, 'listeners', listeners);
+            console.log('name', id, 'listeners', listeners);
             setPastRecordData({
-                name,
+                name: id,
                 listeners,
             });
-            startingCloudRecord = true;
+            preparingToStartCloud = true;
+            let startingTheSwitch = false; // So the switch operation is called once
             playOtherURL(url);
             audio.ontimeupdate = async () => {
-                if (!startingCloudRecord) { // Cancelling the switch
+                if (!preparingToStartCloud) { // Cancelling the switch
                     audio.ontimeupdate = null;
+                    startingTheSwitch = false;
                     return;
                 }
-                if (audio.currentTime > audio.duration - 20) {
-                    const longerURL = await getRemoteURL(showName, id, true);
+                if (!startingTheSwitch && audio.currentTime > audio.duration - 100) { // 20
+                    startingTheSwitch = true;
+                    const longerURL = await getRemoteURL(showName, id, false);
                     audio.ontimeupdate = null;
+                    startingTheSwitch = false;
                     if (longerURL) {
-                        switchToNewAudio(longerURL);
+                        switchToNewAudio(longerURL, stopCloudRecording);
                     } else console.error("There's been an error getting longer url");
                 }
             };
         } else console.error("There's been an error");
-    };
-
-    const stopCloudRecording = () => {
-        console.log('Going back to live', pastRecordData);
-        setPastRecordData(null);
-        startingCloudRecord = false;
-        playOtherURL(`https://stream.dhradio.tk/playlist.ogg?_${Math.random()}`);
-        toggleTimeout();
     };
 
     return (
@@ -79,11 +94,11 @@ const AppStore = ({ setSecret }: Props) => {
                     <>
                         <Informacija secret={setSecret} />
 
-                        <RecrodingsDashboard
+                        {/* <RecrodingsDashboard
                             toggleOverlay={setOverlay}
                             pastRecordData={pastRecordData}
                             stopCloud={stopCloudRecording}
-                        />
+                        /> */}
                     </>
                 )}
 

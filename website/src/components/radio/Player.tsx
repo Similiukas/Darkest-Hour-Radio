@@ -114,7 +114,6 @@ const Player = ({ templateRatio, currentSong, listenerCount, setLive, togglePlay
     useDidMount(() => {
         setPlayButtonText('pause_circle');
         if (pastRecordData) {
-            console.log('Setting to recording data');
             setSongInfo({
                 title: pastRecordData.name,
                 artist: '',

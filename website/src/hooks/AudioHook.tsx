@@ -4,13 +4,14 @@ type OwnProps = [
     audio: HTMLAudioElement,
     toggleAudio: (toggleLive: boolean) => void,
     changeVolume: (increase: boolean) => void,
-    changeAndPlayURL: (audioUrl: string) => Promise<void>,
-    switchToNewAudio: (audioUrl: string) => void,
+    changeAndPlayURL: (audioUrl: string) => void,
+    switchToNewAudio: (audioUrl: string, onAudioEndedCallback?: ((ev: Event) => void)) => void,
 ]
 
 export default function useAudio(url: string, volume = 0.4): OwnProps {
     const [audio, setAudio] = useState(new Audio());
     const [playing, setPlaying] = useState(false);
+    const [audioUrl, setAudioUrl] = useState(url);
 
     const changeVolume = (increase: boolean) => {
         if (increase) audio.volume = (audio.volume >= 0.85) ? 1 : audio.volume + 0.1;
@@ -22,15 +23,15 @@ export default function useAudio(url: string, volume = 0.4): OwnProps {
         setPlaying(!playing);
     };
 
-    const changeAndPlayURL = async (audioUrl: string) => {
+    const changeAndPlayURL = (givenAudioUrl: string) => {
         // toggleAudio(true);      // Can be false, can be null
         setPlaying(false); // Stopping what played before (if it played)
-        audio.src = audioUrl;
-        await audio.load(); // I think I still need await
+        // Not setting the src directly, since because onended can call this and the audio element will be outdated
+        setAudioUrl(givenAudioUrl);
         setPlaying(true);
     };
 
-    const switchToNewAudio = (audioUrl: string) => {
+    const switchToNewAudio = (audioUrl: string, onAudioEndedCallback?: ((ev: Event) => void)) => {
         const newAudio = new Audio(audioUrl);
         newAudio.crossOrigin = 'none';
         newAudio.load();
@@ -46,6 +47,9 @@ export default function useAudio(url: string, volume = 0.4): OwnProps {
             setPlaying(false);
             setAudio(newAudio);
             setPlaying(true);
+            if (onAudioEndedCallback) {
+                newAudio.onended = onAudioEndedCallback;
+            }
         };
 
         // const swapAt = audio.currentTime + 3;
@@ -66,12 +70,20 @@ export default function useAudio(url: string, volume = 0.4): OwnProps {
     };
 
     useEffect(() => {
+        audio.src = audioUrl;
+        audio.load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [audioUrl]);
+
+    useEffect(() => {
+        console.log('changing playing state', playing, audio);
         if (playing) {
             audio.play();
         } else {
             audio.pause();
         }
-    }, [playing, audio]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [playing]);
 
     // Initial values
     useEffect(() => {

@@ -14,7 +14,7 @@ type Props = {
 SwiperCore.use([Navigation, Pagination]);
 
 async function getRecordList(): Promise<Podcast[]> {
-    return fetch('http://127.0.0.1:3002/recordList')
+    return fetch('http://localhost:3002/recordList')
     .then((response) => response.json())
     .catch((err) => {
         console.error('Error fetching record list', err);
@@ -25,8 +25,8 @@ const PodcastContainer = ({ mounting, startCloud, close }: Props) => {
     const [activeShowID, setActiveShowID] = useState(-1);
     const [podcasts, setPodcasts] = useState<Podcast[]|null>(null);
 
-    const callCloud = (showName: string, id: string, name: string, listeners: string) => {
-        startCloud(showName, id, name, listeners);
+    const callCloud = (showName: string, id: string, listeners: string) => {
+        startCloud(showName, id, listeners);
         close();
     };
 

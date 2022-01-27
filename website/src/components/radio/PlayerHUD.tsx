@@ -14,7 +14,7 @@ const PlayerHUD = ({ templateRatio, listenerCount, currentSong }: Props) => {
     return (
         <div id="player-hud">
             <div id="listeners">
-                <span id="text">Current Listeners:&nbsp;</span>
+                <span id="text">{currentSong ? 'Current ' : ' Total '}Listeners:&nbsp;</span>
                 <span className={`listener-count ${active ? 'visible' : ''}`}>{listenerCount}</span>
             </div>
             { currentSong && (
