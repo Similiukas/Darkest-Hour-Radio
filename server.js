@@ -3,6 +3,8 @@ const express = require("express");
 const helmet = require("helmet");
 const compression = require("compression");
 const RecordingsRouter = require("./recordings/routes.config");
+const SongsRouter = require("./songs/routes.config");
+const ScheduleRouter = require("./schedule/routes.config");
 
 const app = express();
 
@@ -23,7 +25,7 @@ var corsOptions = {
 app.use(cors(corsOptions));
 */
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3002;
 
 
 // Take a look at compressions
@@ -49,21 +51,29 @@ app.use((req, res, next) => {
     // But don't have any really sensative data so it's fine
     // In a real app would send firebase user auth token and then check it. Or use something like JWT if not using firebase
     // Firebase: https://firebase.google.com/docs/auth/admin/verify-id-tokens#web
-    // if (req.headers.referer === "https://dhradio.tk/" && req.headers.origin === "https://dhradio.tk"){
+    if (req.headers.referer === "https://dhradio.tk/" && req.headers.origin === "https://dhradio.tk"){
         if (req.method === "OPTIONS"){
             return res.sendStatus(200);
         }
         else next();
-    // }
-    // else    res.status(403).send({ Error: "Not authorized" });
+    }
+    else    res.status(403).send({ Error: "Not authorized" });
 })
 
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
+ScheduleRouter.routesConfig(app);
+SongsRouter.routesConfig(app);
 RecordingsRouter.routesConfig(app);
 
 app.listen(port, () =>{
     console.log("App listening on port", port);
+    console.log(`The process pid is: ${process.pid}`);
+})
+
+// A process can not listen to sigkill: https://stackoverflow.com/q/42450501/9819103
+process.on('exit', (code) => {
+    console.log("Cia jau kai exit kviecia, Process exit:", code);
 })

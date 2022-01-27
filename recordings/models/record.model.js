@@ -11,7 +11,7 @@ const FieldValue = firebase.FieldValue;
  */
 async function getAudioURL(url){
     try {
-        const response = await got(url);
+        const response = await got("https://e1.pcloud.link/publink/show?code=XZ4Xx7ZCHcOynfUOyJado0U7RmQRY7yzoNk");
         var s = response.body.indexOf("audiolink");
         var e = response.body.indexOf("downloadlink");
         return response.body.substring((s + 13), (e - 5)).replace(/\\/g, "");
@@ -30,16 +30,21 @@ exports.test = () => {
  */
 exports.getRecordsList = async () => {
     try {
-        let result = new Object();
+        let result = [];
         const snapshot = await recordsRef.get();
-        for (const doc of snapshot.docs){
-            let i = 0;
-            result[doc.id] = [];
+        for (let i = 0; i < snapshot.docs.length; ++i ) {
+            const doc = snapshot.docs[i];
+            result.push({ name: doc.id, recordings: [] });
             const recordMainDataSnapshot = await recordsRef.doc(doc.id).collection("recording-main-info").get();
-            for (const record of recordMainDataSnapshot.docs){
-                result[doc.id][i] = record.data();
-                result[doc.id][i]["id"] = record.id;
-                ++i;
+            for (let j = 0; j < recordMainDataSnapshot.docs.length; j++) {
+                const record = recordMainDataSnapshot.docs[j];
+                const recordData = record.data();
+                result[i].recordings.push({
+                    name: record.id,
+                    length: recordData.length,
+                    listeners: recordData.listeners,
+                    'creation-date': recordData["creation-date"],
+                });
             }
         }
         return result;
@@ -56,8 +61,7 @@ exports.getRecordsList = async () => {
  * @returns returns the url of the given record file from pcloud
  */
 exports.getRecordURL = async (showName, id, shortURL=true) => {
-    const documentRef = recordsRef.doc(showName).collection("recording-storage-data").doc(id);
-    const document = await documentRef.get();
+    const document = await recordsRef.doc(showName).collection("recording-main-info").doc(id).get();
     if(!document.exists){
         throw new ReferenceError("Document does not exit");
     }
@@ -78,9 +82,10 @@ exports.getRecordURL = async (showName, id, shortURL=true) => {
  * @param {string} showName name of the show
  * @param {string} id ID of the show
  */
-exports.updateRecordViews = async (showName, id) => {
-    const storageDocumentRef = recordsRef.doc(showName).collection("recording-storage-data").doc(id);
+ exports.updateRecordViews = async (showName, id) => {
     const mainDocumentRef = recordsRef.doc(showName).collection("recording-main-info").doc(id);
-    await mainDocumentRef.update({ listeners: FieldValue.increment(1) });
-    await storageDocumentRef.update({ "read-time": FieldValue.serverTimestamp() });
+    await mainDocumentRef.update({
+        listeners: FieldValue.increment(1),
+        "read-time": FieldValue.serverTimestamp()
+    });
 }
