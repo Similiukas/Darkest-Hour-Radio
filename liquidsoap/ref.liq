@@ -20,14 +20,14 @@ mypop = playlist("~/music/playlists/pop.pls", mime_type="audio/x-scpls")
 # -------------------
 
 # ---- Mopidy ----
-mymopidy = input.harbor(port=8800, password="nu0stab_sraDijas-2", "/mopidy-input")
+mymopidy = input.harbor(port=8800, password=ICECAST_SOURCE_PASSWORD, "/mopidy-input")
 # ----------------
 
 # ---- Live ----
 # The problem is that track metadata is not updated.
 # Need to broadcast MP3 from Mixxx and output MP3 from liquidsoap
 # But Icecast get first track's metadata and that's it. It doesn't change the metadata from track to track
-mylive = input.harbor(port=8006, password="nu0stab_sraDijas-2", "/mixxx")
+mylive = input.harbor(port=8006, password=ICECAST_SOURCE_PASSWORD, "/mixxx")
 # --------------
 
 # ---- Jingles ----
@@ -73,10 +73,10 @@ end
 # ------------------------------------
 
 # ---- Building radio ----
-myplaylists = map_metadata(append_album, random(id="day-random", weights = [1, 40, 30, 4, 22, 7, 22, 16, 12, 26, 2, 4, 14],
+myplaylists = map_metadata(append_album, random(id="day-random", weights = [1, 35, 30, 4, 22, 7, 22, 18, 15, 26, 2, 4, 14],
 	[myreformatai, myindie, mygimtine, myjazz, myindierock, mychill, myrock, myelectronic, myold, myhiphop, mybad, myjapanese, mypop]))
 
-mynightplaylists = map_metadata(append_album, random(weights = [16, 1, 18, 13, 6, 10, 18, 8, 10],
+mynightplaylists = map_metadata(append_album, random(weights = [16, 2, 18, 11, 7, 10, 18, 8, 10],
 	[mynight, myreformatai, myindie, mygimtine, myjazz, myindierock, mychill, myrock, myelectronic]))
 
 # Adding ad to day playlist
@@ -99,7 +99,7 @@ full = fallback(track_sensitive=false, transition_length=7.0, transitions=[from_
 # ---- Output ----
 output.icecast(%vorbis,
 	host = "localhost", port = 8000,
-	password = "nu0stab_sraDijas-2", mount = "playlist.ogg",
+	password = ICECAST_SOURCE_PASSWORD, mount = "playlist.ogg",
 	description = "Darkest Hour Radio, the best independent radio in the Baltic States",
 	icy_metadata="true",
 	full)
