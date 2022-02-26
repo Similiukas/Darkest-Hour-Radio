@@ -1,0 +1,23 @@
+[Unit]
+Description=Custom service to update Mopidy song metadata in the Icecast2 stream
+After=mopidy.service
+# Retrying to start can happen 10 times
+# StartLimitInterval must be > StartLimitBurst * RestartSec
+StartLimitInterval=660
+StartLimitBurst=10
+
+[Service]
+# Can set up environment variables here like
+# Environment=PORT=8091
+# Environment=SOMETHING=12
+Type=simple
+Restart=always
+# Restarting after 60 seconds if failed
+RestartSec=60
+ExecStart=/usr/bin/python3 /home/tautvaisassimas/update-metadata/main.py
+User=tautvaisassimas
+
+#StandardOutput=console
+
+[Install]
+WantedBy=multi-user.target
