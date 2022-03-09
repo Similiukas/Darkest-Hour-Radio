@@ -1,6 +1,8 @@
-set("log.file.path", "/tmp/reformatai-liq.log")
-set("server.telnet", false)
-set("harbor.bind_addrs", ["0.0.0.0"])
+log.level.set(3)
+log.file.set(true)
+log.file.path.set("/tmp/reformatai-liq.log")
+settings.server.telnet.set(false)
+settings.harbor.bind_addrs.set(["0.0.0.0"])
 
 # ---- Playlists ----
 myreformatai = playlist("~/music/playlists/reformatai_2.pls", mime_type="audio/x-scpls")
@@ -19,15 +21,27 @@ mynight = playlist("~/music/playlists/night.pls", mime_type="audio/x-scpls")
 mypop = playlist("~/music/playlists/pop.pls", mime_type="audio/x-scpls")
 # -------------------
 
+# TODO: Add passwords in another file
+
 # ---- Mopidy ----
-mymopidy = input.harbor(port=8800, password="nu0stab_sraDijas-2", "/mopidy-input")
+# This just prints metadata and does not modify it
+# https://github.com/savonet/liquidsoap/issues/2241
+def log_metadatas(m) =
+	print("cia kazkas eina")
+	print(m)
+	print(m["title"])
+end
+
+mymopidy = input.harbor("/mopidy", port=8800, password=ICECAST_PASSWORD, metadata_charset="UTF-8")
+
+mymopidy.on_metadata(log_metadatas)
 # ----------------
 
 # ---- Live ----
 # The problem is that track metadata is not updated.
 # Need to broadcast MP3 from Mixxx and output MP3 from liquidsoap
 # But Icecast get first track's metadata and that's it. It doesn't change the metadata from track to track
-mylive = input.harbor(port=8006, password="nu0stab_sraDijas-2", "/mixxx")
+mylive = input.harbor("/mixxx", port=ICECAST_DJ_PORT, password=ICECAST_PASSWORD, buffer=30.0, max=31.0)
 # --------------
 
 # ---- Jingles ----
@@ -37,20 +51,20 @@ myad1 = single("~/music/jingles/radio-ad-1-silence.mp3")
 # -----------------
 
 # ---- Transitions ----
-def from_pls(jingle, old, new)
-	old = fade.final(old)
+def from_pls((jingle:source), (old:source), (new:source))
+	old = fade.out(old, duration=3.8)
 
 	s = add([jingle, old])
 
 	sequence([s, new])
 end
 
-def to_pls(jingle, old, new)
-	old = fade.final(old)
+def to_pls((jingle:source), (old:source), (new:source))
+	old = fade.out(old, duration=3.8)
 
 	s = add([jingle, old])
 
-	sequence([s, fade.initial(new)], merge=true)
+	sequence([s, fade.in(new, duration=3.8)], merge=true)
 end
 # --------------------
 
@@ -66,6 +80,7 @@ end
 
 # When live connects from input.harbor, adding additional data to indicate in icecast stats
 def append_live_indicator(m)
+	print("Live audio metadata: #{m}")
 	title = m["title"]
 	
 	[("title", "#{title} $live$")]
@@ -88,18 +103,27 @@ myfullplaylists = mksafe(crossfade(duration=6.0, fade_in=3.5, fade_out=3.5,
 	({ 2h-20h }, myplaylists),
 	({ 20h-2h }, mynightplaylists)])))
 
-radio = fallback(track_sensitive=false, transition_length=12.0, transitions=[from_pls(myjingle), to_pls(myjingle)],
-	[skip_blank(mymopidy, track_sensitive=false, max_blank=2.0, threshold=0.0), myfullplaylists])
+#radio = fallback(track_sensitive=false, transition_length=12.0, transitions=[from_pls(myjingle), to_pls(myjingle)],
+#	[map_metadata(append_album, blank.skip(mymopidy, track_sensitive=false, max_blank=2.0, threshold=0.0)), myfullplaylists])
 
-full = fallback(track_sensitive=false, transition_length=7.0, transitions=[from_pls(myjingle2), to_pls(myjingle2)],
+radio = fallback(track_sensitive=false, transition_length=12.0, transitions=[from_pls(myjingle), to_pls(myjingle)],
+       [blank.skip(mymopidy, track_sensitive=false, max_blank=2.0, threshold=0.0), myfullplaylists])
+
+#radio = fallback(track_sensitive=false, transition_length=12.0,
+#	[map_metadata(append_album, skip_blank(mymopidy, track_sensitive=false, max_blank=2.0, threshold=0.0)), myfullplaylists])
+
+full = fallback(track_sensitive=false, transition_length=7.6, transitions=[from_pls(myjingle2), to_pls(myjingle2)],
 	[map_metadata(append_live_indicator, mylive), radio])
+
+#full = fallback(track_sensitive=false, transition_length=7.0,
+#	[map_metadata(append_live_indicator, mylive), radio])
 
 # ------------------------
 
 # ---- Output ----
 output.icecast(%vorbis,
-	host = "localhost", port = 8000,
-	password = "nu0stab_sraDijas-2", mount = "playlist.ogg",
+	host = "127.0.0.1", port = 8000,
+	password = ICECAST_PASSWORD, mount = "playlist.ogg",
 	description = "Darkest Hour Radio, the best independent radio in the Baltic States",
 	icy_metadata="true",
 	full)

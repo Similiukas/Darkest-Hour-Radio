@@ -6,6 +6,8 @@ import urllib.parse
 import logging
 import os
 
+# TODO: dar man rodos galima albumus gaut ir per cia https://docs.mopidy.com/en/latest/api/http/#json-rpc. Tipo tiesiog siuncia json-rpc i endpoint ir ten gal dar kazka idomaus siuncia metadata
+
 # logging format: https://docs.python.org/3/library/logging.html#logrecord-attributes
 # This logger logs stuff to journald which is cool
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"), format='[%(asctime)s](%(funcName)s)%(levelname)s: %(message)s')
@@ -13,8 +15,8 @@ logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"), format='[%(asctime
 IP_ADDRESS = "127.0.0.1"
 ICECAST_ADDRESS = f"http://{IP_ADDRESS}:8000/admin/metadata?"
 ICECAST_MOUNTPOINT = "/playlist.ogg"
-ICECAST_USER = ""
-ICECAST_PASSWORD = ""
+ICECAST_USER = "ICECAST_USER"
+ICECAST_PASSWORD = "ICECAST_PASSWORD"
 
 
 async def updateMetadata(songName):
@@ -32,7 +34,7 @@ def convertMessage(message):
     # Only converting messages with "event": "track_playback_started"
     if (re.search("\"event\": \"track_playback_started\"", message)):
         kazkas = re.findall("\"name\": \"(.*?)\"", message)
-        # Escaping double escape character (\\u2019 -> \u2019)
+	# Escaping double escape character (\\u2019 -> \u2019)
         kazkas = [x.encode("latin1").decode('unicode_escape') for x in kazkas]
         songName = f"{str(kazkas[1])} - {str(kazkas[0])} #{str(kazkas[2])}"
         return songName
