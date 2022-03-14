@@ -85,7 +85,7 @@ export async function searchRelease(artist: string, album: string) {
  * @returns URL of the show or null if there's an error.
  */
 export async function getRemoteURL(showName: string, id: string, shortURL = true) {
-    return fetch(`http://localhost:3002/${shortURL ? 'recordShortURL' : 'recordFullURL'}/${showName}/${id}`, {
+    return fetch(`${process.env.REACT_APP_REMOTE_API_URL}/${shortURL ? 'recordShortURL' : 'recordFullURL'}/${showName}/${id}`, {
         mode: 'cors',
         method: 'GET',
     })
@@ -116,5 +116,7 @@ export function convertDate(scheduleInfo: ScheduleInfo[] | undefined) {
         // eslint-disable-next-line no-underscore-dangle
         date = new Date(scheduleInfo[0].date._seconds * 1000);
     }
-    return ` ${date.getHours()}:${date.getMinutes()} [${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}]`;
+    const hours = ` ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')} `;
+    const years = `[${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}]`;
+    return hours + years;
 }

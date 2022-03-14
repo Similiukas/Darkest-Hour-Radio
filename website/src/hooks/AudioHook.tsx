@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 
+import useDidMount from './EffectExceptFirst';
+
 type OwnProps = [
     audio: HTMLAudioElement,
     toggleAudio: (toggleLive: boolean) => void,
@@ -69,14 +71,14 @@ export default function useAudio(url: string, volume = 0.4): OwnProps {
         // }
     };
 
-    useEffect(() => {
+    // Setting the url except on load (so listener count doesn't increase before pressing play)
+    useDidMount(() => {
         audio.src = audioUrl;
         audio.load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [audioUrl]);
 
     useEffect(() => {
-        console.log('changing playing state', playing, audio);
         if (playing) {
             audio.play();
         } else {

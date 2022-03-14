@@ -21,7 +21,7 @@ const Overlays = ({ startCloud }: Props) => {
     const shouldRenderPodcast = useDelayUnmount(overlayType === OverlayType.Podcast, 400);
 
     useEffect(() => {
-        fetch('http://localhost:3002/schedule')
+        fetch(`${process.env.REACT_APP_REMOTE_API_URL}/schedule`)
         .then((res) => res.json())
         .then((result) => setScheduleInfo(result));
     }, [setScheduleInfo]);

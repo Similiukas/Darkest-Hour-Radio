@@ -35,6 +35,7 @@ const PodcastContainer = ({ mounting, startCloud, close }: Props) => {
             const results = await getRecordList();
             setActiveShowID(0);
             setPodcasts(results);
+            console.log(results);
         }
         fetchData();
     }, []);
@@ -52,7 +53,7 @@ const PodcastContainer = ({ mounting, startCloud, close }: Props) => {
                         Evening Vibes
                     </button>
                     <button className={activeShowID === 1 ? 'active' : ''} onClick={() => setActiveShowID(1)} type="button" style={{ borderRadius: '0 10px 10px 0' }}>
-                        Another show
+                        Memento
                     </button>
                     {/* <button className={activeShowID === 2 ? 'active' : ''} type="button">Third show</button> */}
                 </div>

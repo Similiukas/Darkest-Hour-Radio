@@ -9,9 +9,8 @@ type Props = {
     currentSong: string,
 }
 
-// https://nameless-citadel-71535.herokuapp.com/song
 async function getHearts(songName: string) {
-    return fetch(`http://localhost:3002/song/${songName}`, {
+    return fetch(`${process.env.REACT_APP_REMOTE_API_URL}/song/${songName}`, {
         mode: 'cors',
         method: 'GET',
     })
@@ -28,7 +27,7 @@ async function getHearts(songName: string) {
 }
 
 function postHearts(songName: string, unheart: boolean) {
-    fetch(`http://localhost:3002/${unheart ? 'un' : ''}song/${songName}`, {
+    fetch(`${process.env.REACT_APP_REMOTE_API_URL}/${unheart ? 'un' : ''}song/${songName}`, {
         mode: 'cors',
         method: 'POST',
     })

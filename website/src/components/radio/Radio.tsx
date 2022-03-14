@@ -79,6 +79,7 @@ const Radio = ({ audio, audioToggle, audioVolume, pastRecordData, stopCloud }: P
             }
         };
         if (pastRecordData) {
+            setIsAudioPlaying(true);
             setListenerCount(pastRecordData.listeners);
             setCurrentSong(null); // This way, Player.jsx doesn't do anything with current song and when changing back to live, immediately updating to current live song
         }
@@ -102,6 +103,7 @@ const Radio = ({ audio, audioToggle, audioVolume, pastRecordData, stopCloud }: P
 
     // Hook placing UI objects based on template size
     useEffect(() => {
+        console.info('placing objects', templateRef.current);
         if (!templateRef.current) return undefined;
         setTemplateRatio(templateRef.current.clientWidth / pixels.templateWidth); // Calling initially
         function resizing() {
@@ -111,7 +113,7 @@ const Radio = ({ audio, audioToggle, audioVolume, pastRecordData, stopCloud }: P
         window.addEventListener('resize', resizing); // Calling after window is resized
         // Cleaning up to prevent memory leak (https://www.pluralsight.com/guides/re-render-react-component-on-window-resize)
         return () => window.removeEventListener('resize', resizing);
-    }, [templateRatio]);
+    }, [templateRef]);
 
     return (
         <div id="radio">
