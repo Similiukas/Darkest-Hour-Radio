@@ -36,6 +36,7 @@ export async function searchRecordings(artist: string, song: string) {
  * @param {String} artist Artist name string
  * @param {JSON} recordings Recordings JSON
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function filterRadios(artist: string, recordings: any) {
     let backup;
     try {

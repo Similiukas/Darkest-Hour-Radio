@@ -7,6 +7,7 @@ import { useEffect, useRef } from 'react';
 // Another thing, is that it's declarative and also you can have a dynamic delay.
 // https://overreacted.io/making-setinterval-declarative-with-react-hooks/
 export default function useInterval(callback: CallableFunction, delay: number) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const savedCallback = useRef<any>();
 
     // Remember the latest callback.

@@ -5,9 +5,9 @@ import { Podcast } from 'types';
 
 import PodcastShowRecording from './PodcastShowRecording';
 
-import 'swiper/swiper.scss';
-import 'swiper/components/navigation/navigation.scss';
-import 'swiper/components/pagination/pagination.scss';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 type Props = {
     activeShowID: number,
@@ -24,7 +24,7 @@ const PodcastRecordingContainer = ({ activeShowID, podcasts, callCloud }: Props)
                 spaceBetween={window.innerWidth > 1025 ? 20 : 10}
                 slidesPerView={window.innerWidth > 1025 ? 4 : 2}
                 freeMode
-                freeModeSticky
+                // freeModeSticky
                 loop={false}
                 navigation={window.innerWidth > 1025}
                 pagination={{ clickable: true }}
