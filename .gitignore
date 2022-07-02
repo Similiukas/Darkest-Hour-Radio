@@ -3,6 +3,7 @@ firebase.json
 firestore.rules
 .env
 config
+*.log
 
 # React production
 build
