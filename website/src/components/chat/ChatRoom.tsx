@@ -54,7 +54,7 @@ const ChatRoom: React.FC<Props> = ({ chatHeight }) => {
                 { messages &&
                   messages.slice(0).reverse().map((msg) => (
                       <ChatMessage
-                          key={msg.timestamp.seconds}
+                          key={msg.timestamp?.seconds ?? Date.now()}
                           name={msg.name}
                           timestamp={msg.timestamp}
                           message={msg.text}
