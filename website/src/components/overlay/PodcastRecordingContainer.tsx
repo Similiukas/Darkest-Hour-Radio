@@ -30,7 +30,7 @@ const PodcastRecordingContainer = ({ activeShowID, podcasts, callCloud }: Props)
                 pagination={{ clickable: true }}
                 observer // So Swiper reinitializes on slide changes
             >
-                { podcasts[activeShowID].recordings.map((show) => (
+                {/* { podcasts[activeShowID].recordings.map((show) => (
                     <SwiperSlide key={show.name}>
                         <PodcastShowRecording
                             key={show.name}
@@ -42,8 +42,35 @@ const PodcastRecordingContainer = ({ activeShowID, podcasts, callCloud }: Props)
                             callCloud={callCloud}
                         />
                     </SwiperSlide>
-                ))}
+                ))} */}
+                <>
+                    <SwiperSlide>
+                        <PodcastShowRecording
+                            key={podcasts[0].recordings[0].name}
+                            showName={podcasts[activeShowID].name}
+                            name={podcasts[0].recordings[0].name}
+                            listeners={podcasts[0].recordings[0].listeners.toString().padStart(2, '0')}
+                            length={podcasts[0].recordings[0].length}
+                            date={podcasts[0].recordings[0]['creation-date']}
+                            callCloud={callCloud}
+                        />
+                    </SwiperSlide>
+                    <SwiperSlide>
+                        <PodcastShowRecording
+                            key={podcasts[1].recordings[0].name}
+                            showName={podcasts[activeShowID].name}
+                            name={podcasts[1].recordings[0].name}
+                            listeners={podcasts[1].recordings[0].listeners.toString().padStart(2, '0')}
+                            length={podcasts[1].recordings[0].length}
+                            date={podcasts[1].recordings[0]['creation-date']}
+                            callCloud={callCloud}
+                        />
+                    </SwiperSlide>
+                </>
             </Swiper>
+            // <div className="podcast-show">
+
+        // </div>
         )}
         { !podcasts && <Loader />}
     </div>

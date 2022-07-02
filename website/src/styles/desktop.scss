@@ -206,6 +206,7 @@ main {
                 background-color: rgb(60, 60, 60);
                 width: 100%;
                 height: 0%;
+                transition: height 300ms ease-out;
             }
         }
         #sound-text {

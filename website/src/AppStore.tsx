@@ -4,7 +4,7 @@ import Header from 'components/Header';
 import Informacija from 'components/Informacija';
 import Overlays from 'components/overlay/Overlays';
 import Radio from 'components/radio/Radio';
-// import RecrodingsDashboard from 'components/RecordingsDashboard';
+import RecrodingsDashboard from 'components/RecordingsDashboard';
 import { SettingsContext } from 'context';
 import { useAudio } from 'hooks';
 import { PastRecordData, StartCloudRecoding } from 'types';
@@ -20,8 +20,8 @@ const AppStore = ({ setSecret }: Props) => {
     const [pastRecordData, setPastRecordData] = useState<PastRecordData|null>(null);
     const [audio, toggleAudioPlay, setAudioVolume, playOtherURL, switchToNewAudio] = useAudio('https://stream.dhradio.tk/playlist.ogg');
 
-    // const { setOverlay, toggleTimeout } = useContext(SettingsContext);
-    const { toggleTimeout } = useContext(SettingsContext);
+    const { setOverlay, toggleTimeout } = useContext(SettingsContext);
+    // const { toggleTimeout } = useContext(SettingsContext);
 
     /**
      * When the user stops the cloud recording and wants to go back to live.
@@ -34,6 +34,12 @@ const AppStore = ({ setSecret }: Props) => {
         playOtherURL(`https://stream.dhradio.tk/playlist.ogg?_${Math.random()}`);
         toggleTimeout();
     };
+
+    // FIXME: best way is to just pipe audio in chunks. Which is done by adding range header?
+    // https://stackoverflow.com/a/42591021/9819103
+    // another example: https://github.com/AnthumChris/fetch-stream-audio
+    // or here with a video: https://www.linode.com/docs/guides/build-react-video-streaming-app/#stream-a-video
+    // cia irgi visai neblogai atrodo gal: https://blog.bywachira.com/post/stream-mp3-link-to-html-audio-tag
 
     /**
      * Starting recording from the cloud. First, it starts the short clip and after it's close to the end,
@@ -94,11 +100,11 @@ const AppStore = ({ setSecret }: Props) => {
                     <>
                         <Informacija secret={setSecret} />
 
-                        {/* <RecrodingsDashboard
+                        <RecrodingsDashboard
                             toggleOverlay={setOverlay}
                             pastRecordData={pastRecordData}
                             stopCloud={stopCloudRecording}
-                        /> */}
+                        />
                     </>
                 )}
 
