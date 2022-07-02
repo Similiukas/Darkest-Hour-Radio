@@ -88,10 +88,10 @@ end
 # ------------------------------------
 
 # ---- Building radio ----
-myplaylists = map_metadata(append_album, random(id="day-random", weights = [1, 40, 30, 4, 22, 7, 22, 16, 12, 26, 2, 4, 14],
+myplaylists = map_metadata(append_album, random(id="day-random", weights = [1, 35, 30, 4, 22, 7, 22, 18, 15, 26, 2, 4, 14],
 	[myreformatai, myindie, mygimtine, myjazz, myindierock, mychill, myrock, myelectronic, myold, myhiphop, mybad, myjapanese, mypop]))
 
-mynightplaylists = map_metadata(append_album, random(weights = [16, 1, 18, 13, 6, 10, 18, 8, 10],
+mynightplaylists = map_metadata(append_album, random(weights = [16, 2, 18, 11, 7, 10, 18, 8, 10],
 	[mynight, myreformatai, myindie, mygimtine, myjazz, myindierock, mychill, myrock, myelectronic]))
 
 # Adding ad to day playlist
