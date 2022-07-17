@@ -19,7 +19,7 @@ $space:1rem;
         cursor: pointer;
         position: relative;
         padding: 
-                $space / 1.125
+                calc($space / 1.125)
                 0
                 $space;
         border: 0 solid #525252;   //black
@@ -33,7 +33,7 @@ $space:1rem;
         @media (min-width: 1025px) {
             font-size: 1.5rem;
             padding:
-                $space / 1.125
+                calc($space / 1.125)
                 $space
                 $space;
         }

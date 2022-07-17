@@ -32,7 +32,7 @@
         }
     },
     // Some cool rules: https://stackoverflow.com/questions/65602807/eslint-import-order-react-typescript
-    "ignorePatterns": ["SecretCanvas.tsx", "HUDVisualizer.tsx", "reportWebVitals.ts", "service-worker.ts", "serviceWorkerRegistration.ts"],
+    "ignorePatterns": ["SecretCanvas.tsx", "HUDVisualizer.tsx", "reportWebVitals.ts"],
     "rules": {
         "react/jsx-filename-extension": [ "error", {"extensions": [".tsx"]} ],
         "react/react-in-jsx-scope": "off",   // React v17 does not require to import react,

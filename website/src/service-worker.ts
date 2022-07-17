@@ -1,24 +1,25 @@
 /// <reference lib="webworker" />
-//@ts-nocheck
-importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.0.2/workbox-sw.js');
 
-console.log("Service worker talking");
+// This service worker can be customized!
+// See https://developers.google.com/web/tools/workbox/modules
+// for the list of available Workbox modules, or add any other
+// code you'd like.
+// You can also remove this file if you'd prefer not to use a
+// service worker, and the Workbox build step will be skipped.
 
+import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { clientsClaim } from 'workbox-core';
+import { ExpirationPlugin } from 'workbox-expiration';
+import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
+import { registerRoute } from 'workbox-routing';
+import { CacheFirst, StaleWhileRevalidate, NetworkFirst } from 'workbox-strategies';
 
-import { registerRoute } from "workbox-routing";
-// const {registerRoute} = workbox.routing;
-import { CacheFirst, StaleWhileRevalidate, NetworkFirst } from "workbox-strategies";
-// const {CacheFirst, StaleWhileRevalidate, NetworkFirst} = workbox.strategies;
-import { CacheableResponsePlugin } from "workbox-cacheable-response";
-// const {CacheableResponsePlugin} = workbox.cacheableResponse;
-import { ExpirationPlugin } from "workbox-expiration";
-// const {ExpirationPlugin} = workbox.expiration
+// eslint-disable-next-line no-undef
+declare const self: ServiceWorkerGlobalScope;
 
-import { precacheAndRoute, createHandlerBoundToURL } from "workbox-precaching";
-
-// For now this will do. Hopefully
-self.skipWaiting();
+// Right now the sw on new app deploy serves the same content and new sw is installed,
+// However new content is served only after broswer tabs is closed. Can change this with skipWaiting()
+console.log('Service worker talking', process.env.REACT_APP_VERSION);
 
 clientsClaim();
 
@@ -26,39 +27,45 @@ clientsClaim();
 // Their URLs are injected into the manifest variable below.
 // This variable must be present somewhere in your service worker file,
 // even if you decide not to use precaching. See https://cra.link/PWA
+// eslint-disable-next-line no-underscore-dangle
 precacheAndRoute(self.__WB_MANIFEST);
 
 // Set up App Shell-style routing, so that all navigation requests
 // are fulfilled with your index.html shell. Learn more at
 // https://developers.google.com/web/fundamentals/architecture/app-shell
+// eslint-disable-next-line prefer-regex-literals
 const fileExtensionRegexp = new RegExp('/[^/?]+\\.[^/]+$');
 registerRoute(
-  // Return false to exempt requests from being fulfilled by index.html.
-  ({ request, url }) => {
-    // If this isn't a navigation, skip.
-    if (request.mode !== 'navigate') {
-      return false;
-    } // If this is a URL that starts with /_, skip.
+    // Return false to exempt requests from being fulfilled by index.html.
+    ({ request, url }: { request: Request; url: URL }) => {
+        // If this isn't a navigation, skip.
+        if (request.mode !== 'navigate') {
+            return false;
+        }
 
-    if (url.pathname.startsWith('/_')) {
-      return false;
-    } // If this looks like a URL for a resource, because it contains // a file extension, skip.
+        // If this is a URL that starts with /_, skip.
+        if (url.pathname.startsWith('/_')) {
+            return false;
+        }
 
-    if (url.pathname.match(fileExtensionRegexp)) {
-      return false;
-    } // Return true to signal that we want to use the handler.
-
-    return true;
-  },
-  createHandlerBoundToURL(process.env.PUBLIC_URL + '/index.html')
+        // If this looks like a URL for a resource, because it contains
+        // a file extension, skip.
+        if (url.pathname.match(fileExtensionRegexp)) {
+            return false;
+        }
+        // Return true to signal that we want to use the handler.
+        return true;
+    },
+    createHandlerBoundToURL(`${process.env.PUBLIC_URL}/index.html`),
 );
 
 // This allows the web app to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
 self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
+    console.info('ServiceWorker msg:', event);
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+        self.skipWaiting();
+    }
 });
 
 // Cache page navigations (html) with a Network First strategy
@@ -67,38 +74,35 @@ registerRoute(
     ({ request }) => request.mode === 'navigate',
     // Use a Network First caching strategy
     new NetworkFirst({
-      // Put all cached files in a cache named 'pages'
-      cacheName: 'pages',
-      plugins: [
+        // Put all cached files in a cache named 'pages'
+        cacheName: 'pages',
+        plugins: [
         // Ensure that only requests that result in a 200 status are cached
-        new CacheableResponsePlugin({
-          statuses: [0, 200],
-        }),
-      ],
+            new CacheableResponsePlugin({
+                statuses: [0, 200],
+            }),
+        ],
     }),
 );
-  
 
 // Cache CSS, JS, and Web Worker requests with a Stale While Revalidate strategy
 registerRoute(
     // Check to see if the request's destination is style for stylesheets, script for JavaScript, or worker for web worker
-    ({ request }) =>
-      request.destination === 'style'  ||
-      request.destination === 'script' ||
-      request.destination === 'worker',
+    ({ request }) => request.destination === 'style'
+      || request.destination === 'script'
+      || request.destination === 'worker',
     // Use a Stale While Revalidate caching strategy
     new StaleWhileRevalidate({
-      // Put all cached files in a cache named 'assets'
-      cacheName: 'assets',
-      plugins: [
+        // Put all cached files in a cache named 'assets'
+        cacheName: 'assets',
+        plugins: [
         // Ensure that only requests that result in a 200 status are cached
-        new CacheableResponsePlugin({
-          statuses: [0, 200],
-        }),
-      ],
+            new CacheableResponsePlugin({
+                statuses: [0, 200],
+            }),
+        ],
     }),
 );
-  
 
 // Cache images with a Cache First strategy
 registerRoute(
@@ -110,14 +114,14 @@ registerRoute(
         cacheName: 'images',
         plugins: [
         // Ensure that only requests that result in a 200 status are cached
-        new CacheableResponsePlugin({
-            statuses: [0, 200],
-        }),
-        // Don't cache more than 50 items, and expire them after 5 days
-        new ExpirationPlugin({
-            maxEntries: 20,
-            maxAgeSeconds: 60 * 60 * 24 * 5, // 5 Days
-        }),
+            new CacheableResponsePlugin({
+                statuses: [0, 200],
+            }),
+            // Don't cache more than 50 items, and expire them after 5 days
+            new ExpirationPlugin({
+                maxEntries: 20,
+                maxAgeSeconds: 60 * 60 * 24 * 5, // 5 Days
+            }),
         ],
     }),
 );
