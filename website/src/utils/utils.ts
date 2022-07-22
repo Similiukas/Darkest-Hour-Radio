@@ -1,6 +1,32 @@
 import { ScheduleInfo } from 'types';
 
 /**
+ * Creates a random name from a colour, emotion and an animal.
+ */
+function generateName() {
+    // eslint-disable-next-line max-len
+    const WORD_1 = ['khaki', 'orchid', 'cyan', 'pink', 'plum', 'gold', 'magenta', 'lime', 'green yellow', 'hot pink', 'violet', 'purple']; // 'chartreuse', 'light blue', 'dark salmon', 'rebecca purple'
+    const WORD_2 = ['angry', 'sad', 'happy', 'hungry', 'surprised', 'confused', 'disappointed'];
+    const WORD_3 = ['woodchuck', 'elephant', 'monkey', 'porpoise', 'panda', 'fox', 'owl', 'starfish', 'cow', 'octopus', 'cat', 'doggo', 'hippopotamus', 'potato'];
+    const colour = WORD_1[Math.floor(Math.random() * WORD_1.length)];
+    return `${colour} ${WORD_2[Math.floor(Math.random() * WORD_2.length)]} ${WORD_3[Math.floor(Math.random() * WORD_3.length)]}`;
+}
+
+function getUserId() {
+    return localStorage.getItem('uid');
+}
+
+/**
+ * Returns name of user from browser storage or gets a new one.
+ */
+export function getUserName() {
+    if (!localStorage.getItem('name')) {
+        localStorage.setItem('name', generateName());
+    }
+    return localStorage.getItem('name');
+}
+
+/**
  * Parses data from Icecast source and splits into artist, title, mbid and checks if dj has connected
  * @param {String} data title of the Icecast source
  * @param {Function} setLive callback function which is called if detected that we are live
@@ -79,23 +105,12 @@ export async function searchRelease(artist: string, album: string) {
 }
 
 /**
- * Fetches the url as a blog from the API of the specific remote audio.
+ * Gives parsed remote audio url.
  * @param showName name of the show.
  * @param id name of the audio.
- * @param shortURL is it a short clip.
- * @returns URL of the show or null if there's an error.
  */
-export async function getRemoteURL(showName: string, id: string, shortURL = true) {
-    return fetch(`${process.env.REACT_APP_REMOTE_API_URL}/${shortURL ? 'recordShortURL' : 'recordFullURL'}/${showName}/${id}`, {
-        mode: 'cors',
-        method: 'GET',
-    })
-    .then((response) => response.blob())
-    .then((blob) => URL.createObjectURL(blob))
-    .catch((err) => {
-        console.error('woops', err);
-        return null;
-    });
+export function getRemoteURL(showName: string, id: string) {
+    return `${process.env.REACT_APP_REMOTE_API_URL}/record/${showName}/${id}/${getUserId() ?? getUserName()}`;
 }
 
 // Mainly for testing songs

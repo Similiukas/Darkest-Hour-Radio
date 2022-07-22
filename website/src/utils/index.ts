@@ -1,4 +1,4 @@
-import { parseMetadata, filterRadios, searchRecordings, searchRelease, getRemoteURL, parseHTMLEntities, convertDate } from './utils';
+import { getUserName, parseMetadata, filterRadios, searchRecordings, searchRelease, getRemoteURL, parseHTMLEntities, convertDate } from './utils';
 
 export {
     parseMetadata,
@@ -8,4 +8,5 @@ export {
     getRemoteURL,
     parseHTMLEntities,
     convertDate,
+    getUserName,
 };

@@ -14,7 +14,7 @@ import Player from './Player';
 
 type Props = {
     audio: HTMLAudioElement,
-    audioToggle: (toggleLive: boolean) => void,
+    toggleAudioPlayback: (toggleLive: boolean) => void,
     audioVolume: (increase: boolean) => void,
     pastRecordData: PastRecordData | null,
     stopCloud: () => void,
@@ -22,7 +22,7 @@ type Props = {
 
 let offline = true;
 
-const Radio = ({ audio, audioToggle, audioVolume, pastRecordData, stopCloud }: Props) => {
+const Radio = ({ audio, toggleAudioPlayback, audioVolume, pastRecordData, stopCloud }: Props) => {
     const [listenerCount, setListenerCount] = useState('00');
     const [currentSong, setCurrentSong] = useState<string | null>(null);
     const [templateRatio, setTemplateRatio] = useState(0);
@@ -37,14 +37,14 @@ const Radio = ({ audio, audioToggle, audioVolume, pastRecordData, stopCloud }: P
         console.log('toggle play?', startPlaying, offline, audio);
 
         if (pastRecordData && audio.paused === startPlaying) {
-            audioToggle(false); // Toggling audio of recording even if we are offline
+            toggleAudioPlayback(false); // Toggling audio of recording even if we are offline
             setIsAudioPlaying(startPlaying);
         } else if (!offline && audio.paused === startPlaying) { // If not offline button only starts or pauses (just for PC buttons)
-            audioToggle(true);
+            toggleAudioPlayback(true);
             toggleTimeout();
             setIsAudioPlaying(startPlaying);
         } else console.error('We are probably offline?', offline, audio, startPlaying);
-    }, [audio, audioToggle, pastRecordData, toggleTimeout]);
+    }, [audio, toggleAudioPlayback, pastRecordData, toggleTimeout]);
 
     const volumeChange = (increase: boolean | number) => {
         if (typeof increase === 'boolean') {

@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 
 import { auth, onAuthStateChanged, updateProfile, firestore, query, collection, orderBy, limit } from 'firebaseConfig';
+import { getUserName } from 'utils';
 
 import ChatMessage from './ChatMessage';
 import MessageSubmit from './MessageSubmit';
@@ -10,27 +11,12 @@ type Props = {
     chatHeight?: string
 };
 
-// eslint-disable-next-line max-len
-const WORD_1 = ['khaki', 'orchid', 'light blue', 'dark salmon', 'cyan', 'pink', 'chartreuse', 'plum', 'gold', 'magenta', 'lime', 'green yellow', 'hot pink', 'violet', 'purple', 'rebecca purple'];
-const WORD_2 = ['angry', 'sad', 'happy', 'hungry', 'surprised', 'confused', 'disappointed'];
-const WORD_3 = ['woodchuck', 'elephant', 'monkey', 'porpoise', 'panda', 'fox', 'owl', 'starfish', 'cow', 'octopus', 'cat', 'doggo', 'hippopotamus', 'potato'];
-// Generating random user name
-function generateName() {
-    const colour = WORD_1[Math.floor(Math.random() * WORD_1.length)];
-    return `${colour} ${WORD_2[Math.floor(Math.random() * WORD_2.length)]} ${WORD_3[Math.floor(Math.random() * WORD_3.length)]}`;
-}
-// Returns name of user from browser storage or gets a new one.
-function getUserName() {
-    if (!localStorage.getItem('name')) {
-        localStorage.setItem('name', generateName());
-    }
-    return localStorage.getItem('name');
-}
-
 onAuthStateChanged(auth, (user) => {
     // When user opens website and if previously has been logged in
+    getUserName();
     if (user) {
         console.log('Signed in then?', user);
+        localStorage.setItem('uid', user.uid);
         if (!user.displayName) {
             updateProfile(user, { displayName: getUserName() });
         }
@@ -39,6 +25,7 @@ onAuthStateChanged(auth, (user) => {
 
 const ChatRoom: React.FC<Props> = ({ chatHeight }) => {
     const dummyRef = useRef<HTMLSpanElement>(null);
+    // TODO: this also returns if it's loading (2nd param), which could be used to show that messages are loading
     const [messages] = useCollectionData(query(collection(firestore, 'messages'), orderBy('timestamp', 'desc'), limit(12)));
 
     // Scrolling to the bottom

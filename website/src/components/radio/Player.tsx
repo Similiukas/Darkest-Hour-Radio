@@ -2,7 +2,6 @@ import { useState, useEffect, useContext, useCallback } from 'react';
 import { Range, Direction, getTrackBackground } from 'react-range';
 
 import { SettingsContext } from 'context';
-import { useDidMount } from 'hooks';
 import defaultPhoto from 'images/logo-min.png';
 import pixels from 'pixels.json';
 import { OverlayType, PastRecordData } from 'types';
@@ -91,7 +90,15 @@ const Player = ({ templateRatio, currentSong, listenerCount, setLive, togglePlay
     }, [setLive]);
 
     useEffect(() => {
-        if (currentSong === 'ad') {
+        if (pastRecordData) {
+            setSongInfo({
+                title: pastRecordData.name,
+                artist: '',
+                album: '',
+            });
+            setPlayButtonText('pause_circle');
+            setCoverPhotoUrl(defaultPhoto);
+        } else if (currentSong === 'ad') {
             setSongInfo({
                 title: 'Darkest Hour Radio',
                 artist: '',
@@ -108,20 +115,7 @@ const Player = ({ templateRatio, currentSong, listenerCount, setLive, togglePlay
             });
             setCoverPhotoUrl(defaultPhoto);
         }
-    }, [currentSong, updateCoverArt]);
-
-    // useEffect except first render
-    useDidMount(() => {
-        setPlayButtonText('pause_circle');
-        if (pastRecordData) {
-            setSongInfo({
-                title: pastRecordData.name,
-                artist: '',
-                album: '',
-            });
-            setCoverPhotoUrl(defaultPhoto);
-        }
-    }, [pastRecordData]);
+    }, [currentSong, pastRecordData, updateCoverArt]);
 
     return (
         <div
