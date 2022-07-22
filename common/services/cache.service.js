@@ -4,7 +4,7 @@ import { writeSongHearts } from "../../songs/models/song.model.js";
 // Could use something like https://github.com/node-cache/node-cache as well but for simplicity this suffices
 export default class Cache {
 
-    // JavaScript is essentially prototype-based language rather than class-bases
+    // JavaScript is essentially prototype-based language rather than class-based
     // Which mean that class with static methods should rather be objects
     // But it does work like this and I think it's more pretty.
     // https://stackoverflow.com/a/40987308/9819103
@@ -20,12 +20,21 @@ export default class Cache {
     }
 
     /**
+     * Private method which parses given `key` and returns the same key as a safe key to store in cache as a object key.
+     * @param {string} key Data object key
+     * @returns safe key
+     */
+    #parseKey(key) {
+        return key.replaceAll(' ', '');
+    }
+
+    /**
      * Saves key value pair to the cache. If key already existed, then the value is overwritten.
      * @param {string} key cache key.
      * @param {any} value value to.
      */
     set(key, value) {
-        Cache.data[key] = value;
+        Cache.data[this.#parseKey(key)] = value;
     }
 
     /**
@@ -34,10 +43,10 @@ export default class Cache {
      * @returns value with the specified key.
      */
     get(key) {
-        if (Cache.data.hasOwnProperty(key)) {
-            return Cache.data[key];
+        if (Cache.data.hasOwnProperty(this.#parseKey(key))) {
+            return Cache.data[this.#parseKey(key)];
         } else {
-            throw new ReferenceError(`Cache with key ${key} does not exist`);
+            throw new ReferenceError(`Cache with key '${key}' does not exist`);
         }
     }
 
@@ -46,8 +55,8 @@ export default class Cache {
      * @param {string} key to delete value of.
      */
     del(key) {
-        if (Cache.data.hasOwnProperty(key)) {
-            delete Cache.data[key];
+        if (Cache.data.hasOwnProperty(this.#parseKey(key))) {
+            delete Cache.data[this.#parseKey(key)];
         }
     }
 
@@ -57,7 +66,7 @@ export default class Cache {
      * @returns boolean.
      */
     check(key) {
-        return Cache.data.hasOwnProperty(key);
+        return Cache.data.hasOwnProperty(this.#parseKey(key));
     }
 
     /**

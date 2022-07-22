@@ -1,14 +1,11 @@
-import { recordsList, recordShortURL, recordFullURL } from "./controllers/recordings.controller.js";
+import { recordsList, recordUrl } from "./controllers/recordings.controller.js";
 
-export function routesConfig(app){
+export default function routesConfig(app){
     app.get("/recordList", [
         recordsList
     ]);
-    app.get("/recordShortURL/:showName/:recordId", [
+    app.get("/record/:showName/:recordId/:uid", [
         // Can add validation middleware here
-        recordShortURL
-    ]);
-    app.get("/recordFullURL/:showName/:recordId", [
-        recordFullURL
+        recordUrl
     ]);
 }
