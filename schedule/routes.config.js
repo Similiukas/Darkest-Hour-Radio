@@ -1,7 +1,7 @@
-const ScheduleController = require("./controllers/schedule.controller");
+import { getSchedule } from "./controllers/schedule.controller.js";
 
-exports.routesConfig = (app) => {
+export default function routesConfig(app) {
     app.get("/schedule", [
-        ScheduleController.getSchedule
+        getSchedule
     ]);
-};
+}

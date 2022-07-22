@@ -1,8 +1,8 @@
-const firebase = require("../../common/services/firebase.service");
+import { db } from "../../common/services/firebase.service.js";
 
-const scheduleRef = firebase.db.collection("schedule");
+const scheduleRef = db.collection("schedule");
 
-exports.getSchedule = async () => {
+export async function getScheduleData() {
     try {
         let result = [];
         const scheduleSnapshot = await scheduleRef.get();
@@ -16,4 +16,4 @@ exports.getSchedule = async () => {
     } catch (error) {
         throw new ReferenceError("Schedule does not exist");
     }
-};
+}

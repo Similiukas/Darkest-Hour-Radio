@@ -1,10 +1,10 @@
-const express = require("express");
-// const cors = require("cors");
-const helmet = require("helmet");
-const compression = require("compression");
-const RecordingsRouter = require("./recordings/routes.config");
-const SongsRouter = require("./songs/routes.config");
-const ScheduleRouter = require("./schedule/routes.config");
+import express from "express";
+import helmet from "helmet";
+import compression from "compression";
+
+import SongRouter from "./songs/routes.config.js";
+import ScheduleRouter from "./schedule/routes.config.js";
+import RecordingRouter from "./recordings/routes.config.js";
 
 const app = express();
 
@@ -38,13 +38,15 @@ const port = process.env.PORT || 3002;
 app.use(helmet());
 
 // Using gzip compression (tho brotli should be supported soon hopefully? https://github.com/expressjs/compression/pull/172)
+// Right now, this is probably never used, since by default, the threshold to consider compression is 1KB
+// but now the body is usually really small. Also, for audio files, compression is not needed, only for text files
 app.use(compression());
 
 app.use((req, res, next) => {
     res.header({
         "Access-Control-Allow-Origin": "https://dhradio.tk",
         "Access-Control-Allow-Headers": "Accept, Authorization, Content-Type, X-Requested-With, Origin, Range",
-        "Access-Control-Allow-Methods": "GET, HEAD, PUT, PATCH, POST, DELETE",
+        "Access-Control-Allow-Methods": "GET, POST, DELETE",
         "Access-Control-Expose-Header": "Content-Length",
     });
     // All of those headers can be changed with something like Insomnia or even curl, so this is not the most secure
@@ -64,13 +66,14 @@ app.use((req, res, next) => {
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-ScheduleRouter.routesConfig(app);
-SongsRouter.routesConfig(app);
-RecordingsRouter.routesConfig(app);
+SongRouter(app);
+ScheduleRouter(app);
+RecordingRouter(app);
 
 app.listen(port, () =>{
     console.log("App listening on port", port);
     console.log(`The process pid is: ${process.pid}`);
+    console.info('To Push to Heroku: git push heroku heroku-build:master');
 })
 
 // A process can not listen to sigkill: https://stackoverflow.com/q/42450501/9819103

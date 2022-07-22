@@ -1,17 +1,16 @@
-const firebase = require("../../common/services/firebase.service");
-const got = require("got");
+import got from "got";
+import { db, FieldValue } from "../../common/services/firebase.service.js";
 
-const recordsRef = firebase.db.collection("recordings");
-const FieldValue = firebase.FieldValue;
+const recordsRef = db.collection("recordings");
 
 /**
  * Gets the audio link from pcloud sharing file html
- * @param {string} url 
+ * @param {string} url
  * @returns scraped url from pcloud
  */
 async function getAudioURL(url){
     try {
-        const response = await got("https://e1.pcloud.link/publink/show?code=XZ4Xx7ZCHcOynfUOyJado0U7RmQRY7yzoNk");
+        const response = await got(url);
         var s = response.body.indexOf("audiolink");
         var e = response.body.indexOf("downloadlink");
         return response.body.substring((s + 13), (e - 5)).replace(/\\/g, "");
@@ -20,15 +19,11 @@ async function getAudioURL(url){
     }
 }
 
-exports.test = () => {
-    console.log("test goes grr");
-}
-
 /**
  * Gets all the records from the database
  * @returns record list
  */
-exports.getRecordsList = async () => {
+export async function getRecordsList() {
     try {
         let result = [];
         const snapshot = await recordsRef.get();
@@ -60,7 +55,7 @@ exports.getRecordsList = async () => {
  * @param {boolean} shortURL trying to get the short clip url or the full record
  * @returns returns the url of the given record file from pcloud
  */
-exports.getRecordURL = async (showName, id, shortURL=true) => {
+export async function getRecordURL(showName, id, shortURL=true) {
     const document = await recordsRef.doc(showName).collection("recording-main-info").doc(id).get();
     if(!document.exists){
         throw new ReferenceError("Document does not exit");
@@ -82,7 +77,7 @@ exports.getRecordURL = async (showName, id, shortURL=true) => {
  * @param {string} showName name of the show
  * @param {string} id ID of the show
  */
- exports.updateRecordViews = async (showName, id) => {
+ export async function  updateRecordViews(showName, id) {
     const mainDocumentRef = recordsRef.doc(showName).collection("recording-main-info").doc(id);
     await mainDocumentRef.update({
         listeners: FieldValue.increment(1),

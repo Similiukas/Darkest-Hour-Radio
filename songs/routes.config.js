@@ -1,19 +1,19 @@
-const SongsController = require("./controllers/songs.controller");
+import { getSong, heartSong, unheartSong, getCache, deleteCache } from "./controllers/songs.controller.js";
 
-exports.routesConfig = (app) => {
+export default function routesConfig(app) {
     app.get("/song/:name", [
-        SongsController.getSong
+        getSong
     ]);
     app.post("/song/:name", [
-        SongsController.heartSong
+        heartSong
     ]);
     app.post("/unsong/:name", [
-        SongsController.unheartSong
+        unheartSong
     ])
     app.get("/cache", [
-        SongsController.getCache
+        getCache
     ]);
     app.delete("/cache", [
-        SongsController.deleteCache
+        deleteCache
     ])
-};
+}

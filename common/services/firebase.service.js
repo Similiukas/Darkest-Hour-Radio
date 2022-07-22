@@ -1,16 +1,17 @@
 // Docs: https://firebase.google.com/docs/firestore/quickstart#node.js
-const admin = require("firebase-admin");
+// import { initializeApp, credential, firestore } from "firebase-admin";
+import firebase from 'firebase-admin';
 
-const serviceAccount = require("../../config/firebaseAccountKey.json");
+import serviceAccount from "../../config/firebaseAccountKey.json" assert { type: "json" };
 
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
+firebase.initializeApp({
+    credential: firebase.credential.cert(serviceAccount)
 });
 
-const db = admin.firestore();
-const FieldValue = admin.firestore.FieldValue;
+const db = firebase.firestore();
+const FieldValue = firebase.firestore.FieldValue;
 
-module.exports = {
+export {
     db,
     FieldValue
 };

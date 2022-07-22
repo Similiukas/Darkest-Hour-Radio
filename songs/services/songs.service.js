@@ -1,6 +1,5 @@
-const SongModel = require("../models/song.model");
-
-const Cache = require("../../common/services/cache.service");
+import { writeSongHearts } from "../models/song.model.js";
+import Cache from "../../common/services/cache.service.js";
 
 const CacheMemory = new Cache({ cachedSongs: [] });
 
@@ -10,13 +9,13 @@ const CacheMemory = new Cache({ cachedSongs: [] });
  * @param {string} songName name of the song
  * @returns hearts of the song from the cache
  */
-exports.getCachedHearts = (songName) => {
+export function getCachedHearts(songName) {
     // If the song exists in cache, then we return it
     if (CacheMemory.check(`song: ${songName}`)) {
         return CacheMemory.get(`song: ${songName}`).new;
     }
     return null;
-};
+}
 
 /**
  * Stores the new song to cache and updates the db if the cache already has 3 songs in it.
@@ -24,7 +23,7 @@ exports.getCachedHearts = (songName) => {
  * @param {string} songName name of the song
  * @param {int} value hearts of the song
  */
-exports.storeNewSongToCache = (songName, value) => {
+export function storeNewSongToCache(songName, value) {
     if (CacheMemory.check(`song: ${songName}`)) return;
 
     CacheMemory.set(`song: ${songName}`, { original: value, new: value });
@@ -37,7 +36,7 @@ exports.storeNewSongToCache = (songName, value) => {
         CacheMemory.del(`song: ${oldestSong}`);
         if (oldestSongHearts.original !== oldestSongHearts.new) {
             // Then we write the new value to the DB. This might need to have await, just in case
-            SongModel.writeSongHearts(oldestSong, oldestSongHearts.new);
+            writeSongHearts(oldestSong, oldestSongHearts.new);
         }
     }
 
@@ -50,7 +49,7 @@ exports.storeNewSongToCache = (songName, value) => {
  * @param {string} songName name of the song
  * @param {boolean} increase heart song or unheart
  */
-exports.updateSongHearts = (songName, increase) => {
+export function updateSongHearts(songName, increase) {
     // In theory, update only happens after get, which means song is already in cache
     // If it's not in cache, then it's either a bug with previous and currentSong
     // Or just using curl hence ignoring the call
@@ -62,10 +61,10 @@ exports.updateSongHearts = (songName, increase) => {
     }
 }
 
-exports.getCache = () => {
+export function getCacheData() {
     return Cache.data;
 }
 
-exports.deleteCache = () => {
+export function deleteCacheData() {
     CacheMemory.flush();
 }

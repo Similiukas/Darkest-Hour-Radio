@@ -1,21 +1,22 @@
-const { exit } = require("process");
-const SongModel = require("../../songs/models/song.model");
+import { exit } from "process";
+import { writeSongHearts } from "../../songs/models/song.model.js";
 
 // Could use something like https://github.com/node-cache/node-cache as well but for simplicity this suffices
-module.exports = class Cache {
+export default class Cache {
 
     // JavaScript is essentially prototype-based language rather than class-bases
     // Which mean that class with static methods should rather be objects
     // But it does work like this and I think it's more pretty.
     // https://stackoverflow.com/a/40987308/9819103
     static data = new Object();
+    static STARTED_EXIT = false;
 
     constructor(initialValue) {
         if (initialValue) {
             Cache.data = { ...Cache.data, ...initialValue };
         }
         // sitas irgi gal but turi but static, kad butu pakviests tik karta
-        process.on('SIGTERM', this.saveBeforeExit.bind(this));
+        process.on('SIGTERM', Cache.saveBeforeExit.bind(this));
     }
 
     /**
@@ -62,21 +63,27 @@ module.exports = class Cache {
     /**
      * Saving cached songs to the database before exit.
      */
-    async saveBeforeExit() {
+    static async saveBeforeExit() {
+        // Making sure save is started only once
+        if (Cache.STARTED_EXIT) return;
+        Cache.STARTED_EXIT = true;
         console.log("[Cache service] Saving data to db before exiting", Cache.data);
+
         try {
             const cachedSongs = this.get("cachedSongs");
             for (const cachedSong of cachedSongs) {
                 const cachedSongHearts = this.get(`song: ${cachedSong}`);
                 if (cachedSongHearts.original !== cachedSongHearts.new) {
-                    await SongModel.writeSongHearts(cachedSong, cachedSongHearts.new);
+                    await writeSongHearts(cachedSong, cachedSongHearts.new);
+                    console.log(`[Cache service] Saved ${cachedSong} to db`);
                 }
             }
             console.log("[Cache service] Data saved to db successfully", Cache.data);
+            exit();
         } catch (err) {
             console.error("[Cache service] Error saving cache to db:\n", err);
+            exit(-1);
         }
-        exit();
     }
 
     /**

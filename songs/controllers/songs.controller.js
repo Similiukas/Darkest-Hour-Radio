@@ -1,46 +1,46 @@
-const SongService = require("../services/songs.service");
-const SongModel = require("../models/song.model");
+import { getCachedHearts, storeNewSongToCache, updateSongHearts, getCacheData, deleteCacheData } from "../services/songs.service.js";
+import { getSongHearts } from "../models/song.model.js";
 
-exports.getSong = (req, res) => {
+export function getSong(req, res) {
     const songName = req.params.name;
-    const cachedHearts = SongService.getCachedHearts(songName);
+    const cachedHearts = getCachedHearts(songName);
     if (cachedHearts) {
         res.status(200).send(cachedHearts.toString());
         return;
     }
     
     // If the song is not in cache, checking db
-    SongModel.getSongHearts(songName)
+    getSongHearts(songName)
     .then(result => {
-        SongService.storeNewSongToCache(songName, result);
+        storeNewSongToCache(songName, result);
         res.status(200).send(result.toString());
     })
     .catch(err => res.status(500).send({ Error: err.message }))
 }
 
-exports.heartSong = (req, res) => {
+export function heartSong(req, res) {
     try {
-        SongService.updateSongHearts(req.params.name, true);
+        updateSongHearts(req.params.name, true);
         res.status(200).end();
     } catch (err) {
         res.status(400).send({ Error: err.message });
     }
 }
 
-exports.unheartSong = (req, res) => {
+export function unheartSong(req, res) {
     try {
-        SongService.updateSongHearts(req.params.name, false);
+        updateSongHearts(req.params.name, false);
         res.status(200).end();
     } catch (err) {
         res.status(400).send({ Error: err.message });
     }
 }
 
-exports.getCache = (req, res) => {
-    res.status(200).send(SongService.getCache());
+export function getCache(req, res) {
+    res.status(200).send(getCacheData());
 }
 
-exports.deleteCache = (req, res) => {
-    SongService.deleteCache();
+export function deleteCache(req, res) {
+    deleteCacheData();
     res.status(200).end();
 }

@@ -1,7 +1,6 @@
-const firebase = require("../../common/services/firebase.service");
+import { db, FieldValue } from "../../common/services/firebase.service.js";
 
-const songsRef = firebase.db.collection("songs");
-const FieldValue = firebase.FieldValue;
+const songsRef = db.collection("songs");
 
 async function writeNewSong(songName) {
     const defaultData = {
@@ -12,7 +11,7 @@ async function writeNewSong(songName) {
     await songsRef.doc(songName).set(defaultData);
 }
 
-exports.writeSongHearts = async (songName, value) => {
+export async function writeSongHearts(songName, value) {
     const songDocumentRef = songsRef.doc(songName);
     const songDocument = await songDocumentRef.get();
     if(songDocument.exists){
@@ -21,9 +20,9 @@ exports.writeSongHearts = async (songName, value) => {
     else{
         throw new ReferenceError("This song does not exist:", songName);
     }
-};
+}
 
-exports.getSongHearts = async (songName) => {
+export async function getSongHearts(songName) {
     const songDocument = await songsRef.doc(songName).get();
     if(songDocument.exists){
         const data = songDocument.data();

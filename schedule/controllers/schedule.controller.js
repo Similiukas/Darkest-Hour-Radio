@@ -1,8 +1,8 @@
-const ScheduleService = require('../services/schedule.service');
-const ScheduleModel = require('../models/schedule.model');
+import { getCachedSchedule, storeScheduleToCache } from '../services/schedule.service.js';
+import { getScheduleData } from '../models/schedule.model.js';
 
-exports.getSchedule = (req, res) => {
-    const schedule = ScheduleService.getCachedSchedule();
+export function getSchedule(req, res) {
+    const schedule = getCachedSchedule();
     // Cache hit
     if (schedule) {
         res.status(200).send(schedule);
@@ -10,12 +10,12 @@ exports.getSchedule = (req, res) => {
     }
 
     // Cache miss
-    ScheduleModel.getSchedule()
+    getScheduleData()
     .then(result =>{
-        ScheduleService.storeScheduleToCache(result);
+        storeScheduleToCache(result);
         res.status(200).send(result);
     })
     .catch(err => {
         res.status(500).send({ "Error": err.message });
     });
-};
+}

@@ -1,17 +1,14 @@
-const RecordingsController = require("./controllers/recordings.controller");
+import { recordsList, recordShortURL, recordFullURL } from "./controllers/recordings.controller.js";
 
-exports.routesConfig = (app) =>{
-    app.get("/test", [
-        RecordingsController.something
-    ]);
+export function routesConfig(app){
     app.get("/recordList", [
-        RecordingsController.recordsList
+        recordsList
     ]);
     app.get("/recordShortURL/:showName/:recordId", [
         // Can add validation middleware here
-        RecordingsController.recordShortURL
+        recordShortURL
     ]);
     app.get("/recordFullURL/:showName/:recordId", [
-        RecordingsController.recordFullURL
+        recordFullURL
     ]);
 }

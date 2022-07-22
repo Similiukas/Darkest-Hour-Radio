@@ -1,4 +1,4 @@
-const Cache = require("../../common/services/cache.service");
+import Cache from "../../common/services/cache.service.js";
 
 const CacheMemory = new Cache();
 
@@ -9,7 +9,7 @@ const RECORD_URL_TTL  = 2*60*60*1000;   // 2 hours
  * Gets record list from cache if it exists.
  * @returns cached record list
  */
-exports.getCachedRecords = () => {
+export function getCachedRecords() {
     // If the song exists in cache, then we return it
     if (CacheMemory.check("recordList")) {
         const records = CacheMemory.get("recordList");
@@ -19,13 +19,13 @@ exports.getCachedRecords = () => {
         return records.records;
     }
     return null;
-};
+}
 
 /**
  * Stores records to cache.
  * @param {any} records to store in cache
  */
-exports.storeRecordsToCache = (records) => {
+export function storeRecordsToCache(records) {
     CacheMemory.set("recordList", {
         records,
         expiresIn: new Date(new Date().getTime() + RECORD_LIST_TTL)
@@ -39,7 +39,7 @@ exports.storeRecordsToCache = (records) => {
  * @param {boolean} shortUrl is it short url we need?
  * @returns record's url from cache
  */
-exports.getCachedRecordUrl = (showName, record, shortUrl) => {
+export function getCachedRecordUrl(showName, record, shortUrl) {
     if (CacheMemory.check(`record: ${showName}-${record}`)) {
         const recordData = CacheMemory.get(`record: ${showName}-${record}`);
         if (recordData.expiresIn < Date.now()) {
@@ -61,7 +61,7 @@ exports.getCachedRecordUrl = (showName, record, shortUrl) => {
  * @param {string} shortUrl url of short record.
  * @param {string} fullUrl url of full record.
  */
-exports.storeRecordURLToCache = (showName, record, shortUrl=null, fullUrl=null) => {
+export function storeRecordURLToCache(showName, record, shortUrl=null, fullUrl=null) {
     // If a record exists in cache (not expired), then we update the values if they are null
     if (CacheMemory.check(`record: ${showName}-${record}`)) {
         const recordData = CacheMemory.get(`record: ${showName}-${record}`);
