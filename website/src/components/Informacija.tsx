@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 
 import { SettingsContext } from 'context';
-import logoImage from 'images/logo-min.png';
+import logoImage from 'images/logo-min.webp';
 import { convertDate } from 'utils';
 // import logoImage from '@images/logo-min.png';
 // Aliases: https://dev.to/larswaechter/path-aliases-with-typescript-in-nodejs-4353

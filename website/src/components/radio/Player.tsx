@@ -2,7 +2,7 @@ import { useState, useEffect, useContext, useCallback } from 'react';
 import { Range, Direction, getTrackBackground } from 'react-range';
 
 import { SettingsContext } from 'context';
-import defaultPhoto from 'images/logo-min.png';
+import defaultPhoto from 'images/logo-min.webp';
 import pixels from 'pixels.json';
 import { OverlayType, PastRecordData } from 'types';
 import { filterRadios, parseHTMLEntities, parseMetadata, searchRecordings, searchRelease } from 'utils';

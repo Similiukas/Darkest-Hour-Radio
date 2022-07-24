@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useContext, useCallback } from 'react';
 
 import { SettingsContext } from 'context';
-import radioTemplate from 'images/desktop-template-3-min.png';
+import radioTemplate from 'images/desktop-template-3-min.webp';
 import pixels from 'pixels.json';
 import { OverlayType, PastRecordData } from 'types';
 
