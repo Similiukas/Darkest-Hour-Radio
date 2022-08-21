@@ -7,7 +7,6 @@ type Props = {
     mounting: boolean,
     onClick: () => void,
 }
-// TODO: pridet prie npm scripts dar ir linterio fix
 // TODO: perziet ar tabindex ka daro
 const Info = ({ mounting, onClick }: Props) => {
     const { scheduleInfo } = useContext(SettingsContext);
