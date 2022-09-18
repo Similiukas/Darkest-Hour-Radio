@@ -34,6 +34,10 @@ Need to then restart the SysteMD service with
 
  `sudo systemctl restart icecast2`
 
+## Liquidsoap `random()` change:
+
+When there are a lot of playlists (in this case 14), the `random()` function is not great. This is because after every new song, it plays a random playlist. This seems fine until there are a lot of playlist. Then, there are a lot of changes of playlists. The same playlist one gets one track played and then suddenly another playlist is queued. To circumvent this issue, using the custom `custom_random()` function written in `custom_random.liq`. This implementation is based on the original [source code](https://github.com/savonet/liquidsoap/blob/main/src/libs/switches.liq#L139) of `random()` function. The only difference is that there's an additional parameter `min_tracks = n` which forces to change playlist only after at least `n` tracks.
+
 ## Mopidy start
 
 As a service:
