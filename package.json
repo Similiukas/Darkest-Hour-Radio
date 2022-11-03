@@ -1,12 +1,13 @@
 {
   "name": "radio-api",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Radio REST API for getting recording data",
   "main": "server.js",
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "echo \"No build script existing\" && exit 0"
   },
   "author": "Similiukas",
   "license": "ISC",

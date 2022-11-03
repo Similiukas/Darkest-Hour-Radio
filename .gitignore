@@ -3,3 +3,5 @@ config
 .todo
 .env
 build
+
+fly.toml
