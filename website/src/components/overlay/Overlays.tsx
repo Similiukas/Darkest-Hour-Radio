@@ -2,7 +2,7 @@ import { useContext, useEffect } from 'react';
 
 import { SettingsContext } from 'context';
 import { useDelayUnmount } from 'hooks';
-import { OverlayType, StartCloudRecoding } from 'types';
+import { OverlayType, ScheduleInfo, StartCloudRecoding } from 'types';
 
 import Info from './Info';
 import PodcastContainer from './PodcastContainer';
@@ -23,7 +23,7 @@ const Overlays = ({ startCloud }: Props) => {
     useEffect(() => {
         fetch(`${process.env.REACT_APP_REMOTE_API_URL}/schedule`)
         .then((res) => res.json())
-        .then((result) => setScheduleInfo(result));
+        .then((result) => setScheduleInfo(result.sort((a: ScheduleInfo, b: ScheduleInfo) => b.priority - a.priority)));
     }, [setScheduleInfo]);
 
     return (

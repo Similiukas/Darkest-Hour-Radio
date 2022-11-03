@@ -29,5 +29,6 @@ export interface Podcast {
 
 export interface ScheduleInfo {
     name: string,
+    priority: number,
     date: Timestamp,
 }
