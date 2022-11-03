@@ -10,6 +10,7 @@ export async function getScheduleData() {
             result.push({
                 name: doc.id,
                 date: doc.get('date'),
+                priority: doc.get('priority'),
             });
         }
         return result;
