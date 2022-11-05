@@ -67,4 +67,5 @@ export function getCacheData() {
 
 export function deleteCacheData() {
     CacheMemory.flush();
+    CacheMemory.set('cachedSongs', []);
 }
