@@ -25,20 +25,19 @@ onAuthStateChanged(auth, (user) => {
 
 const ChatRoom: React.FC<Props> = ({ chatHeight }) => {
     const dummyRef = useRef<HTMLSpanElement>(null);
-    // TODO: this also returns if it's loading (2nd param), which could be used to show that messages are loading
-    const [messages] = useCollectionData(query(collection(firestore, 'messages'), orderBy('timestamp', 'desc'), limit(12)));
+    const [messages, loading] = useCollectionData(query(collection(firestore, 'messages'), orderBy('timestamp', 'desc'), limit(20)));
 
     // Scrolling to the bottom
     useEffect(() => {
-        if (dummyRef.current) {
+        if (!loading && dummyRef.current) {
             dummyRef.current.scrollIntoView({ behavior: 'smooth' });
         }
-    }, [messages]);
+    }, [messages, loading]);
 
     return (
         <div className="chat" style={{ maxHeight: chatHeight }}>
             <div id="all-messages">
-                { messages &&
+                { messages && !loading &&
                   messages.slice(0).reverse().map((msg) => (
                       <ChatMessage
                           key={msg.timestamp?.seconds ?? Date.now()}

@@ -105,6 +105,21 @@ export async function searchRelease(artist: string, album: string) {
 }
 
 /**
+ * Adds album cover art to HTML
+ * @param {MBID} MBID Release MBID from musicbrainz
+ * @param {boolean} group If true, looking for release group. If false -> just for release
+ */
+export async function addCoverArt(MBID: string, group: boolean, callback: (imageUrl: string | null) => void) {
+    try {
+        const img = await fetch(`https://coverartarchive.org/release${group ? '-group/' : '/'}${MBID}`);
+        const imgJSON = await img.json();
+        callback(imgJSON.images[0].thumbnails.small.replace('http://', 'https://'));
+    } catch (error) {
+        callback(null);
+    }
+}
+
+/**
  * Gives parsed remote audio url.
  * @param showName name of the show.
  * @param id name of the audio.

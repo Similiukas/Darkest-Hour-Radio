@@ -103,7 +103,6 @@ const Radio = ({ audio, toggleAudioPlayback, audioVolume, pastRecordData, stopCl
 
     // Hook placing UI objects based on template size
     useEffect(() => {
-        console.info('placing objects', templateRef.current);
         if (!templateRef.current) return undefined;
         setTemplateRatio(templateRef.current.clientWidth / pixels.templateWidth); // Calling initially
         function resizing() {
@@ -161,6 +160,7 @@ const Radio = ({ audio, toggleAudioPlayback, audioVolume, pastRecordData, stopCl
                 togglePlay={togglePlay}
                 volumeChange={volumeChange}
                 pastRecordData={pastRecordData}
+                isAudioPlaying={isAudioPlaying}
             />
 
             <div ref={templateRef}>
