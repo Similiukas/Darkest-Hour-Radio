@@ -23,19 +23,15 @@ const App = () => {
         setSecret(true);
     });
 
-    return (
-        <>
-            { secret && <SecretCanvas /> }
-
-            { !secret && (
-                <>
-                    <SettingsProvider>
-                        <AppStore setSecret={setSecret} />
-                    </SettingsProvider>
-                    <ChatContainer />
-                </>
-            )}
-        </>
+    return (secret ? <SecretCanvas />
+        : (
+            <>
+                <SettingsProvider>
+                    <AppStore setSecret={setSecret} />
+                </SettingsProvider>
+                <ChatContainer />
+            </>
+        )
     );
 };
 

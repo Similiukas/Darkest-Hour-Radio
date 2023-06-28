@@ -22,6 +22,7 @@ const BoomboxButtons = ({ templateRatio, togglePlay, volumeChange, pastRecordDat
 
     const buttonHeight = templateRatio * pixels.boomboxButtons.height;
     const buttonWidth = templateRatio * pixels.boomboxButtons.width;
+    const PODCAST_ENABLED = process.env.REACT_APP_PODCAST_ENABLED === 'true';
 
     useDidMount(() => {
         setPlaying(true); // Setting to button UI to play whenever playingPast changes
@@ -82,15 +83,17 @@ const BoomboxButtons = ({ templateRatio, togglePlay, volumeChange, pastRecordDat
                     volumeChange(true);
                 }}
             />
-            <Button
-                buttonType="podcast"
-                buttonName="podcasts"
-                buttonHeight={buttonHeight}
-                buttonWidth={buttonWidth}
-                somethingLikeOnClick={() => {
-                    setOverlay(OverlayType.Podcast);
-                }}
-            />
+            { PODCAST_ENABLED && (
+                <Button
+                    buttonType="podcast"
+                    buttonName="podcasts"
+                    buttonHeight={buttonHeight}
+                    buttonWidth={buttonWidth}
+                    somethingLikeOnClick={() => {
+                        setOverlay(OverlayType.Podcast);
+                    }}
+                />
+            )}
             <Button
                 buttonType="info"
                 buttonName="info"

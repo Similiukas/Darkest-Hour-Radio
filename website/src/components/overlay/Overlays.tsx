@@ -19,6 +19,7 @@ const Overlays = ({ startCloud }: Props) => {
     const { overlayType, setOverlay, setScheduleInfo } = useContext(SettingsContext);
     const shouldRenderInfo = useDelayUnmount(overlayType === OverlayType.Info, 400);
     const shouldRenderPodcast = useDelayUnmount(overlayType === OverlayType.Podcast, 400);
+    const PODCAST_ENABLED = process.env.REACT_APP_PODCAST_ENABLED === 'true';
 
     useEffect(() => {
         fetch(`${process.env.REACT_APP_REMOTE_API_URL}/schedule`)
@@ -37,7 +38,7 @@ const Overlays = ({ startCloud }: Props) => {
                 />
             )}
 
-            { shouldRenderPodcast && (
+            { shouldRenderPodcast && PODCAST_ENABLED && (
                 <PodcastContainer
                     mounting={overlayType === OverlayType.Podcast}
                     startCloud={startCloud}

@@ -4,7 +4,7 @@ import Header from 'components/Header';
 import Informacija from 'components/Informacija';
 import Overlays from 'components/overlay/Overlays';
 import Radio from 'components/radio/Radio';
-import RecrodingsDashboard from 'components/RecordingsDashboard';
+import RecordingsDashboard from 'components/RecordingsDashboard';
 import { SettingsContext } from 'context';
 import { useAudio } from 'hooks';
 import { PastRecordData, StartCloudRecoding } from 'types';
@@ -15,11 +15,11 @@ type Props = {
 }
 
 const AppStore = ({ setSecret }: Props) => {
-    const [pastRecordData, setPastRecordData] = useState<PastRecordData|null>(null);
+    const [pastRecordData, setPastRecordData] = useState<PastRecordData | null>(null);
     const [audio, toggleAudioPlayback, setAudioVolume, changeAudioSource] = useAudio('https://stream.dhradio.tk/playlist.ogg');
 
     const { setOverlay, toggleTimeout } = useContext(SettingsContext);
-
+    const PODCAST_ENABLED = process.env.REACT_APP_PODCAST_ENABLED === 'true';
     /**
      * When the user stops the cloud recording and wants to go back to live.
      * Need to delete past record data, cancel the switch to full audio and toggle the timeout.
@@ -75,11 +75,13 @@ const AppStore = ({ setSecret }: Props) => {
                     <>
                         <Informacija secret={setSecret} />
 
-                        <RecrodingsDashboard
-                            toggleOverlay={setOverlay}
-                            pastRecordData={pastRecordData}
-                            stopCloud={stopCloudRecording}
-                        />
+                        {PODCAST_ENABLED && (
+                            <RecordingsDashboard
+                                toggleOverlay={setOverlay}
+                                pastRecordData={pastRecordData}
+                                stopCloud={stopCloudRecording}
+                            />
+                        )}
                     </>
                 )}
 
