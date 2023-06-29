@@ -2,7 +2,6 @@ import { useContext, useEffect } from 'react';
 
 import { SettingsContext } from 'context';
 import { useDelayUnmount } from 'hooks';
-import { OverlayType, ScheduleInfo, StartCloudRecoding } from 'types';
 
 import Info from './Info';
 import PodcastContainer from './PodcastContainer';
@@ -17,8 +16,8 @@ type Props = {
 // https://stackoverflow.com/a/37950970/9819103
 const Overlays = ({ startCloud }: Props) => {
     const { overlayType, setOverlay, setScheduleInfo } = useContext(SettingsContext);
-    const shouldRenderInfo = useDelayUnmount(overlayType === OverlayType.Info, 400);
-    const shouldRenderPodcast = useDelayUnmount(overlayType === OverlayType.Podcast, 400);
+    const shouldRenderInfo = useDelayUnmount(overlayType === 'Info', 400);
+    const shouldRenderPodcast = useDelayUnmount(overlayType === 'Podcast', 400);
     const PODCAST_ENABLED = process.env.REACT_APP_PODCAST_ENABLED === 'true';
 
     useEffect(() => {
@@ -31,27 +30,27 @@ const Overlays = ({ startCloud }: Props) => {
         <>
             { shouldRenderInfo && (
                 <Info
-                    mounting={overlayType === OverlayType.Info}
+                    mounting={overlayType === 'Info'}
                     onClick={() => {
-                        setOverlay(OverlayType.Empty);
+                        setOverlay('Empty');
                     }}
                 />
             )}
 
             { shouldRenderPodcast && PODCAST_ENABLED && (
                 <PodcastContainer
-                    mounting={overlayType === OverlayType.Podcast}
+                    mounting={overlayType === 'Podcast'}
                     startCloud={startCloud}
                     close={() => {
-                        setOverlay(OverlayType.Empty);
+                        setOverlay('Empty');
                     }}
                 />
             )}
 
-            { overlayType === OverlayType.TimeoutStart && (
+            { overlayType === 'TimeoutStart' && (
                 <Timeout
                     onClick={() => {
-                        setOverlay(OverlayType.TimeoutEnd);
+                        setOverlay('TimeoutEnd');
                     }}
                 />
             )}

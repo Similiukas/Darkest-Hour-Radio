@@ -7,7 +7,6 @@ import Radio from 'components/radio/Radio';
 import RecordingsDashboard from 'components/RecordingsDashboard';
 import { SettingsContext } from 'context';
 import { useAudio } from 'hooks';
-import { PastRecordData, StartCloudRecoding } from 'types';
 import { getRemoteURL } from 'utils';
 
 type Props = {

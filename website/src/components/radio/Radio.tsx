@@ -3,7 +3,6 @@ import { useState, useRef, useEffect, useContext, useCallback } from 'react';
 import { SettingsContext } from 'context';
 import radioTemplate from 'images/desktop-template-3-min.webp';
 import pixels from 'pixels.json';
-import { OverlayType, PastRecordData } from 'types';
 
 import BoomboxButtons from './BoomboxButtons';
 import Cassette from './Cassette';
@@ -91,11 +90,11 @@ const Radio = ({ audio, toggleAudioPlayback, audioVolume, pastRecordData, stopCl
     // Timeout useEffect hook for pausing/playing the audio when timeout is reached/ended
     // Also, notifies boombox buttons to change
     useEffect(() => {
-        if (overlayType === OverlayType.TimeoutStart) {
+        if (overlayType === 'TimeoutStart') {
             togglePlay(false);
-        } else if (overlayType === OverlayType.TimeoutEnd) {
+        } else if (overlayType === 'TimeoutEnd') {
             togglePlay(true);
-            setOverlay(OverlayType.Empty);
+            setOverlay('Empty');
         }
     // If togglePlay is added to dep-array, then it will get called 3 times causing an error on third one
     // eslint-disable-next-line react-hooks/exhaustive-deps

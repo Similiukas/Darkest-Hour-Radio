@@ -1,7 +1,6 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import Loader from 'components/Loader';
-import { Podcast } from 'types';
 
 import PodcastShowRecording from './PodcastShowRecording';
 

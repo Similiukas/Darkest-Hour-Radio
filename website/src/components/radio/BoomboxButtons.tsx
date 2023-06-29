@@ -3,7 +3,6 @@ import { useContext, useState } from 'react';
 import { SettingsContext } from 'context';
 import { useDidMount } from 'hooks';
 import pixels from 'pixels.json';
-import { OverlayType, PastRecordData } from 'types';
 
 import Button from './Button';
 
@@ -33,11 +32,11 @@ const BoomboxButtons = ({ templateRatio, togglePlay, volumeChange, pastRecordDat
             className="boombox-buttons"
             style={{
                 marginTop: templateRatio * pixels.boomboxButtons.containerMarginTop - buttonHeight,
-                pointerEvents: overlayType === OverlayType.TimeoutStart ? 'none' : 'auto',
+                pointerEvents: overlayType === 'TimeoutStart' ? 'none' : 'auto',
             }}
         >
             <Button
-                buttonType={`play ${overlayType === OverlayType.TimeoutStart ? '' : (playing ? 'active' : '')}`}
+                buttonType={`play ${overlayType === 'TimeoutStart' ? '' : (playing ? 'active' : '')}`}
                 buttonName="play_arrow"
                 buttonHeight={buttonHeight}
                 buttonWidth={buttonWidth}
@@ -47,7 +46,7 @@ const BoomboxButtons = ({ templateRatio, togglePlay, volumeChange, pastRecordDat
                 }}
             />
             <Button
-                buttonType={`pause ${overlayType === OverlayType.TimeoutStart ? 'active' : (playing ? '' : 'active')}`}
+                buttonType={`pause ${overlayType === 'TimeoutStart' ? 'active' : (playing ? '' : 'active')}`}
                 buttonName="pause"
                 buttonHeight={buttonHeight}
                 buttonWidth={buttonWidth}
@@ -90,7 +89,7 @@ const BoomboxButtons = ({ templateRatio, togglePlay, volumeChange, pastRecordDat
                     buttonHeight={buttonHeight}
                     buttonWidth={buttonWidth}
                     somethingLikeOnClick={() => {
-                        setOverlay(OverlayType.Podcast);
+                        setOverlay('Podcast');
                     }}
                 />
             )}
@@ -100,7 +99,7 @@ const BoomboxButtons = ({ templateRatio, togglePlay, volumeChange, pastRecordDat
                 buttonHeight={buttonHeight}
                 buttonWidth={buttonWidth}
                 somethingLikeOnClick={() => {
-                    setOverlay(OverlayType.Info);
+                    setOverlay('Info');
                 }}
             />
         </div>

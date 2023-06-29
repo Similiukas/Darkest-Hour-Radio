@@ -4,7 +4,6 @@ import { Range, Direction, getTrackBackground } from 'react-range';
 import { SettingsContext } from 'context';
 import defaultPhoto from 'images/logo-min.webp';
 import pixels from 'pixels.json';
-import { OverlayType, PastRecordData } from 'types';
 import { addCoverArt, filterRadios, parseHTMLEntities, parseMetadata, searchRecordings, searchRelease } from 'utils';
 
 import PlayerHUD from './PlayerHUD';
@@ -133,7 +132,7 @@ const Player = ({ templateRatio, currentSong, listenerCount, setLive, togglePlay
                         setPlayButtonText(playButtonText === 'play_circle' ? 'pause_circle' : 'play_circle');
                     }}
                 >
-                    {overlayType === OverlayType.TimeoutStart ? 'play_circle' : playButtonText}
+                    {overlayType === 'TimeoutStart' ? 'play_circle' : playButtonText}
                 </span>   {/* <!-- Hide in desktop--> */}
 
                 <div className="song info">

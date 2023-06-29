@@ -1,7 +1,5 @@
 import { createContext } from 'react';
 
-import { OverlayType, ScheduleInfo } from 'types';
-
 interface SettingsProps {
     overlayType: OverlayType;
     scheduleInfo: ScheduleInfo[] | undefined;
@@ -11,7 +9,7 @@ interface SettingsProps {
 }
 
 export const DEFAULT_SETTINGS: SettingsProps = {
-    overlayType: OverlayType.Empty,
+    overlayType: 'Empty',
     scheduleInfo: undefined,
     setOverlay: () => undefined,
     toggleTimeout: () => undefined,
