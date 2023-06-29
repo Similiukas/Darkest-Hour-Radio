@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import SwiperCore, { Navigation, Pagination } from 'swiper';
 
-import { StartCloudRecoding, Podcast } from 'types';
+import { playSoundFX } from 'utils';
 
 import PodcastRecordingContainer from './PodcastRecordingContainer';
 
@@ -26,6 +26,7 @@ const PodcastContainer = ({ mounting, startCloud, close }: Props) => {
     const [podcasts, setPodcasts] = useState<Podcast[] | null>(null);
 
     const callCloud = (showName: string, id: string, listeners: string) => {
+        playSoundFX('CassetteInsert');
         startCloud(showName, id, listeners);
         close();
     };

@@ -1,4 +1,5 @@
-import { ScheduleInfo } from 'types';
+import clickFX from 'images/button.wav';
+import insertCassetteFX from 'images/cassette-in-close.wav';
 
 /**
  * Creates a random name from a colour, emotion and an animal.
@@ -134,6 +135,8 @@ export function parseHTMLEntities(code: string) {
     return parser.parseFromString(code, 'text/html').documentElement.textContent;
 }
 
+console.log('hello?');
+
 /**
  * Converts the first date of the schedule.
  * @param scheduleInfo schedule
@@ -150,4 +153,41 @@ export function convertDate(scheduleInfo: ScheduleInfo[] | undefined) {
     const hours = ` ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')} `;
     const years = `[${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}]`;
     return hours + years;
+}
+
+// Creating three separate audio elements if button is spammed. Third one is reached if spammed real hard
+const buttonAudios = [new Audio(clickFX), new Audio(clickFX), new Audio(clickFX)];
+buttonAudios.forEach((e) => {
+    e.preload = 'auto';
+    e.volume = 0.1;
+});
+const cassetteAudio = new Audio(insertCassetteFX);
+cassetteAudio.preload = 'metadata';
+cassetteAudio.volume = 0.7;
+
+/**
+ * Playing a sound effect.
+ * @param type Sound effect type
+ */
+export function playSoundFX(type: SoundEffectType) {
+    if (type === 'ButtonClick') {
+        if (buttonAudios[0].paused) {
+            buttonAudios[0].currentTime = 0;
+            buttonAudios[0].play();
+        } else if (buttonAudios[1].paused) {
+            buttonAudios[1].currentTime = 0;
+            buttonAudios[1].play();
+            buttonAudios[0].pause();
+            buttonAudios[0].currentTime = 0;
+        } else if (buttonAudios[2].paused) {
+            buttonAudios[2].currentTime = 0;
+            buttonAudios[2].play();
+            buttonAudios[0].pause();
+            buttonAudios[0].currentTime = 0;
+            buttonAudios[1].pause();
+            buttonAudios[1].currentTime = 0;
+        }
+    } else if (type === 'CassetteInsert') {
+        cassetteAudio.play();
+    }
 }
