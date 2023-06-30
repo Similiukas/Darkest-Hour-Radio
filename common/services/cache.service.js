@@ -8,7 +8,7 @@ export default class Cache {
     // Which mean that class with static methods should rather be objects
     // But it does work like this and I think it's more pretty.
     // https://stackoverflow.com/a/40987308/9819103
-    static data = new Object();
+    static data = new Map();
     static STARTED_EXIT = false;
 
     constructor(initialValue) {
@@ -87,7 +87,7 @@ export default class Cache {
                     console.log(`[Cache service] Saved ${cachedSong} to db`);
                 }
             }
-            console.log("[Cache service] Data saved to db successfully", Cache.data);
+            console.log("[Cache service] Data saved to db successfully");
             exit();
         } catch (err) {
             console.error("[Cache service] Error saving cache to db:\n", err);

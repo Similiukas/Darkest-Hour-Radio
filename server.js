@@ -73,7 +73,7 @@ RecordingRouter(app);
 app.listen(port, () =>{
     console.log("App listening on port", port);
     console.log(`The process pid is: ${process.pid}`);
-    console.info('To Push to Heroku: git push heroku heroku-build:master');
+    console.log('Deploying to fly: fly deploy -a dhradio-api')
 })
 
 // A process can not listen to sigkill: https://stackoverflow.com/q/42450501/9819103
