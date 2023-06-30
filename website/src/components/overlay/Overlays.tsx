@@ -23,7 +23,7 @@ const Overlays = ({ startCloud }: Props) => {
     useEffect(() => {
         fetch(`${process.env.REACT_APP_REMOTE_API_URL}/schedule`)
         .then((res) => res.json())
-        .then((result) => setScheduleInfo(result.sort((a: ScheduleInfo, b: ScheduleInfo) => b.priority - a.priority)));
+        .then((result: ScheduleInfo[]) => setScheduleInfo(result?.sort((a, b) => b.priority - a.priority)));
     }, [setScheduleInfo]);
 
     return (

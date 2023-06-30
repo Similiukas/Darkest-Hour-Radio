@@ -36,7 +36,6 @@ const PodcastContainer = ({ mounting, startCloud, close }: Props) => {
             const results = await getRecordList();
             setActiveShowID(0);
             setPodcasts(results);
-            console.log(results);
         }
         fetchData();
     }, []);

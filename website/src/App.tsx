@@ -13,6 +13,10 @@ import 'styles/style.scss';
 // TODO: naudot certificates, ka apsaugot API
 // TODO: test on audio ended
 
+// PRODUCTION: can add this to production index.html for preloading image, however it's not used in mobile so maybe not needed
+// Also, don't really know how to add it not by hand, since its name changes every time
+// <link rel="preload" fetchpriority="high" as="image" href="./static/media/desktop-template-3-min.KAZKASwebp" type="image/webp">
+
 const App = () => {
     // TODO: If we start by playing the cloud record, how the timeout gonna be? I guess maybe then we don't need the timeout function? But still, when we press to go back to live, then we need to start timeout
     // TODO: Also, when the cloud record ends, what to do with UI?

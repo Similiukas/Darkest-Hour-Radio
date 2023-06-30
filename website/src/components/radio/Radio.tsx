@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 import { useState, useRef, useEffect, useContext, useCallback } from 'react';
 
 import { SettingsContext } from 'context';
@@ -33,8 +34,6 @@ const Radio = ({ audio, toggleAudioPlayback, audioVolume, pastRecordData, stopCl
     const { overlayType, setOverlay, toggleTimeout } = useContext(SettingsContext);
 
     const togglePlay = useCallback((startPlaying: boolean) => {
-        console.log('toggle play?', startPlaying, offline, audio);
-
         if (pastRecordData && audio.paused === startPlaying) {
             toggleAudioPlayback(false); // Toggling audio of recording even if we are offline
             setIsAudioPlaying(startPlaying);
@@ -42,7 +41,7 @@ const Radio = ({ audio, toggleAudioPlayback, audioVolume, pastRecordData, stopCl
             toggleAudioPlayback(true);
             toggleTimeout();
             setIsAudioPlaying(startPlaying);
-        } else console.error('We are probably offline?', offline, audio, startPlaying);
+        } else console.warn('We are probably offline?', offline, audio, startPlaying);
     }, [audio, toggleAudioPlayback, pastRecordData, toggleTimeout]);
 
     const volumeChange = (increase: boolean | number) => {
@@ -164,7 +163,10 @@ const Radio = ({ audio, toggleAudioPlayback, audioVolume, pastRecordData, stopCl
 
             <div ref={templateRef}>
                 {/* For some reason if ref is on img then clientWidth gets 0 on useEffect */}
-                <img id="boombox" src={radioTemplate} alt="Old style boombox player" />
+                {/* fetchpriority is currently recognized only by Chrome: https://caniuse.com/?search=fetchpriority */}
+                {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                {/* @ts-ignore */}
+                <img id="boombox" style={{ aspectRatio: '1916/955' }} src={radioTemplate} alt="Old style boombox player" fetchpriority="high" />
             </div>
         </div>
     );

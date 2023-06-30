@@ -24,13 +24,11 @@ const AppStore = ({ setSecret }: Props) => {
      * Need to delete past record data, cancel the switch to full audio and toggle the timeout.
      */
     const stopCloudRecording = () => {
-        console.log('Going back to live', pastRecordData, audio);
         setPastRecordData({
             name: 'Loading...',
             listeners: '00',
         });
         changeAudioSource(`https://stream.dhradio.tk/playlist.ogg?_${Math.random()}`, () => {
-            console.log('pradeam statyt i null');
             setPastRecordData(null);
             toggleTimeout();
         });
@@ -43,7 +41,6 @@ const AppStore = ({ setSecret }: Props) => {
      * @param listeners listener count.
      */
     const startCloudRecording: StartCloudRecoding = async (showName, id, listeners) => {
-        console.log('name', id, 'listeners', listeners);
         setPastRecordData({
             name: 'Loading...',
             listeners: '00',

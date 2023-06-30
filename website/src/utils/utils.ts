@@ -69,7 +69,7 @@ export function filterRadios(artist: string, recordings: any) {
     try {
         backup = recordings[0].releases[0]['release-group'].id;
     } catch (error) {
-        console.error('Error in filtering radios (getting backup)', error);
+        console.warn('Error in filtering radios (getting backup)', error);
         return 'NONE'; // Failed to find a backup
     }
     try {
@@ -77,12 +77,7 @@ export function filterRadios(artist: string, recordings: any) {
             const record = recordings[recordingIndex];
             for (let releaseIndex = 0; releaseIndex < record.releases.length; releaseIndex++) {
                 const release = record.releases[releaseIndex];
-                console.log(release);
-                if (release['artist-credit']?.[0].name.toLowerCase() === 'various artists') {
-                    console.log('Found radio');
-                    // continue;
-                } else if (release['artist-credit']?.[0].name.toLowerCase() === artist.toLowerCase()) {
-                    console.log('Right artist');
+                if (release['artist-credit']?.[0].name.toLowerCase() === artist.toLowerCase()) {
                     return release['release-group'].id;
                 }
             }
@@ -134,8 +129,6 @@ export function parseHTMLEntities(code: string) {
     const parser = new DOMParser();
     return parser.parseFromString(code, 'text/html').documentElement.textContent;
 }
-
-console.log('hello?');
 
 /**
  * Converts the first date of the schedule.

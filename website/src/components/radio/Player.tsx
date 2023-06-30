@@ -69,7 +69,7 @@ const Player = ({ templateRatio, currentSong, listenerCount, setLive, togglePlay
                 addCoverArt(MBID, true, (imgUrl) => setCoverPhotoUrl(imgUrl ?? defaultPhoto));
             }
         } catch (error) {
-            console.error(`There was an error trying to get cover art for this [${songInfo}] audio.\nSwitching to default photo\nError:`, error);
+            console.warn(`There was an error trying to get cover art for this [${songInfo}] audio.\nSwitching to default photo\nError:`, error);
             setCoverPhotoUrl(defaultPhoto);
         }
     }, [setLive]);
