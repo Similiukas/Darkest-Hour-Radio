@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import SwiperCore, { Navigation, Pagination } from 'swiper';
 
-import { StartCloudRecoding, Podcast } from 'types';
+import { playSoundFX } from 'utils';
 
 import PodcastRecordingContainer from './PodcastRecordingContainer';
 
@@ -14,7 +14,7 @@ type Props = {
 SwiperCore.use([Navigation, Pagination]);
 
 async function getRecordList(): Promise<Podcast[]> {
-    return fetch('http://localhost:3002/recordList')
+    return fetch(`${process.env.REACT_APP_REMOTE_API_URL}/recordList`)
     .then((response) => response.json())
     .catch((err) => {
         console.error('Error fetching record list', err);
@@ -23,9 +23,10 @@ async function getRecordList(): Promise<Podcast[]> {
 
 const PodcastContainer = ({ mounting, startCloud, close }: Props) => {
     const [activeShowID, setActiveShowID] = useState(-1);
-    const [podcasts, setPodcasts] = useState<Podcast[]|null>(null);
+    const [podcasts, setPodcasts] = useState<Podcast[] | null>(null);
 
     const callCloud = (showName: string, id: string, listeners: string) => {
+        playSoundFX('CassetteInsert');
         startCloud(showName, id, listeners);
         close();
     };
@@ -35,7 +36,6 @@ const PodcastContainer = ({ mounting, startCloud, close }: Props) => {
             const results = await getRecordList();
             setActiveShowID(0);
             setPodcasts(results);
-            console.log(results);
         }
         fetchData();
     }, []);

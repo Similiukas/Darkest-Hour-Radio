@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 import { useDelayBool, useDidMount } from 'hooks';
 import pixels from 'pixels.json';
-import { PastRecordData } from 'types';
 
 import HUDVisualizer from './HUDVisualizer';
 

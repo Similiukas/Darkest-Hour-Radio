@@ -1,7 +1,5 @@
 import { FC, useState, useCallback } from 'react';
 
-import { OverlayType, ScheduleInfo } from 'types';
-
 import { DEFAULT_SETTINGS, SettingsContext } from './settingsContext';
 
 // Right now, the context uses simple state but it would be better to memoize these values
@@ -30,7 +28,7 @@ export const SettingsProvider: FC = ({ children }) => {
             clearTimeout(playbackTimeoutID);
             setPlaybackTimeoutID(null);
         } else {
-            setPlaybackTimeoutID(setTimeout(setOverlayType, 2.6 * 60 * 60 * 1000, OverlayType.TimeoutStart));
+            setPlaybackTimeoutID(setTimeout(setOverlayType, 2.6 * 60 * 60 * 1000, 'TimeoutStart'));
         }
     }, [playbackTimeoutID]);
 

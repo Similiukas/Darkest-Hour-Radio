@@ -5,14 +5,15 @@
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true, 
-    "outDir": "./buildts",
+    "outDir": "./build",
     "isolatedModules": true, 
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "skipLibCheck": true,
+    // "skipLibCheck": true, // Reason: https://github.com/vitejs/vite/issues/5814#issuecomment-1021556882
     "baseUrl": "src",
+    "typeRoots": ["./node_modules/@types", "./types"],
     "paths": {
       "@/images/*": ["images/"]
     },

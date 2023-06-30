@@ -1,5 +1,5 @@
 import { Timestamp } from 'firebaseConfig';
-import cassette from 'images/cassette-min.png';
+import cassette from 'images/cassette-min.webp';
 
 type Props = {
     showName: string,

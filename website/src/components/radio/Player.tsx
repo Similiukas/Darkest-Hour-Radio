@@ -2,11 +2,9 @@ import { useState, useEffect, useContext, useCallback } from 'react';
 import { Range, Direction, getTrackBackground } from 'react-range';
 
 import { SettingsContext } from 'context';
-import { useDidMount } from 'hooks';
-import defaultPhoto from 'images/logo-min.png';
+import defaultPhoto from 'images/logo-min.webp';
 import pixels from 'pixels.json';
-import { OverlayType, PastRecordData } from 'types';
-import { filterRadios, parseHTMLEntities, parseMetadata, searchRecordings, searchRelease } from 'utils';
+import { addCoverArt, filterRadios, parseHTMLEntities, parseMetadata, searchRecordings, searchRelease } from 'utils';
 
 import PlayerHUD from './PlayerHUD';
 
@@ -18,6 +16,7 @@ type Props = {
     togglePlay: (startPlaying: boolean) => void,
     volumeChange: (increase: boolean | number) => void,
     pastRecordData: PastRecordData | null,
+    isAudioPlaying: boolean
 }
 
 type SongInfo = {
@@ -26,7 +25,7 @@ type SongInfo = {
     album: string,
 }
 
-const Player = ({ templateRatio, currentSong, listenerCount, setLive, togglePlay, volumeChange, pastRecordData }: Props) => {
+const Player = ({ templateRatio, currentSong, listenerCount, setLive, togglePlay, volumeChange, pastRecordData, isAudioPlaying }: Props) => {
     const width = window.innerWidth > 1025 ? templateRatio * pixels.Player.width - 2 * templateRatio * pixels.Player.width * pixels.Player.MARGIN_X : undefined;
     const height = window.innerWidth > 1025 ? templateRatio * pixels.Player.height - 2 * templateRatio * pixels.Player.height * pixels.Player.MARGIN_Y : undefined;
     const marginLeft = window.innerWidth > 1025 ? templateRatio * pixels.Player.width * pixels.Player.MARGIN_X : undefined;
@@ -38,21 +37,6 @@ const Player = ({ templateRatio, currentSong, listenerCount, setLive, togglePlay
     const [volume, setVolume] = useState([0.4]);
 
     const { overlayType } = useContext(SettingsContext);
-
-    /**
-     * Adds album cover art to HTML
-     * @param {MBID} MBID Release MBID from musicbrainz
-     * @param {boolean} group If true, looking for release group. If false -> just for release
-     */
-    async function addCoverArt(MBID: string, group: boolean) {
-        try {
-            const img = await fetch(`https://coverartarchive.org/release${group ? '-group/' : '/'}${MBID}`);
-            const imgJSON = await img.json();
-            setCoverPhotoUrl(imgJSON.images[0].thumbnails.small);
-        } catch (error) {
-            setCoverPhotoUrl(defaultPhoto);
-        }
-    }
 
     const updateCoverArt = useCallback(async (song: string | null) => {
         if (!song) return;
@@ -74,24 +58,32 @@ const Player = ({ templateRatio, currentSong, listenerCount, setLive, togglePlay
                 if (MBID === 'NONE') {
                     setCoverPhotoUrl(defaultPhoto);
                 } else {
-                    addCoverArt(MBID, true);
+                    addCoverArt(MBID, true, (imgUrl) => setCoverPhotoUrl(imgUrl ?? defaultPhoto));
                 }
             } else if ((songInfo[3].match(/.-./g) || []).length >= 2) { // If album or MBID has more than 2 '-', then it's MBID
-                addCoverArt(songInfo[3], false); // Search for cover art by release MBID
+                addCoverArt(songInfo[3], false, (imgUrl) => setCoverPhotoUrl(imgUrl ?? defaultPhoto)); // Search for cover art by release MBID
             } else {
                 // Search for release by artist and album name
                 // Search for cover art by release
                 const MBID = await searchRelease(songInfo[1], songInfo[3]);
-                addCoverArt(MBID, true);
+                addCoverArt(MBID, true, (imgUrl) => setCoverPhotoUrl(imgUrl ?? defaultPhoto));
             }
         } catch (error) {
-            console.error(`There was an error trying to get cover art for this [${songInfo}] audio.\nSwitching to default photo\nError:`, error);
+            console.warn(`There was an error trying to get cover art for this [${songInfo}] audio.\nSwitching to default photo\nError:`, error);
             setCoverPhotoUrl(defaultPhoto);
         }
     }, [setLive]);
 
     useEffect(() => {
-        if (currentSong === 'ad') {
+        if (pastRecordData) {
+            setSongInfo({
+                title: pastRecordData.name,
+                artist: '',
+                album: '',
+            });
+            setPlayButtonText('pause_circle');
+            setCoverPhotoUrl(defaultPhoto);
+        } else if (currentSong === 'ad') {
             setSongInfo({
                 title: 'Darkest Hour Radio',
                 artist: '',
@@ -108,20 +100,17 @@ const Player = ({ templateRatio, currentSong, listenerCount, setLive, togglePlay
             });
             setCoverPhotoUrl(defaultPhoto);
         }
-    }, [currentSong, updateCoverArt]);
+    }, [currentSong, pastRecordData, updateCoverArt]);
 
-    // useEffect except first render
-    useDidMount(() => {
-        setPlayButtonText('pause_circle');
-        if (pastRecordData) {
-            setSongInfo({
-                title: pastRecordData.name,
-                artist: '',
-                album: '',
-            });
-            setCoverPhotoUrl(defaultPhoto);
+    useEffect(() => {
+        if (isAudioPlaying && !!currentSong && currentSong !== 'ad') {
+            const songInfo = parseMetadata(currentSong);
+            if (!songInfo) return;
+            document.title = `${songInfo[2]} - ${songInfo[1]}`;
+        } else {
+            document.title = 'DHRadio';
         }
-    }, [pastRecordData]);
+    }, [isAudioPlaying, currentSong, pastRecordData]);
 
     return (
         <div
@@ -143,7 +132,7 @@ const Player = ({ templateRatio, currentSong, listenerCount, setLive, togglePlay
                         setPlayButtonText(playButtonText === 'play_circle' ? 'pause_circle' : 'play_circle');
                     }}
                 >
-                    {overlayType === OverlayType.TimeoutStart ? 'play_circle' : playButtonText}
+                    {overlayType === 'TimeoutStart' ? 'play_circle' : playButtonText}
                 </span>   {/* <!-- Hide in desktop--> */}
 
                 <div className="song info">

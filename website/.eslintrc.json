@@ -32,7 +32,7 @@
         }
     },
     // Some cool rules: https://stackoverflow.com/questions/65602807/eslint-import-order-react-typescript
-    "ignorePatterns": ["SecretCanvas.tsx", "HUDVisualizer.tsx", "reportWebVitals.ts", "service-worker.ts", "serviceWorkerRegistration.ts"],
+    "ignorePatterns": ["SecretCanvas.tsx", "HUDVisualizer.tsx", "reportWebVitals.ts"],
     "rules": {
         "react/jsx-filename-extension": [ "error", {"extensions": [".tsx"]} ],
         "react/react-in-jsx-scope": "off",   // React v17 does not require to import react,
@@ -59,6 +59,7 @@
         "no-plusplus": "off",   // C'mon ++ and -- is better
         "no-shadow": "off", // Default rule does not work with enums https://github.com/typescript-eslint/typescript-eslint/issues/2483
         "no-console": "off", // Allow console.log
+        "no-undef": "off", // Does not allow .d.ts file typings https://github.com/typescript-eslint/typescript-eslint/issues/342
         "import/extensions": ["error", { "tsx": "never" }],  // Don't require tsx elements to be important as *.tsx
         "max-len": ["warn", { "code": 190, "comments": 135 }],
         "react/jsx-one-expression-per-line": "off", // This just allows multiple expressions in one line like: <p></p><br/>

@@ -1,4 +1,31 @@
-import { ScheduleInfo } from 'types';
+import clickFX from 'images/button.wav';
+import insertCassetteFX from 'images/cassette-in-close.wav';
+
+/**
+ * Creates a random name from a colour, emotion and an animal.
+ */
+function generateName() {
+    // eslint-disable-next-line max-len
+    const WORD_1 = ['khaki', 'orchid', 'cyan', 'pink', 'plum', 'gold', 'magenta', 'lime', 'green yellow', 'hot pink', 'violet', 'purple']; // 'chartreuse', 'light blue', 'dark salmon', 'rebecca purple'
+    const WORD_2 = ['angry', 'sad', 'happy', 'hungry', 'surprised', 'confused', 'disappointed'];
+    const WORD_3 = ['woodchuck', 'elephant', 'monkey', 'porpoise', 'panda', 'fox', 'owl', 'starfish', 'cow', 'octopus', 'cat', 'doggo', 'hippopotamus', 'potato'];
+    const colour = WORD_1[Math.floor(Math.random() * WORD_1.length)];
+    return `${colour} ${WORD_2[Math.floor(Math.random() * WORD_2.length)]} ${WORD_3[Math.floor(Math.random() * WORD_3.length)]}`;
+}
+
+function getUserId() {
+    return localStorage.getItem('uid');
+}
+
+/**
+ * Returns name of user from browser storage or gets a new one.
+ */
+export function getUserName() {
+    if (!localStorage.getItem('name')) {
+        localStorage.setItem('name', generateName());
+    }
+    return localStorage.getItem('name');
+}
 
 /**
  * Parses data from Icecast source and splits into artist, title, mbid and checks if dj has connected
@@ -42,7 +69,7 @@ export function filterRadios(artist: string, recordings: any) {
     try {
         backup = recordings[0].releases[0]['release-group'].id;
     } catch (error) {
-        console.error('Error in filtering radios (getting backup)', error);
+        console.warn('Error in filtering radios (getting backup)', error);
         return 'NONE'; // Failed to find a backup
     }
     try {
@@ -50,12 +77,7 @@ export function filterRadios(artist: string, recordings: any) {
             const record = recordings[recordingIndex];
             for (let releaseIndex = 0; releaseIndex < record.releases.length; releaseIndex++) {
                 const release = record.releases[releaseIndex];
-                console.log(release);
-                if (release['artist-credit']?.[0].name.toLowerCase() === 'various artists') {
-                    console.log('Found radio');
-                    // continue;
-                } else if (release['artist-credit']?.[0].name.toLowerCase() === artist.toLowerCase()) {
-                    console.log('Right artist');
+                if (release['artist-credit']?.[0].name.toLowerCase() === artist.toLowerCase()) {
                     return release['release-group'].id;
                 }
             }
@@ -79,23 +101,27 @@ export async function searchRelease(artist: string, album: string) {
 }
 
 /**
- * Fetches the url as a blog from the API of the specific remote audio.
+ * Adds album cover art to HTML
+ * @param {MBID} MBID Release MBID from musicbrainz
+ * @param {boolean} group If true, looking for release group. If false -> just for release
+ */
+export async function addCoverArt(MBID: string, group: boolean, callback: (imageUrl: string | null) => void) {
+    try {
+        const img = await fetch(`https://coverartarchive.org/release${group ? '-group/' : '/'}${MBID}`);
+        const imgJSON = await img.json();
+        callback(imgJSON.images[0].thumbnails.small.replace('http://', 'https://'));
+    } catch (error) {
+        callback(null);
+    }
+}
+
+/**
+ * Gives parsed remote audio url.
  * @param showName name of the show.
  * @param id name of the audio.
- * @param shortURL is it a short clip.
- * @returns URL of the show or null if there's an error.
  */
-export async function getRemoteURL(showName: string, id: string, shortURL = true) {
-    return fetch(`${process.env.REACT_APP_REMOTE_API_URL}/${shortURL ? 'recordShortURL' : 'recordFullURL'}/${showName}/${id}`, {
-        mode: 'cors',
-        method: 'GET',
-    })
-    .then((response) => response.blob())
-    .then((blob) => URL.createObjectURL(blob))
-    .catch((err) => {
-        console.error('woops', err);
-        return null;
-    });
+export function getRemoteURL(showName: string, id: string) {
+    return `${process.env.REACT_APP_REMOTE_API_URL}/record/${showName}/${id}/${getUserId() ?? getUserName()}`;
 }
 
 // Mainly for testing songs
@@ -120,4 +146,41 @@ export function convertDate(scheduleInfo: ScheduleInfo[] | undefined) {
     const hours = ` ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')} `;
     const years = `[${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}]`;
     return hours + years;
+}
+
+// Creating three separate audio elements if button is spammed. Third one is reached if spammed real hard
+const buttonAudios = [new Audio(clickFX), new Audio(clickFX), new Audio(clickFX)];
+buttonAudios.forEach((e) => {
+    e.preload = 'auto';
+    e.volume = 0.1;
+});
+const cassetteAudio = new Audio(insertCassetteFX);
+cassetteAudio.preload = 'metadata';
+cassetteAudio.volume = 0.7;
+
+/**
+ * Playing a sound effect.
+ * @param type Sound effect type
+ */
+export function playSoundFX(type: SoundEffectType) {
+    if (type === 'ButtonClick') {
+        if (buttonAudios[0].paused) {
+            buttonAudios[0].currentTime = 0;
+            buttonAudios[0].play();
+        } else if (buttonAudios[1].paused) {
+            buttonAudios[1].currentTime = 0;
+            buttonAudios[1].play();
+            buttonAudios[0].pause();
+            buttonAudios[0].currentTime = 0;
+        } else if (buttonAudios[2].paused) {
+            buttonAudios[2].currentTime = 0;
+            buttonAudios[2].play();
+            buttonAudios[0].pause();
+            buttonAudios[0].currentTime = 0;
+            buttonAudios[1].pause();
+            buttonAudios[1].currentTime = 0;
+        }
+    } else if (type === 'CassetteInsert') {
+        cassetteAudio.play();
+    }
 }

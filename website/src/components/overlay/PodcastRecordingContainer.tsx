@@ -1,7 +1,6 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import Loader from 'components/Loader';
-import { Podcast } from 'types';
 
 import PodcastShowRecording from './PodcastShowRecording';
 
@@ -43,7 +42,21 @@ const PodcastRecordingContainer = ({ activeShowID, podcasts, callCloud }: Props)
                         />
                     </SwiperSlide>
                 ))} */}
-                <>
+                {/* TODO: temporary showing this way the main shows until there are more of them */}
+                {podcasts.map((show) => (
+                    <SwiperSlide key={show.name + activeShowID}>
+                        <PodcastShowRecording
+                            key={show.name}
+                            showName={show.name}
+                            name={show.recordings[0].name}
+                            listeners={show.recordings[0].listeners.toString().padStart(2, '0')}
+                            length={show.recordings[0].length}
+                            date={show.recordings[0]['creation-date']}
+                            callCloud={callCloud}
+                        />
+                    </SwiperSlide>
+                ))}
+                {/* <>
                     <SwiperSlide>
                         <PodcastShowRecording
                             key={podcasts[0].recordings[0].name}
@@ -66,13 +79,13 @@ const PodcastRecordingContainer = ({ activeShowID, podcasts, callCloud }: Props)
                             callCloud={callCloud}
                         />
                     </SwiperSlide>
-                </>
+                </> */}
             </Swiper>
             // <div className="podcast-show">
 
         // </div>
         )}
-        { !podcasts && <Loader />}
+        {!podcasts && <Loader />}
     </div>
 );
 

@@ -137,7 +137,7 @@ main {
 
 #boombox {
     display: block;
-    max-width: 100%;
+    width: 100%;
     height: auto;
     user-select: none;
     -webkit-user-drag: none;
@@ -242,6 +242,7 @@ main {
         align-items: center;
         width: 24%;
         height: 100%;
+        padding-left: 10px;
         float: left;
         color: #4e4d4d;
         font-family: 'Nova Square', cursive;

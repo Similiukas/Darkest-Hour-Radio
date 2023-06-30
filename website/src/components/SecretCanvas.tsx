@@ -80,7 +80,6 @@ const SecretCanvas = () => {
         if (!canvasRef.current) return;
         ctx = canvasRef.current.getContext('2d');
         actx = new AudioContext();
-        console.log(TOTAL_STARS);
         initializeAudio();
         resizeHandler();
     }

@@ -62,5 +62,5 @@ Vorbis (64kBps) | 80% | 68% | normal
 - [ ] Broadcast Icecast with Opus format
 - [ ] Display recently played songs
 - [ ] Improve scalability by adding relay Icecast streams
-- [ ] Add metadata to Mopidy
+- [X] Add metadata to Mopidy
 - [X] Add indicator to show broadcasting is live

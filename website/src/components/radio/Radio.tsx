@@ -1,9 +1,9 @@
+/* eslint-disable react/no-unknown-property */
 import { useState, useRef, useEffect, useContext, useCallback } from 'react';
 
 import { SettingsContext } from 'context';
-import radioTemplate from 'images/desktop-template-3-min.png';
+import radioTemplate from 'images/desktop-template-3-min.webp';
 import pixels from 'pixels.json';
-import { OverlayType, PastRecordData } from 'types';
 
 import BoomboxButtons from './BoomboxButtons';
 import Cassette from './Cassette';
@@ -14,7 +14,7 @@ import Player from './Player';
 
 type Props = {
     audio: HTMLAudioElement,
-    audioToggle: (toggleLive: boolean) => void,
+    toggleAudioPlayback: (toggleLive: boolean) => void,
     audioVolume: (increase: boolean) => void,
     pastRecordData: PastRecordData | null,
     stopCloud: () => void,
@@ -22,7 +22,7 @@ type Props = {
 
 let offline = true;
 
-const Radio = ({ audio, audioToggle, audioVolume, pastRecordData, stopCloud }: Props) => {
+const Radio = ({ audio, toggleAudioPlayback, audioVolume, pastRecordData, stopCloud }: Props) => {
     const [listenerCount, setListenerCount] = useState('00');
     const [currentSong, setCurrentSong] = useState<string | null>(null);
     const [templateRatio, setTemplateRatio] = useState(0);
@@ -34,17 +34,15 @@ const Radio = ({ audio, audioToggle, audioVolume, pastRecordData, stopCloud }: P
     const { overlayType, setOverlay, toggleTimeout } = useContext(SettingsContext);
 
     const togglePlay = useCallback((startPlaying: boolean) => {
-        console.log('toggle play?', startPlaying, offline, audio);
-
         if (pastRecordData && audio.paused === startPlaying) {
-            audioToggle(false); // Toggling audio of recording even if we are offline
+            toggleAudioPlayback(false); // Toggling audio of recording even if we are offline
             setIsAudioPlaying(startPlaying);
         } else if (!offline && audio.paused === startPlaying) { // If not offline button only starts or pauses (just for PC buttons)
-            audioToggle(true);
+            toggleAudioPlayback(true);
             toggleTimeout();
             setIsAudioPlaying(startPlaying);
-        } else console.error('We are probably offline?', offline, audio, startPlaying);
-    }, [audio, audioToggle, pastRecordData, toggleTimeout]);
+        } else console.warn('We are probably offline?', offline, audio, startPlaying);
+    }, [audio, toggleAudioPlayback, pastRecordData, toggleTimeout]);
 
     const volumeChange = (increase: boolean | number) => {
         if (typeof increase === 'boolean') {
@@ -91,11 +89,11 @@ const Radio = ({ audio, audioToggle, audioVolume, pastRecordData, stopCloud }: P
     // Timeout useEffect hook for pausing/playing the audio when timeout is reached/ended
     // Also, notifies boombox buttons to change
     useEffect(() => {
-        if (overlayType === OverlayType.TimeoutStart) {
+        if (overlayType === 'TimeoutStart') {
             togglePlay(false);
-        } else if (overlayType === OverlayType.TimeoutEnd) {
+        } else if (overlayType === 'TimeoutEnd') {
             togglePlay(true);
-            setOverlay(OverlayType.Empty);
+            setOverlay('Empty');
         }
     // If togglePlay is added to dep-array, then it will get called 3 times causing an error on third one
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -103,7 +101,6 @@ const Radio = ({ audio, audioToggle, audioVolume, pastRecordData, stopCloud }: P
 
     // Hook placing UI objects based on template size
     useEffect(() => {
-        console.info('placing objects', templateRef.current);
         if (!templateRef.current) return undefined;
         setTemplateRatio(templateRef.current.clientWidth / pixels.templateWidth); // Calling initially
         function resizing() {
@@ -161,11 +158,15 @@ const Radio = ({ audio, audioToggle, audioVolume, pastRecordData, stopCloud }: P
                 togglePlay={togglePlay}
                 volumeChange={volumeChange}
                 pastRecordData={pastRecordData}
+                isAudioPlaying={isAudioPlaying}
             />
 
             <div ref={templateRef}>
                 {/* For some reason if ref is on img then clientWidth gets 0 on useEffect */}
-                <img id="boombox" src={radioTemplate} alt="Old style boombox player" />
+                {/* fetchpriority is currently recognized only by Chrome: https://caniuse.com/?search=fetchpriority */}
+                {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                {/* @ts-ignore */}
+                <img id="boombox" style={{ aspectRatio: '1916/955' }} src={radioTemplate} alt="Old style boombox player" fetchpriority="high" />
             </div>
         </div>
     );
