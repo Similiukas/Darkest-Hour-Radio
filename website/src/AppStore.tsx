@@ -15,7 +15,7 @@ type Props = {
 
 const AppStore = ({ setSecret }: Props) => {
     const [pastRecordData, setPastRecordData] = useState<PastRecordData | null>(null);
-    const [audio, toggleAudioPlayback, setAudioVolume, changeAudioSource] = useAudio('https://stream.dhradio.tk/playlist.ogg');
+    const [audio, toggleAudioPlayback, setAudioVolume, changeAudioSource] = useAudio('https://dhradiostream.mooo.com/playlist.ogg');
 
     const { setOverlay, toggleTimeout } = useContext(SettingsContext);
     const PODCAST_ENABLED = process.env.REACT_APP_PODCAST_ENABLED === 'true';
@@ -28,7 +28,7 @@ const AppStore = ({ setSecret }: Props) => {
             name: 'Loading...',
             listeners: '00',
         });
-        changeAudioSource(`https://stream.dhradio.tk/playlist.ogg?_${Math.random()}`, () => {
+        changeAudioSource(`https://dhradiostream.mooo.com/playlist.ogg?_${Math.random()}`, () => {
             setPastRecordData(null);
             toggleTimeout();
         });

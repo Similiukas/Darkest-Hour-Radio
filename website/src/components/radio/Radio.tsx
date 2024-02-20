@@ -57,7 +57,7 @@ const Radio = ({ audio, toggleAudioPlayback, audioVolume, pastRecordData, stopCl
         const getInfo = async () => {
             if (pastRecordData) return;
             try {
-                const info = await fetch(`https://stream.dhradio.tk/status-json.xsl?_=${Math.random()}`);
+                const info = await fetch(`https://dhradiostream.mooo.com/status-json.xsl?_=${Math.random()}`);
                 const json = await info.json();
                 const source = Array.isArray(json.icestats.source) ? json.icestats.source[0] : json.icestats.source;
                 setListenerCount(source.listeners.toString().padStart(2, '0'));

@@ -4,7 +4,7 @@ import { useAudio } from "hooks";
 
 const SecretCanvas = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const [audio, toggleAudio] = useAudio("https://stream.dhradio.tk/playlist.ogg", 1);
+    const [audio, toggleAudio] = useAudio("https://dhradiostream.mooo.com/playlist.ogg", 1);
     /*
     *   Noel Delgado | @pixelia_me
     *   https://codepen.io/noeldelgado/pen/EaNjBy
