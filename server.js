@@ -44,7 +44,7 @@ app.use(compression());
 
 app.use((req, res, next) => {
     res.header({
-        "Access-Control-Allow-Origin": "https://dhradio.tk",
+        "Access-Control-Allow-Origin": "https://dhradio.web.app",
         "Access-Control-Allow-Headers": "Accept, Authorization, Content-Type, X-Requested-With, Origin, Range",
         "Access-Control-Allow-Methods": "GET, POST, DELETE",
         "Access-Control-Expose-Header": "Content-Length",
@@ -53,7 +53,7 @@ app.use((req, res, next) => {
     // But don't have any really sensative data so it's fine
     // In a real app would send firebase user auth token and then check it. Or use something like JWT if not using firebase
     // Firebase: https://firebase.google.com/docs/auth/admin/verify-id-tokens#web
-    if (req.headers.referer === "https://dhradio.tk/" && req.headers.origin === "https://dhradio.tk"){
+    if (req.headers.referer === "https://dhradio.web.app/" && req.headers.origin === "https://dhradio.web.app"){
         if (req.method === "OPTIONS"){
             return res.sendStatus(200);
         }
