@@ -25,22 +25,33 @@ async function getAudioURL(url){
  */
 export async function getRecordsList() {
     try {
-        let result = [];
+        let result = []; let addedShows = 0;
         const snapshot = await recordsRef.get();
         for (let i = 0; i < snapshot.docs.length; ++i ) {
             const doc = snapshot.docs[i];
+            if (doc.data().hidden) {
+                console.log('found hidden doc', doc.id)
+                continue
+            }
+
             result.push({ name: doc.id, recordings: [] });
             const recordMainDataSnapshot = await recordsRef.doc(doc.id).collection("recording-main-info").get();
             for (let j = 0; j < recordMainDataSnapshot.docs.length; j++) {
                 const record = recordMainDataSnapshot.docs[j];
                 const recordData = record.data();
-                result[i].recordings.push({
+                if (recordData.hidden) {
+                    console.log('found hidden record', recordData.id);
+                    continue;
+                }
+
+                result[addedShows].recordings.push({
                     name: record.id,
                     length: recordData.length,
                     listeners: recordData.listeners,
                     'creation-date': recordData["creation-date"],
                 });
             }
+            addedShows++;
         }
         return result;
     } catch (error) {
